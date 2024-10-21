@@ -1,0 +1,16 @@
+{
+    "name": "localgovdrupal/localgov_finders",
+    "description": "LocalGovDrupal distribution: Common finders functionality, display, index, filter.",
+    "type": "drupal-module",
+    "homepage": "https://github.com/localgovdrupal/localgov_finders",
+    "license": "GPL-2.0-or-later",
+    "minimum-stability": "dev",
+    "require": {
+        "drupal/core": "^10.2",
+        "drupal/search_api": "^1.29"
+    },
+    "require-dev": {},
+    "suggest": {
+        "drupal/facets": "For Search API facets"
+    }
+}
