@@ -1,0 +1,9 @@
+name: 'LocalGov Finders'
+type: module
+description: 'Common finders functionality, display, index, filter.'
+package: LocalGov Drupal
+core_version_requirement: ^10.2
+dependencies:
+  - drupal:views
+  - search_api:search_api
+configure: entity.localgov_directories_facets_type.collection
