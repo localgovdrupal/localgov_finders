@@ -1,0 +1,4 @@
+services:
+  plugin.manager.localgov_finders_finder_type:
+    class: Drupal\localgov_finders\FinderTypeManager
+    parent: default_plugin_manager
