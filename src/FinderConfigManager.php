@@ -7,6 +7,9 @@ use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ModuleExtensionList;
 use Drupal\Core\Logger\LoggerChannelFactoryInterface;
+use Drupal\localgov_finders\Enum\FinderRole;
+use Drupal\localgov_finders\Plugin\FinderType\FinderTypeInterface;
+use Drupal\node\NodeTypeInterface;
 use Drupal\search_api\Utility\PluginHelperInterface;
 
 /**
@@ -86,6 +89,34 @@ class FinderConfigManager {
     $this->configInstaller = $config_installer;
     $this->loggerChannelFactory = $logger_channel_factory;
     $this->pluginHelper = $plugin_helper;
+  }
+
+  /**
+   * Sets up a node type as a finder channel.
+   *
+   * @param \Drupal\node\NodeTypeInterface $node_type
+   *   The node type.
+   * @param \Drupal\localgov_finders\Plugin\FinderType\FinderTypeInterface $finder_type
+   *   The finder type plugin.
+   */
+  public function enableNodeTypeAsChannel(NodeTypeInterface $node_type, FinderTypeInterface $finder_type): void {
+    $node_type->setThirdPartySetting('localgov_finders', 'finder_type', $finder_type->getPluginId());
+    $node_type->setThirdPartySetting('localgov_finders', 'finder_role', FinderRole::Channel);
+    $node_type->save();
+  }
+
+  /**
+   * Sets up a node type as finder items.
+   *
+   * @param \Drupal\node\NodeTypeInterface $node_type
+   *   The node type.
+   * @param \Drupal\localgov_finders\Plugin\FinderType\FinderTypeInterface $finder_type
+   *   The finder type plugin.
+   */
+  public function enableNodeTypeAsFinderItems(NodeTypeInterface $node_type, FinderTypeInterface $finder_type): void {
+    $node_type->setThirdPartySetting('localgov_finders', 'finder_type', $finder_type->getPluginId());
+    $node_type->setThirdPartySetting('localgov_finders', 'finder_role', FinderRole::Items);
+    $node_type->save();
   }
 
 }
