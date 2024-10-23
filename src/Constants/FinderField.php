@@ -4,6 +4,8 @@ namespace Drupal\localgov_finders\Constants;
 
 /**
  * Finder field name constants.
+ *
+ * TODO move this to the plugin class.
  */
 class FinderField {
 
