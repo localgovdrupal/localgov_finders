@@ -104,10 +104,11 @@ class FinderConfigManager {
     $node_type->setThirdPartySetting('localgov_finders', 'finder_role', FinderRole::Channel->value);
     $node_type->save();
 
-    // fields:
-    // enabled facets
-    // enabled content types -- need to show the entry types for this finder type.
-    // finder view.
+    // Create fields on the node type.
+    foreach ($finder_type->getChannelFieldDefinitions() as $field_definition) {
+      $this->fieldStorageDefinitionListener->onFieldStorageDefinitionCreate($field_definition);
+      $this->fieldDefinitionListener->onFieldDefinitionCreate($field_definition);
+    }
   }
 
   /**
