@@ -10,9 +10,9 @@ use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Drupal\search_api\Utility\PluginHelperInterface;
 
 /**
- * TODO: class docs.
+ * Manages creation of configuration for Finders.
  */
-class FinderFieldManager {
+class FinderConfigManager {
 
   /**
    * The entity type manager.
