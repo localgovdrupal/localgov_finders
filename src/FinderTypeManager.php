@@ -70,25 +70,4 @@ class FinderTypeManager extends DefaultPluginManager {
     }
   }
 
-  /**
-   * Sets a finder type and role on a node type.
-   *
-   * @param \Drupal\node\NodeTypeInterface $node_type
-   *   The node type.
-   * @param \Drupal\localgov_finders\Plugin\FinderType\FinderTypeInterface $finder_type
-   *   The finder type plugin.
-   * @param \Drupal\localgov_finders\Enum\FinderRole $finder_role
-   *   The finder role.
-   */
-  public function setFinderType(NodeTypeInterface $node_type, FinderTypeInterface $finder_type, FinderRole $finder_role): void {
-    if ($this->getNodeTypeFinderType($node_type)) {
-      throw new \LogicException('The node type already has a finder type set.');
-    }
-
-    // Set the third-party settings on the node type.
-    $node_type->setThirdPartySetting('localgov_finders', 'finder_type', $finder_type->getPluginId());
-    $node_type->setThirdPartySetting('localgov_finders', 'finder_role', $finder_role->value);
-    $node_type->save();
-  }
-
 }
