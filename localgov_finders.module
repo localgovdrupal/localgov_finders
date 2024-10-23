@@ -67,7 +67,7 @@ function localgov_finders_form_node_type_form_alter(&$form, FormStateInterface $
  *
  * @see localgov_finders_form_node_type_form_alter()
  */
-function localgov_finders_form_node_type_form_validate(array $form, \Drupal\Core\Form\FormStateInterface $form_state) {
+function localgov_finders_form_node_type_form_validate(array $form, FormStateInterface $form_state) {
   if (!empty($form_state->getValue(['localgov_finders', 'finder_type'])) && empty($form_state->getValue(['localgov_finders', 'finder_role']))) {
     $form_state->setError($form['localgov_finders']['finder_role'], t('The Finder role must be set if a Finder type is set.'));
   }
@@ -78,7 +78,7 @@ function localgov_finders_form_node_type_form_validate(array $form, \Drupal\Core
  *
  * @see localgov_finders_form_node_type_form_alter()
  */
-function localgov_finders_form_node_type_form_submit(array $form, \Drupal\Core\Form\FormStateInterface $form_state) {
+function localgov_finders_form_node_type_form_submit(array $form, FormStateInterface $form_state) {
   $finder_type_manager = \Drupal::service('plugin.manager.localgov_finders_finder_type');
   $finder_config_manager = \Drupal::service('localgov_finders.finder_config_manager');
 
