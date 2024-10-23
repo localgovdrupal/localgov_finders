@@ -80,6 +80,7 @@ function localgov_finders_form_node_type_form_validate(array $form, \Drupal\Core
  */
 function localgov_finders_form_node_type_form_submit(array $form, \Drupal\Core\Form\FormStateInterface $form_state) {
   $finder_type_manager = \Drupal::service('plugin.manager.localgov_finders_finder_type');
+  $finder_config_manager = \Drupal::service('localgov_finders.finder_config_manager');
 
   /** @var \Drupal\node\NodeTypeInterface $node_type */
   $node_type = $form_state->getFormObject()->getEntity();
@@ -89,7 +90,14 @@ function localgov_finders_form_node_type_form_submit(array $form, \Drupal\Core\F
     $finder_type = $finder_type_manager->createInstance($form_state->getValue(['localgov_finders', 'finder_type']));
     $finder_role = $form_state->getValue(['localgov_finders', 'finder_role']);
 
-    $finder_type_manager->setFinderType($node_type, $finder_type, FinderRole::from($finder_role));
+    switch ($finder_role) {
+      case 'channel':
+        $finder_config_manager->enableNodeTypeAsChannel($node_type, $finder_type);
+        break;
+      case 'items':
+        $finder_config_manager->enableNodeTypeAsFinderItems($node_type, $finder_type);
+        break;
+    }
   }
 
   // @todo Support uninstall.
