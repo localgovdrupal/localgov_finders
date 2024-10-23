@@ -6,6 +6,8 @@ use Drupal\Core\Config\ConfigInstallerInterface;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ModuleExtensionList;
+use Drupal\Core\Field\FieldDefinitionListenerInterface;
+use Drupal\Core\Field\FieldStorageDefinitionListenerInterface;
 use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Drupal\localgov_finders\Enum\FinderRole;
 use Drupal\localgov_finders\Plugin\FinderType\FinderTypeInterface;
@@ -60,7 +62,21 @@ class FinderConfigManager {
   protected $pluginHelper;
 
   /**
-   * Creates a FinderFieldManager instance.
+   * The field storage definition listener service.
+   *
+   * @var \Drupal\Core\Field\FieldStorageDefinitionListenerInterface
+   */
+  protected $fieldStorageDefinitionListener;
+
+  /**
+   * The field definition listener service.
+   *
+   * @var \Drupal\Core\Field\FieldDefinitionListenerInterface
+   */
+  protected $fieldDefinitionListener;
+
+  /**
+   * Creates a FinderConfigManager instance.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
@@ -74,6 +90,10 @@ class FinderConfigManager {
    *   The logger channel factory.
    * @param \Drupal\search_api\Utility\PluginHelperInterface $plugin_helper
    *   The plugin helper service.
+   * @param \Drupal\Core\Field\FieldStorageDefinitionListenerInterface $field_storage_definition_listener
+   *   The field storage definition listener service.
+   * @param \Drupal\Core\Field\FieldDefinitionListenerInterface $field_definition_listener
+   *   The field definition listener service.
    */
   public function __construct(
     EntityTypeManagerInterface $entity_type_manager,
@@ -82,6 +102,8 @@ class FinderConfigManager {
     ConfigInstallerInterface $config_installer,
     LoggerChannelFactoryInterface $logger_channel_factory,
     PluginHelperInterface $plugin_helper,
+    FieldStorageDefinitionListenerInterface $field_storage_definition_listener,
+    FieldDefinitionListenerInterface $field_definition_listener,
   ) {
     $this->entityTypeManager = $entity_type_manager;
     $this->entityFieldManager = $entity_field_manager;
@@ -89,6 +111,8 @@ class FinderConfigManager {
     $this->configInstaller = $config_installer;
     $this->loggerChannelFactory = $logger_channel_factory;
     $this->pluginHelper = $plugin_helper;
+    $this->fieldStorageDefinitionListener = $field_storage_definition_listener;
+    $this->fieldDefinitionListener = $field_definition_listener;
   }
 
   /**

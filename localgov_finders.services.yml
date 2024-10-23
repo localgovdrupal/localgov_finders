@@ -4,4 +4,4 @@ services:
     parent: default_plugin_manager
   localgov_finders.finder_config_manager:
     class: Drupal\localgov_finders\FinderConfigManager
-    arguments: ['@entity_type.manager', '@entity_field.manager', '@extension.list.module', '@config.installer', '@logger.factory', '@search_api.plugin_helper']
+    arguments: ['@entity_type.manager', '@entity_field.manager', '@extension.list.module', '@config.installer', '@logger.factory', '@search_api.plugin_helper', '@field_storage_definition.listener', '@field_definition.listener']
