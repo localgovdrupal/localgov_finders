@@ -10,11 +10,11 @@ enum FinderRole: string {
   /**
    * Nodes whose node type has this role show lists of items.
    */
-  case CHANNEL = 'channel';
+  case Channel = 'channel';
 
   /**
    * Nodes whose node type has this role are items shown in listings.
    */
-  case ITEMS = 'items';
+  case Items = 'items';
 
 }
