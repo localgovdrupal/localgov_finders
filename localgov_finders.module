@@ -5,9 +5,51 @@
  * Contains hook implementations for the localgov_finders module.
  */
 
+use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Field\FieldDefinition;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
 use Drupal\localgov_finders\Enum\FinderRole;
+
+/**
+ * Implements hook_entity_bundle_field_info().
+ */
+function localgov_finders_entity_bundle_field_info(EntityTypeInterface $entity_type, $bundle, array $base_field_definitions) {
+  // We only work with nodes.
+  if ($entity_type->id() != 'node') {
+    return [];
+  }
+
+  // Get the channel bundle field definitions from the config manager.
+  $finder_config_manager = \Drupal::service('localgov_finders.finder_config_manager');
+
+  $node_type = \Drupal::service('entity_type.manager')->getStorage('node_type')->load($bundle);
+
+  // On a node type creation form, there is no node type yet.
+  if (empty($node_type)) {
+    return [];
+  }
+
+  $fields = $finder_config_manager->getChannelFieldDefinitions($node_type);
+
+  return $fields;
+}
+
+/**
+ * Implements hook_form_BASE_FORM_ID_alter().
+ */
+function localgov_finders_form_BASE_FORM_ID_alter(&$form, FormStateInterface $form_state, $form_id) {
+  // Modification for the form with the given BASE_FORM_ID goes here. For
+  // example, if BASE_FORM_ID is "node_form", this code would run on every
+  // node form, regardless of node type.
+
+  // Add a checkbox to the node form about agreeing to terms of use.
+  $form['terms_of_use'] = [
+    '#type' => 'checkbox',
+    '#title' => t("I agree with the website's terms and conditions."),
+    '#required' => TRUE,
+  ];
+}
 
 /**
  * Implements hook_form_BASE_FORM_ID_alter(): node_type_form.

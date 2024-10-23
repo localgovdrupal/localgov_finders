@@ -115,6 +115,23 @@ class FinderConfigManager {
     $this->fieldDefinitionListener = $field_definition_listener;
   }
 
+  public function getChannelFieldDefinitions(NodeTypeInterface $node_type): array {
+    $finder_type_manager = \Drupal::service('plugin.manager.localgov_finders_finder_type');
+
+    if ($finder_type = $finder_type_manager->getNodeTypeFinderType($node_type)) {
+      $channel_field_definitions = [];
+
+      foreach ($finder_type->getChannelFieldDefinitions($node_type) as $field_definition) {
+        $channel_field_definitions[$field_definition->getName()] = $field_definition;
+      }
+
+      return $channel_field_definitions;
+    }
+    else {
+      return [];
+    }
+  }
+
   /**
    * Sets up a node type as a finder channel.
    *
@@ -129,7 +146,8 @@ class FinderConfigManager {
     $node_type->save();
 
     // Create fields on the node type.
-    foreach ($finder_type->getChannelFieldDefinitions() as $field_definition) {
+    foreach ($finder_type->getChannelFieldDefinitions($node_type) as $field_definition) {
+      // TODO! only if no storage already!
       $this->fieldStorageDefinitionListener->onFieldStorageDefinitionCreate($field_definition);
       $this->fieldDefinitionListener->onFieldDefinitionCreate($field_definition);
     }
