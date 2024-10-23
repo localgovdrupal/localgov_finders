@@ -8,13 +8,13 @@ namespace Drupal\localgov_finders\Enum;
 enum FinderRole: string {
 
   /**
-   * Nodes whose node type has this role show lists of items.
+   * Nodes whose node type has this role show lists of entries.
    */
   case Channel = 'channel';
 
   /**
-   * Nodes whose node type has this role are items shown in listings.
+   * Nodes whose node type has this role are entries shown in listings.
    */
-  case Items = 'items';
+  case Entries = 'entries';
 
 }
