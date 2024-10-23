@@ -121,10 +121,6 @@ class FinderConfigManager {
     if ($finder_type = $finder_type_manager->getNodeTypeFinderType($node_type)) {
       $channel_field_definitions = [];
 
-      foreach ($finder_type->getChannelFieldDefinitions($node_type) as $field_definition) {
-        $channel_field_definitions[$field_definition->getName()] = $field_definition;
-      }
-
       return $channel_field_definitions;
     }
     else {

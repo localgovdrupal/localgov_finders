@@ -15,14 +15,17 @@ use Drupal\node\NodeTypeInterface;
 abstract class FinderTypeBase extends PluginBase implements FinderTypeInterface {
 
   public function getChannelFieldDefinitions(NodeTypeInterface $node_type): array {
-    $field_definitions = [
-      $this->getChannelTypesFieldDefinition(),
-    ];
+    $field_definitions = [];
+
+    $channel_types_field_definition = $this->getChannelTypesFieldDefinition();
+    $field_definitions[$channel_types_field_definition->getName()] = $channel_types_field_definition;
+
+    // TODO: further fields:
     // enabled facets
     // finder view.
-    //
 
     foreach ($field_definitions as $field_definition) {
+      // Set the target bundle on all bundle fields.
       $field_definition->setTargetBundle($node_type->id());
     }
 
