@@ -1,0 +1,96 @@
+<?php
+
+/**
+ * @file
+ * Contains hook implementations for the localgov_finders module.
+ */
+
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Render\Element;
+use Drupal\localgov_finders\Enum\FinderRole;
+
+/**
+ * Implements hook_form_BASE_FORM_ID_alter(): node_type_form.
+ */
+function localgov_finders_form_node_type_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  /** @var \Drupal\node\NodeTypeInterface $node_type */
+  $node_type = $form_state->getFormObject()->getEntity();
+
+  $form['localgov_finders'] = [
+    '#type' => 'details',
+    '#group' => 'additional_settings',
+    '#title' => t('LocalGov Finder type'),
+    '#attributes' => ['class' => ['localgov-finders-type']],
+    '#tree' => TRUE,
+    '#weight' => 10,
+  ];
+
+  $finder_type_definitions = \Drupal::service('plugin.manager.localgov_finders_finder_type')->getDefinitions();
+  $options = array_map(fn($definition) => $definition['label'], $finder_type_definitions);
+
+  $form['localgov_finders']['finder_type'] = [
+    '#type' => 'radios',
+    '#title' => t("Finder type"),
+    '#options' => $options,
+    '#empty_value' => '',
+    '#default_value' => $node_type->getThirdPartySetting('localgov_finders', 'finder_type', ''),
+  ];
+
+  foreach ($finder_type_definitions as $finder_type_id => $definition) {
+    $form['localgov_finders']['finder_type'][$finder_type_id]['#description'] = $definition['description'];
+  }
+
+  $form['localgov_finders']['finder_role'] = [
+    '#type' => 'radios',
+    '#title' => t("Finder role"),
+    '#options' => [
+      'channel' => t('Finder channel: nodes of this type are finders'),
+      'items'   => t('Item: nodes of this type are items that can be shown in finders'),
+    ],
+    '#default_value' => $node_type->getThirdPartySetting('localgov_finders', 'finder_role', ''),
+    // @todo Use States to hide this & make it required if a type is selected.
+  ];
+
+  // Don't allow removal of finder type fields.
+  // @todo Add support for removing finder configuration.
+  $form['localgov_finders']['finder_type']['#disabled'] = !empty($form['localgov_finders']['finder_type']['#default_value']);
+  $form['localgov_finders']['finder_role']['#disabled'] = !empty($form['localgov_finders']['finder_role']['#default_value']);
+
+  foreach (Element::children($form['actions']) as $action) {
+    $form['actions'][$action]['#validate'][] = 'localgov_finders_form_node_type_form_validate';
+    $form['actions'][$action]['#submit'][] = 'localgov_finders_form_node_type_form_submit';
+  }
+}
+
+/**
+ * Validation handler.
+ *
+ * @see localgov_finders_form_node_type_form_alter()
+ */
+function localgov_finders_form_node_type_form_validate(array $form, \Drupal\Core\Form\FormStateInterface $form_state) {
+  if (!empty($form_state->getValue(['localgov_finders', 'finder_type'])) && empty($form_state->getValue(['localgov_finders', 'finder_role']))) {
+    $form_state->setError($form['localgov_finders']['finder_role'], t('The Finder role must be set if a Finder type is set.'));
+  }
+}
+
+/**
+ * Submit handler.
+ *
+ * @see localgov_finders_form_node_type_form_alter()
+ */
+function localgov_finders_form_node_type_form_submit(array $form, \Drupal\Core\Form\FormStateInterface $form_state) {
+  $finder_type_manager = \Drupal::service('plugin.manager.localgov_finders_finder_type');
+
+  /** @var \Drupal\node\NodeTypeInterface $node_type */
+  $node_type = $form_state->getFormObject()->getEntity();
+
+  $original_finder_type = $node_type->getThirdPartySetting('localgov_finders', 'finder_type', '');
+  if (empty($original_finder_type) && $form_state->getValue(['localgov_finders', 'finder_type'])) {
+    $finder_type = $finder_type_manager->createInstance($form_state->getValue(['localgov_finders', 'finder_type']));
+    $finder_role = $form_state->getValue(['localgov_finders', 'finder_role']);
+
+    $finder_type_manager->setFinderType($node_type, $finder_type, FinderRole::from($finder_role));
+  }
+
+  // @todo Support uninstall.
+}
