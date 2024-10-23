@@ -103,20 +103,31 @@ class FinderConfigManager {
     $node_type->setThirdPartySetting('localgov_finders', 'finder_type', $finder_type->getPluginId());
     $node_type->setThirdPartySetting('localgov_finders', 'finder_role', FinderRole::Channel);
     $node_type->save();
+
+    // fields:
+    // enabled facets
+    // enabled content types -- need to show the entry types for this finder type.
+    // finder view.
   }
 
   /**
-   * Sets up a node type as finder items.
+   * Sets up a node type as finder entries.
    *
    * @param \Drupal\node\NodeTypeInterface $node_type
    *   The node type.
    * @param \Drupal\localgov_finders\Plugin\FinderType\FinderTypeInterface $finder_type
    *   The finder type plugin.
    */
-  public function enableNodeTypeAsFinderItems(NodeTypeInterface $node_type, FinderTypeInterface $finder_type): void {
+  public function enableNodeTypeAsFinderEntries(NodeTypeInterface $node_type, FinderTypeInterface $finder_type): void {
     $node_type->setThirdPartySetting('localgov_finders', 'finder_type', $finder_type->getPluginId());
-    $node_type->setThirdPartySetting('localgov_finders', 'finder_role', FinderRole::Items);
+    $node_type->setThirdPartySetting('localgov_finders', 'finder_role', FinderRole::Entries);
     $node_type->save();
+
+    // fields:
+    // localgov_directory_channels
+    // localgov_directory_facets_select
+    // localgov_directory_title_sort
+
   }
 
 }
