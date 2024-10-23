@@ -41,6 +41,10 @@ abstract class FinderTypeBase extends PluginBase implements FinderTypeInterface 
         // TODO! this needs to move into Finders
         'handler' => 'localgov_directories_entry_types',
         'target_type' => 'node_type',
+      ])
+      ->setDisplayConfigurable('form', TRUE)
+      ->setDisplayOptions('form', [
+        'type' => 'options_buttons',
       ]);
   }
 
