@@ -101,7 +101,7 @@ class FinderConfigManager {
    */
   public function enableNodeTypeAsChannel(NodeTypeInterface $node_type, FinderTypeInterface $finder_type): void {
     $node_type->setThirdPartySetting('localgov_finders', 'finder_type', $finder_type->getPluginId());
-    $node_type->setThirdPartySetting('localgov_finders', 'finder_role', FinderRole::Channel);
+    $node_type->setThirdPartySetting('localgov_finders', 'finder_role', FinderRole::Channel->value);
     $node_type->save();
 
     // fields:
@@ -120,7 +120,7 @@ class FinderConfigManager {
    */
   public function enableNodeTypeAsFinderEntries(NodeTypeInterface $node_type, FinderTypeInterface $finder_type): void {
     $node_type->setThirdPartySetting('localgov_finders', 'finder_type', $finder_type->getPluginId());
-    $node_type->setThirdPartySetting('localgov_finders', 'finder_role', FinderRole::Entries);
+    $node_type->setThirdPartySetting('localgov_finders', 'finder_role', FinderRole::Entries->value);
     $node_type->save();
 
     // fields:
