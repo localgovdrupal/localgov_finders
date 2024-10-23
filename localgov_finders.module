@@ -45,7 +45,7 @@ function localgov_finders_form_node_type_form_alter(&$form, FormStateInterface $
     '#title' => t("Finder role"),
     '#options' => [
       'channel' => t('Finder channel: nodes of this type are finders'),
-      'items'   => t('Item: nodes of this type are items that can be shown in finders'),
+      'entries' => t('Entries: nodes of this type are entries that can be shown in finders'),
     ],
     '#default_value' => $node_type->getThirdPartySetting('localgov_finders', 'finder_role', ''),
     // @todo Use States to hide this & make it required if a type is selected.
@@ -94,8 +94,8 @@ function localgov_finders_form_node_type_form_submit(array $form, \Drupal\Core\F
       case 'channel':
         $finder_config_manager->enableNodeTypeAsChannel($node_type, $finder_type);
         break;
-      case 'items':
-        $finder_config_manager->enableNodeTypeAsFinderItems($node_type, $finder_type);
+      case 'entries':
+        $finder_config_manager->enableNodeTypeAsFinderEntries($node_type, $finder_type);
         break;
     }
   }
