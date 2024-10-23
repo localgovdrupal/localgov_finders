@@ -145,9 +145,8 @@ class FinderConfigManager {
     $node_type->setThirdPartySetting('localgov_finders', 'finder_role', FinderRole::Channel->value);
     $node_type->save();
 
-    // Create fields on the node type.
+    // Create bundle fields on the node type.
     foreach ($finder_type->getChannelFieldDefinitions($node_type) as $field_definition) {
-      // TODO! only if no storage already!
       $this->fieldStorageDefinitionListener->onFieldStorageDefinitionCreate($field_definition);
       $this->fieldDefinitionListener->onFieldDefinitionCreate($field_definition);
     }
