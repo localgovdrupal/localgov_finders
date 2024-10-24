@@ -146,6 +146,11 @@ class FinderConfigManager {
       $this->fieldStorageDefinitionListener->onFieldStorageDefinitionCreate($field_definition);
       $this->fieldDefinitionListener->onFieldDefinitionCreate($field_definition);
     }
+
+    // TODO:
+    // Create config.
+
+    // Update existing config.
   }
 
   /**
@@ -166,6 +171,10 @@ class FinderConfigManager {
     // localgov_directory_facets_select
     // localgov_directory_title_sort
 
+    // TODO:
+    // Create config.
+
+    // Update existing config.
   }
 
 }
