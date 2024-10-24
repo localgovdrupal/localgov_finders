@@ -143,6 +143,8 @@ class FinderConfigManager {
 
     // Create bundle fields on the node type.
     foreach ($finder_type->getChannelFieldDefinitions($node_type) as $field_definition) {
+      // Notify the field definition listeners. This is what updates core's
+      // field map.
       $this->fieldStorageDefinitionListener->onFieldStorageDefinitionCreate($field_definition);
       $this->fieldDefinitionListener->onFieldDefinitionCreate($field_definition);
     }
