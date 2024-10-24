@@ -121,7 +121,7 @@ class FinderConfigManager {
   }
 
   /**
-   * Sets up a node type as a finder channel.
+   * Sets up a node type as finder channels.
    *
    * @param \Drupal\node\NodeTypeInterface $node_type
    *   The node type.
