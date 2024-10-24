@@ -18,6 +18,13 @@ function localgov_finders_entity_bundle_field_info(EntityTypeInterface $entity_t
     return [];
   }
 
+  if (empty($bundle)) {
+    // FieldStorageReuseForm invokes this with a NULL bundle, which is probably
+    // a bug.
+    // TODO: no, it was probably my field map which was corrupted.
+    return [];
+  }
+
   // Get the channel bundle field definitions from the config manager.
   $finder_config_manager = \Drupal::service('localgov_finders.finder_config_manager');
 
