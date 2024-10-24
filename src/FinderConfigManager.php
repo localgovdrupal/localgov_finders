@@ -119,9 +119,7 @@ class FinderConfigManager {
     $finder_type_manager = \Drupal::service('plugin.manager.localgov_finders_finder_type');
 
     if ($finder_type = $finder_type_manager->getNodeTypeFinderType($node_type)) {
-      $channel_field_definitions = [];
-
-      return $channel_field_definitions;
+      return $finder_type->getChannelFieldDefinitions($node_type);
     }
     else {
       return [];
