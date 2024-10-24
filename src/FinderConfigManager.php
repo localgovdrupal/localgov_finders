@@ -15,7 +15,7 @@ use Drupal\node\NodeTypeInterface;
 use Drupal\search_api\Utility\PluginHelperInterface;
 
 /**
- * Manages creation of configuration for Finders.
+ * Manages definition of fields and creation of configuration for Finders.
  */
 class FinderConfigManager {
 
