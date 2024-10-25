@@ -1,0 +1,8 @@
+name: 'LocalGov Finders tests'
+type: module
+description: 'Provides test fixtures for LocalGov finder.'
+package: Testing
+version: VERSION
+dependencies:
+  - localgov_finders:localgov_finders
+  - drupal:entity_test
