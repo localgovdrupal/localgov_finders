@@ -9,7 +9,9 @@
         "drupal/core": "^10.2",
         "drupal/search_api": "^1.29"
     },
-    "require-dev": {},
+    "require-dev": {
+        "drupal/plugin": "^2.13"
+    },
     "suggest": {
         "drupal/facets": "For Search API facets"
     }
