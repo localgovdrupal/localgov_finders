@@ -3,6 +3,7 @@
 namespace Drupal\localgov_finders;
 
 use Drupal\Core\Cache\CacheBackendInterface;
+use Drupal\Core\Config\Entity\ConfigEntityInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Plugin\DefaultPluginManager;
 use Drupal\localgov_finders\Attribute\FinderType;
@@ -59,8 +60,8 @@ class FinderTypeManager extends DefaultPluginManager {
    * @return \Drupal\localgov_finders\Plugin\FinderType\FinderTypeInterface
    *   A finder type plugin if the node type has one set, or NULL otherwise.
    */
-  public function getNodeTypeFinderType(NodeTypeInterface $node_type): ?FinderTypeInterface {
-    $finder_type_id = $node_type->getThirdPartySetting('localgov_finders', 'finder_type', '');
+  public function getBundleFinderType(ConfigEntityInterface $bundle): ?FinderTypeInterface {
+    $finder_type_id = $bundle->getThirdPartySetting('localgov_finders', 'finder_type', '');
 
     if ($finder_type_id) {
       return $this->createInstance($finder_type_id);

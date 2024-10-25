@@ -3,6 +3,9 @@
 namespace Drupal\localgov_finders;
 
 use Drupal\Core\Config\ConfigInstallerInterface;
+use Drupal\Core\Config\Entity\ConfigEntityInterface;
+use Drupal\Core\Config\Entity\ConfigEntityType;
+use Drupal\Core\Config\Entity\ConfigEntityTypeInterface;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ModuleExtensionList;
@@ -115,17 +118,6 @@ class FinderConfigManager {
     $this->fieldDefinitionListener = $field_definition_listener;
   }
 
-  public function getChannelFieldDefinitions(NodeTypeInterface $node_type): array {
-    $finder_type_manager = \Drupal::service('plugin.manager.localgov_finders_finder_type');
-
-    if ($finder_type = $finder_type_manager->getNodeTypeFinderType($node_type)) {
-      return $finder_type->getChannelFieldDefinitions($node_type);
-    }
-    else {
-      return [];
-    }
-  }
-
   /**
    * Sets up a node type as a finder channel.
    *
@@ -134,13 +126,16 @@ class FinderConfigManager {
    * @param \Drupal\localgov_finders\Plugin\FinderType\FinderTypeInterface $finder_type
    *   The finder type plugin.
    */
-  public function enableNodeTypeAsChannel(NodeTypeInterface $node_type, FinderTypeInterface $finder_type): void {
-    $node_type->setThirdPartySetting('localgov_finders', 'finder_type', $finder_type->getPluginId());
-    $node_type->setThirdPartySetting('localgov_finders', 'finder_role', FinderRole::Channel->value);
-    $node_type->save();
+  public function enableAsChannel(ConfigEntityInterface $entity_bundle, FinderTypeInterface $finder_type): void {
+    $entity_bundle->setThirdPartySetting('localgov_finders', 'finder_type', $finder_type->getPluginId());
+    $entity_bundle->setThirdPartySetting('localgov_finders', 'finder_role', FinderRole::Channel->value);
+    $entity_bundle->save();
+    // @see Drupal\localgov_finders\Hook\EntityHooks::entityUpdate
+  }
 
+  public function configureAsChannel(ConfigEntityInterface $entity_bundle, FinderTypeInterface $finder_type): void {
     // Create bundle fields on the node type.
-    foreach ($finder_type->getChannelFieldDefinitions($node_type) as $field_definition) {
+    foreach ($finder_type->getChannelFieldDefinitions($entity_bundle) as $field_definition) {
       // Notify the field definition listeners. This is what updates core's
       // field map.
       $this->fieldStorageDefinitionListener->onFieldStorageDefinitionCreate($field_definition);
@@ -154,18 +149,21 @@ class FinderConfigManager {
   }
 
   /**
-   * Sets up a node type as finder entries.
+   * Add settings for bundle as finder entry.
    *
    * @param \Drupal\node\NodeTypeInterface $node_type
    *   The node type.
    * @param \Drupal\localgov_finders\Plugin\FinderType\FinderTypeInterface $finder_type
    *   The finder type plugin.
    */
-  public function enableNodeTypeAsFinderEntries(NodeTypeInterface $node_type, FinderTypeInterface $finder_type): void {
-    $node_type->setThirdPartySetting('localgov_finders', 'finder_type', $finder_type->getPluginId());
-    $node_type->setThirdPartySetting('localgov_finders', 'finder_role', FinderRole::Entries->value);
-    $node_type->save();
+  public function enableAsEntry(ConfigEntityInterface $entity_bundle, FinderTypeInterface $finder_type): void {
+    $entity_bundle->setThirdPartySetting('localgov_finders', 'finder_type', $finder_type->getPluginId());
+    $entity_bundle->setThirdPartySetting('localgov_finders', 'finder_role', FinderRole::Entries->value);
+    $entity_bundle->save();
+    // @see Drupal\localgov_finders\Hook\EntityHooks::entityUpdate
+  }
 
+  public function configureAsEntry(ConfigEntityInterface $entity_bundle, FinderTypeInterface $finder_type): void {
     // fields:
     // localgov_directory_channels
     // localgov_directory_facets_select

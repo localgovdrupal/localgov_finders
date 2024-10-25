@@ -1,7 +1,12 @@
 services:
+  Drupal\localgov_finders\Hook\EntityHooks:
+    class: Drupal\localgov_finders\Hook\EntityHooks
+    autowire: true
   plugin.manager.localgov_finders_finder_type:
     class: Drupal\localgov_finders\FinderTypeManager
     parent: default_plugin_manager
+  Drupal\localgov_finders\FinderTypeManager: '@plugin.manager.localgov_finders_finder_type'
   localgov_finders.finder_config_manager:
     class: Drupal\localgov_finders\FinderConfigManager
     arguments: ['@entity_type.manager', '@entity_field.manager', '@extension.list.module', '@config.installer', '@logger.factory', '@search_api.plugin_helper', '@field_storage_definition.listener', '@field_definition.listener']
+  Drupal\localgov_finders\FinderConfigManager: '@localgov_finders.finder_config_manager'

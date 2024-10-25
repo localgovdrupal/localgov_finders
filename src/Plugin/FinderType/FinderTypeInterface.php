@@ -4,7 +4,7 @@ namespace Drupal\localgov_finders\Plugin\FinderType;
 
 use Drupal\Component\Plugin\DerivativeInspectionInterface;
 use Drupal\Component\Plugin\PluginInspectionInterface;
-use Drupal\node\NodeTypeInterface;
+use Drupal\Core\Config\Entity\ConfigEntityInterface;
 
 /**
  * Interface for Finder Type plugins.
@@ -20,6 +20,6 @@ interface FinderTypeInterface extends PluginInspectionInterface, DerivativeInspe
    * @return array
    *   An array of field definitions, keyed by the field name.
    */
-  public function getChannelFieldDefinitions(NodeTypeInterface $node_type): array;
+  public function getChannelFieldDefinitions(ConfigEntityInterface $bundle): array;
 
 }

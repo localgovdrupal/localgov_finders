@@ -5,39 +5,55 @@
  * Contains hook implementations for the localgov_finders module.
  */
 
+use Drupal\Core\Entity\ContentEntityTypeInterface;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Hook\Attribute\LegacyHook;
 use Drupal\Core\Render\Element;
+use Drupal\localgov_finders\Hook\EntityHooks;
+use Drupal\node\NodeTypeInterface;
 
 /**
  * Implements hook_entity_bundle_field_info().
  */
-function localgov_finders_entity_bundle_field_info(EntityTypeInterface $entity_type, $bundle, array $base_field_definitions) {
-  // We only work with nodes.
-  if ($entity_type->id() != 'node') {
+function localgov_finders_entity_bundle_field_info(EntityTypeInterface $entity_type, string $bundle_id, array $base_field_definitions): array {
+  if (!$entity_type instanceof ContentEntityTypeInterface) {
     return [];
   }
 
-  if (empty($bundle)) {
+  if (empty($bundle_id)) {
     // FieldStorageReuseForm invokes this with a NULL bundle, which is probably
     // a bug.
     // TODO: no, it was probably my field map which was corrupted.
     return [];
   }
 
-  // Get the channel bundle field definitions from the config manager.
-  $finder_config_manager = \Drupal::service('localgov_finders.finder_config_manager');
-
-  $node_type = \Drupal::service('entity_type.manager')->getStorage('node_type')->load($bundle);
-
-  // On a node type creation form, there is no node type yet.
-  if (empty($node_type)) {
+  // Entity Bundle Field does get called with entities that only have one
+  // bundle and no bundle type class.
+  $bundle_type_id = $entity_type->getBundleEntityType();
+  if (empty($bundle_type_id)) {
     return [];
   }
 
-  $fields = $finder_config_manager->getChannelFieldDefinitions($node_type);
+  // On a node type creation form, there is no node type yet.
+  $bundle = \Drupal::service('entity_type.manager')->getStorage($bundle_type_id)->load($bundle_id);
+  if (empty($bundle)) {
+    return [];
+  }
 
-  return $fields;
+  // Get finder type, if there is one.
+  $finder_type_manager = \Drupal::service('plugin.manager.localgov_finders_finder_type');
+  $finder_type = $finder_type_manager->getBundleFinderType($bundle);
+  if (empty($finder_type)) {
+    return [];
+  }
+
+  // @todo channel/entry
+  //   Should all that third party logic go into the FinderConfigManager.
+  //   Also then the insert/update.
+  // Return fields from finder type.
+  return $finder_type->getChannelFieldDefinitions($bundle);
 }
 
 /**
@@ -110,26 +126,27 @@ function localgov_finders_form_node_type_form_validate(array $form, FormStateInt
  * @see localgov_finders_form_node_type_form_alter()
  */
 function localgov_finders_form_node_type_form_submit(array $form, FormStateInterface $form_state) {
-  $finder_type_manager = \Drupal::service('plugin.manager.localgov_finders_finder_type');
-  $finder_config_manager = \Drupal::service('localgov_finders.finder_config_manager');
-
-  /** @var \Drupal\node\NodeTypeInterface $node_type */
   $node_type = $form_state->getFormObject()->getEntity();
+  assert($node_type instanceof NodeTypeInterface);
+  $node_type->setThirdPartySetting(
+    'localgov_finders',
+    'finder_type',
+    $form_state->getValue(['localgov_finders', 'finder_type'])
+  );
+  $node_type->setThirdPartySetting(
+    'localgov_finders',
+    'finder_role',
+    $form_state->getValue(['localgov_finders', 'finder_role'])
+  );
+  $node_type->save();
+}
 
-  $original_finder_type = $node_type->getThirdPartySetting('localgov_finders', 'finder_type', '');
-  if (empty($original_finder_type) && $form_state->getValue(['localgov_finders', 'finder_type'])) {
-    $finder_type = $finder_type_manager->createInstance($form_state->getValue(['localgov_finders', 'finder_type']));
-    $finder_role = $form_state->getValue(['localgov_finders', 'finder_role']);
+#[LegacyHook]
+function localgov_finders_entity_insert(EntityInterface $entity): void {
+  \Drupal::service(EntityHooks::class)->entityInsert($entity);
+}
 
-    switch ($finder_role) {
-      case 'channel':
-        $finder_config_manager->enableNodeTypeAsChannel($node_type, $finder_type);
-        break;
-      case 'entries':
-        $finder_config_manager->enableNodeTypeAsFinderEntries($node_type, $finder_type);
-        break;
-    }
-  }
-
-  // @todo Support uninstall.
+#[LegacyHook]
+function localgov_finders_entity_update(EntityInterface $entity): void {
+  \Drupal::service(EntityHooks::class)->entityUpdate($entity);
 }
