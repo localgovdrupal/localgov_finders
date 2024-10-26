@@ -15,6 +15,8 @@ use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Drupal\localgov_finders\Enum\FinderRole;
 use Drupal\localgov_finders\Plugin\FinderType\FinderTypeInterface;
 use Drupal\node\NodeTypeInterface;
+use Drupal\search_api\Datasource\DatasourceInterface;
+use Drupal\search_api\IndexInterface;
 use Drupal\search_api\Utility\PluginHelperInterface;
 
 /**
@@ -134,7 +136,10 @@ class FinderConfigManager {
   }
 
   public function configureAsChannel(ConfigEntityInterface $entity_bundle, FinderTypeInterface $finder_type): void {
-    // Create bundle fields on the node type.
+    $entity_type_id = $entity_bundle->getEntityType()->getBundleOf();
+    $bundle_id = $entity_bundle->id();
+
+    // Create bundle fields on the entity type.
     foreach ($finder_type->getChannelFieldDefinitions($entity_bundle) as $field_definition) {
       // Notify the field definition listeners. This is what updates core's
       // field map.
@@ -142,6 +147,42 @@ class FinderConfigManager {
       $this->fieldDefinitionListener->onFieldDefinitionCreate($field_definition);
     }
 
+    //
+    foreach ($finder_type->getIndexIds() as $index_id) {
+      $index = $this->entityTypeManager->getStorage('search_api_index')->load($index_id);
+      assert($index instanceof IndexInterface);
+      $this->indexAddBundle($index, $entity_type_id, $bundle_id);
+      // Configure fields on the index.
+      // There are fields that need only adding once, they just can't exist
+      // on the index till the content type and field is there.
+      // eg The Directory Channel selection field.
+      // There are also fields that could already exist that need the bundle
+      // or other configuration or settings on them.
+      // eg The rendered item bundle.
+
+      foreach ($finder_type->getIndexFields($entity_bundle) as $field_name => $field_definition) {
+        if (!$index->getField($field_name)) {
+          $index->addField($field_definition);
+        }
+        $field = $index->getField($field_name);
+        $finder_type->alterField($field_name, $field);
+      }
+      $this->renderedItemAddBundle($index, $entity_type_id, $entity_id);
+      $this->indexAddChannelsField($index);
+      // The Channel is also the trigger for adding/removing from the index.
+      // So also handle fields already existing on the entity that should be
+      // included in the index.
+      //$entity_fields = $this->entityFieldManager->getFieldDefinitions($entity_type_id, $entity_bundle);
+      //if (array_key_exists(Constants::FACET_SELECTION_FIELD, $entity_fields)) {
+      //  $this->indexAddFacetField($index);
+      //}
+      //if (array_key_exists(Constants::TITLE_SORT_FIELD, $entity_fields)) {
+      //  $this->indexAddTitleSortField($index);
+      //}
+      $finder_type->indexAlter($index);
+      $index->save();
+
+    }
     // TODO:
     // Create config.
 
@@ -174,5 +215,85 @@ class FinderConfigManager {
 
     // Update existing config.
   }
+
+  /**
+   * Add entity bundle to index datasource.
+   *
+   * @todo could this be replaced with a Search API plugin that looks for
+   * enabled bundles. It would be of all entity types though. And we still add
+   * fields so change the config, so it's maybe fine to keep doing here?
+   *
+   * @param \Drupal\search_api\IndexInterface $index
+   *   The index to add bundle to.
+   * @param string $entity_type_id
+   *   Entity type ID.
+   * @param string $entity_bundle
+   *   The bundle ID.
+   */
+  protected function indexAddBundle(IndexInterface $index, string $entity_type_id, string $entity_bundle): void {
+    $datasource = $this->indexGetDatasource($index, $entity_type_id);
+    if (!$datasource) {
+      $this->logger->error('Failed to update the directories search index with new bundle');
+      return;
+    }
+
+    $configuration = $datasource->getConfiguration();
+    $configuration['bundles']['default'] = FALSE;
+    if (!in_array($entity_bundle, $configuration['bundles']['selected'])) {
+      $configuration['bundles']['selected'][] = $entity_bundle;
+    }
+    $datasource->setConfiguration($configuration);
+  }
+
+  /**
+   * Get index entity datasource.
+   *
+   * @param \Drupal\search_api\IndexInterface $index
+   *   The index to retrieve the datasource from.
+   * @param string $entity_type_id
+   *   The entity type ID.
+   *
+   * @return \Drupal\search_api\Datasource\DatasourceInterface
+   *   The datasource.
+   */
+  protected function indexGetDatasource(IndexInterface $index, string $entity_type_id): DatasourceInterface {
+    $datasource = $index->getDatasource('entity:' . $entity_type_id);
+    if (!$datasource) {
+      // If the content:node datasource has been lost so have the fields most
+      // probably and it's more of a mess. But leaving this here anyway.
+      $datasource = $this->pluginHelper->createDatasourcePlugin($index, 'entity:' . $entity_type_id);
+    }
+
+    return $datasource;
+  }
+
+  /**
+   * Add entity bundle to index rendered item field.
+   *
+   * @param \Drupal\search_api\IndexInterface $index
+   *   The index to add bundle to.
+   * @param string $entity_type_id
+   *   Entity type ID.
+   * @param string $entity_bundle
+   *   The bundle ID.
+   */
+  protected function renderedItemAddBundle(IndexInterface $index, string $entity_type_id, string $entity_bundle): void {
+    $index_field = $index->getField('rendered_item');
+    if ($index_field) {
+      $configuration = $index_field->getConfiguration();
+      $configuration['view_mode']['entity:' . $entity_type_id][$entity_bundle] = 'directory_index';
+      $index_field->setConfiguration($configuration);
+    }
+  }
+
+  /**
+   * Setup indexing on the Directory channels field of Directory entries.
+   *
+   * @param \Drupal\search_api\IndexInterface $index
+   *   The index to the channel field to.
+   */
+  protected function indexAddChannelsField(IndexInterface $index): void {
+  }
+
 
 }

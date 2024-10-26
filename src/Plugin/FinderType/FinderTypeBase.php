@@ -8,6 +8,7 @@ use Drupal\Core\Config\Entity\ConfigEntityTypeInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\localgov_finders\Constants\FinderField;
 use Drupal\localgov_finders\Field\BundleFieldDefinition;
+use Drupal\search_api\IndexInterface;
 
 /**
  * Base class for Finder Type plugins.
@@ -32,6 +33,35 @@ abstract class FinderTypeBase extends PluginBase implements FinderTypeInterface 
     return $field_definitions;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function getIndexIds(): array {
+    return [];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getIndexFields(ConfigEntityInterface $bundle, IndexInterface $index): array {
+    return [];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function alterField(string $field_name, SearchIndexField $field_definition): void {
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function alterIndex(Index $index): void {
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   protected function getChannelTypesFieldDefinition(ConfigEntityInterface $bundle): FieldDefinitionInterface {
     $entity_type = $bundle->getEntityType();
     return BundleFieldDefinition::create('entity_reference')
