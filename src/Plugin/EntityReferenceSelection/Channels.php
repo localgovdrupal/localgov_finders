@@ -2,7 +2,6 @@
 
 namespace Drupal\localgov_finders\Plugin\EntityReferenceSelection;
 
-use Drupal\Core\Database\Query\SelectInterface;
 use Drupal\Core\Entity\Attribute\EntityReferenceSelection;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityRepositoryInterface;
@@ -150,23 +149,34 @@ class Channels extends DefaultSelection {
   protected function buildEntityQuery($match = NULL, $match_operator = 'CONTAINS') {
     $query = parent::buildEntityQuery($match, $match_operator);
 
-    // Fields all wrong!
-    //
-    $query->condition('type', 'localgov_directory');
-    $or = $query->orConditionGroup();
-    $or->notExists('localgov_directory_channel_types');
-    if ($this->configuration['entity']) {
-      // The field can be instantiated without an entity.
-      // The entity is not really part of the configuration.
-      // Drupal\Core\Entity\EntityReferenceSelection\SelectionPluginManagerInterface::getSelectionHandler
-      // In practical situations this is used for forms etc. before the
-      // configuration has been made, not when the field is on an entity type.
-      // Really it would be nicer to be able to get to the bundle associated
-      // with the configuration as there has to be one!
-      $bundle = $this->configuration['entity']->bundle();
-      $or->condition('localgov_directory_channel_types', $bundle, 'IN');
-    }
-    $query->condition($or);
+    // Get the entity we are getting field values for.
+    $host_entity = $this->configuration['entity'];
+
+    $bundle_entity_type_id = $host_entity->getEntityType()->getBundleEntityType();
+    $bundle_entity = $this->entityTypeManager->getStorage($bundle_entity_type_id)->load($host_entity->bundle());
+    $finder_type = $this->finderTypeManager->getBundleFinderType($bundle_entity);
+    $channel_bundles = $this->finderTypeManager->getChannelBundles($host_entity->getEntityType(), $finder_type);
+
+    // Limit the query to bundles which are channels of the same finder type.
+    $query->condition('type', array_keys($channel_bundles), 'IN');
+
+    // TODO: condition for channel types field.
+    // //
+    // $query->condition('type', 'localgov_directory');
+    // $or = $query->orConditionGroup();
+    // $or->notExists('localgov_directory_channel_types');
+    // if ($this->configuration['entity']) {
+    //   // The field can be instantiated without an entity.
+    //   // The entity is not really part of the configuration.
+    //   // Drupal\Core\Entity\EntityReferenceSelection\SelectionPluginManagerInterface::getSelectionHandler
+    //   // In practical situations this is used for forms etc. before the
+    //   // configuration has been made, not when the field is on an entity type.
+    //   // Really it would be nicer to be able to get to the bundle associated
+    //   // with the configuration as there has to be one!
+    //   $bundle = $this->configuration['entity']->bundle();
+    //   $or->condition('localgov_directory_channel_types', $bundle, 'IN');
+    // }
+    // $query->condition($or);
     return $query;
   }
 

@@ -175,10 +175,13 @@ abstract class FinderTypeBase extends PluginBase implements FinderTypeInterface 
       ->setTranslatable(FALSE)
       ->setCardinality(BundleFieldDefinition::CARDINALITY_UNLIMITED)
       ->setSettings([
-        // TODO! this needs to move into Finders
-        'handler' => 'default', // localgov_directories_channels_selection
+        'handler' => 'localgov_finders_channels',
         'target_type' => $content_entity_type,
         'handler_settings' => [
+          // We don't use this setting in our selection plugin, but the class it
+          // inherits from does. Setting this to NULL means it skips its bundle
+          // filtering which we don't need.
+          'target_bundles' => NULL,
           'sort' => [
             'field' => 'title',
             'direction' => 'DESC',
