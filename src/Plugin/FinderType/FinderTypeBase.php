@@ -128,6 +128,8 @@ abstract class FinderTypeBase extends PluginBase implements FinderTypeInterface 
    *
    * @return \Drupal\Core\Field\FieldDefinitionInterface
    *   The bundle field definition.
+   *
+   * @see \Drupal\localgov_finders\Plugin\EntityReferenceSelection\EntryTypes
    */
   protected function getChannelTypesFieldDefinition(ConfigEntityInterface $bundle): FieldDefinitionInterface {
     $bundle_entity_type = $bundle->getEntityType();
@@ -141,9 +143,8 @@ abstract class FinderTypeBase extends PluginBase implements FinderTypeInterface 
       ->setTranslatable(FALSE)
       ->setCardinality(BundleFieldDefinition::CARDINALITY_UNLIMITED)
       ->setSettings([
-        // TODO! this needs to move into Finders
-        'handler' => 'default',
-        'target_type' => $entity_type->id(),
+        'handler' => 'localgov_finders_entry_types',
+        'target_type' => $bundle_entity_type->id(),
       ])
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayOptions('form', [

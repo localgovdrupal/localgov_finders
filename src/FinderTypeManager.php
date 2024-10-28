@@ -4,6 +4,7 @@ namespace Drupal\localgov_finders;
 
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
+use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Plugin\DefaultPluginManager;
 use Drupal\localgov_finders\Attribute\FinderType;
@@ -68,6 +69,35 @@ class FinderTypeManager extends DefaultPluginManager {
     else {
       return NULL;
     }
+  }
+
+  /**
+   * Gets the bundle entities which are entries for the given finder type.
+   *
+   * For example, for the node entity type and the directories finder type, this
+   * will return all the node type entities which are configured to be directory
+   * entries.
+   *
+   * @param \Drupal\Core\Entity\EntityTypeInterface $content_entity_type The
+   *   entity type to get bundles for.
+   * @param \Drupal\localgov_finders\Plugin\FinderType\FinderTypeInterface
+   *   $finder_type The finder type plugin to get bundles for.
+   *
+   * @return array An array of bundle entities.
+   */
+  public function getEntryBundles(EntityTypeInterface $content_entity_type, FinderTypeInterface $finder_type): array {
+    $bundle_entity_type_id = $content_entity_type->getBundleEntityType();
+
+    $entity_type_manager = \Drupal::service('entity_type.manager');
+    $bundle_entities = $entity_type_manager->getStorage($bundle_entity_type_id)->loadMultiple();
+    $finder_type_id = $finder_type->getPluginId();
+
+    return array_filter(
+      $bundle_entities,
+      fn ($bundle_entity) =>
+        $bundle_entity->getThirdPartySetting('localgov_finders', 'finder_type', '') == $finder_type_id &&
+        $bundle_entity->getThirdPartySetting('localgov_finders', 'finder_role', '') == FinderRole::Entries->value
+    );
   }
 
 }
