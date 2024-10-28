@@ -78,12 +78,13 @@ class FinderTypeManager extends DefaultPluginManager {
    * will return all the node type entities which are configured to be directory
    * entries.
    *
-   * @param \Drupal\Core\Entity\EntityTypeInterface $content_entity_type The
-   *   entity type to get bundles for.
-   * @param \Drupal\localgov_finders\Plugin\FinderType\FinderTypeInterface
-   *   $finder_type The finder type plugin to get bundles for.
+   * @param \Drupal\Core\Entity\EntityTypeInterface $content_entity_type
+   *   The entity type to get bundles for.
+   * @param \Drupal\localgov_finders\Plugin\FinderType\FinderTypeInterface $finder_type
+   *   The finder type plugin to get bundles for.
    *
-   * @return array An array of bundle entities.
+   * @return array
+   *   An array of bundle entities, keyed by the entity ID.
    */
   public function getEntryBundles(EntityTypeInterface $content_entity_type, FinderTypeInterface $finder_type): array {
     $bundle_entity_type_id = $content_entity_type->getBundleEntityType();
