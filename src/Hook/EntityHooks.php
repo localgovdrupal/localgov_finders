@@ -61,7 +61,7 @@ final class EntityHooks {
         $entity_bundle,
         $finder_type
       ),
-      FinderRole::Entries->value => $this->finderConfigManager->enableAsEntry(
+      FinderRole::Entries->value => $this->finderConfigManager->configureAsEntry(
         $entity_bundle,
         $finder_type
       ),
