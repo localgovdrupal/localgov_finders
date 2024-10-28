@@ -18,6 +18,20 @@ use Drupal\search_api\Item\Field as SearchIndexField;
 abstract class FinderTypeBase extends PluginBase implements FinderTypeInterface {
 
   /**
+   * The field name for the channel types field.
+   *
+   * @see self::getChannelTypesFieldDefinition()
+   */
+  const string CHANNEL_TYPES_FIELD = 'localgov_finders_channel_types';
+
+  /**
+   * The field name for the channel selection field.
+   *
+   * @see self::getChannelSelectionFieldDefinition()
+   */
+  const string CHANNEL_SELECTION_FIELD = 'localgov_finders_channels';
+
+  /**
    * {@inheritdoc}
    */
   public function getChannelFieldDefinitions(ConfigEntityInterface $bundle): array {
@@ -136,7 +150,7 @@ abstract class FinderTypeBase extends PluginBase implements FinderTypeInterface 
     $content_entity_type = $bundle_entity_type->getBundleOf();
 
     return BundleFieldDefinition::create('entity_reference')
-      ->setName(FinderField::CHANNEL_TYPES_FIELD)
+      ->setName(static::CHANNEL_TYPES_FIELD)
       ->setTargetEntityTypeId($content_entity_type)
       ->setLabel(t('Enabled Content types'))
       ->setRequired(FALSE)
@@ -168,7 +182,7 @@ abstract class FinderTypeBase extends PluginBase implements FinderTypeInterface 
     $content_entity_type = $bundle_entity_type->getBundleOf();
 
     return BundleFieldDefinition::create('entity_reference')
-      ->setName(FinderField::CHANNEL_SELECTION_FIELD)
+      ->setName(static::CHANNEL_SELECTION_FIELD)
       ->setTargetEntityTypeId($content_entity_type)
       ->setLabel(t('Directory channels'))
       ->setRequired(FALSE)
