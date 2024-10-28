@@ -9,6 +9,8 @@ use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\localgov_finders\Constants\FinderField;
 use Drupal\localgov_finders\Field\BundleFieldDefinition;
 use Drupal\search_api\IndexInterface;
+use Drupal\search_api\Item\Field as SearchIndexField;
+use Drupal\search_api\Entity\Index;
 
 /**
  * Base class for Finder Type plugins.
