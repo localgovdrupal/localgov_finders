@@ -14,6 +14,17 @@ use Drupal\search_api\Item\Field as SearchIndexField;
 interface FinderTypeInterface extends PluginInspectionInterface, DerivativeInspectionInterface {
 
   /**
+   * Gets the name of a bundle field this plugin defines.
+   *
+   * @param string $field_constant
+   *   The name of a field name constant on the plugin class.
+   *
+   * @return string
+   *   The name of the field.
+   */
+  public function getFieldName(string $field_constant): string;
+
+  /**
    * Gets the bundle field definitions for a finder channel bundle.
    *
    * @param \Drupal\Core\Config\Entity\ConfigEntityInterface
