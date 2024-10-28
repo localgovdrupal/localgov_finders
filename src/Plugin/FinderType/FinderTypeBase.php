@@ -16,6 +16,9 @@ use Drupal\search_api\Item\Field as SearchIndexField;
  */
 abstract class FinderTypeBase extends PluginBase implements FinderTypeInterface {
 
+  /**
+   * {@inheritdoc}
+   */
   public function getChannelFieldDefinitions(ConfigEntityInterface $bundle): array {
     $field_definitions = [];
 
