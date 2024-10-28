@@ -9,7 +9,6 @@ use Drupal\Core\Plugin\DefaultPluginManager;
 use Drupal\localgov_finders\Attribute\FinderType;
 use Drupal\localgov_finders\Enum\FinderRole;
 use Drupal\localgov_finders\Plugin\FinderType\FinderTypeInterface;
-use Drupal\node\NodeTypeInterface;
 
 /**
  * Manages discovery and instantiation of Finder Type plugins.
