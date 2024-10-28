@@ -51,7 +51,7 @@ final class EntityHooks {
    * @param \Drupal\Core\Config\Entity\ConfigEntityInterface $entity_bundle
    *   The entity bundle to configure.
    * @param string $finder_type_name
-   *   \Drupal\localgov_finders\Enum\FinderRole type name.
+   *   The finder type plugin ID.
    */
   private function configureFinder(ConfigEntityInterface $entity_bundle, string $finder_type_name): void {
     $finder_type = $this->finderTypeManager->createInstance($finder_type_name);
