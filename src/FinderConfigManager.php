@@ -14,7 +14,6 @@ use Drupal\Core\Field\FieldStorageDefinitionListenerInterface;
 use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Drupal\localgov_finders\Enum\FinderRole;
 use Drupal\localgov_finders\Plugin\FinderType\FinderTypeInterface;
-use Drupal\node\NodeTypeInterface;
 use Drupal\search_api\Datasource\DatasourceInterface;
 use Drupal\search_api\IndexInterface;
 use Drupal\search_api\Utility\PluginHelperInterface;
@@ -150,8 +149,8 @@ class FinderConfigManager {
   /**
    * Sets configuration on a bundle entity as finder channels.
    *
-   * @param \Drupal\node\NodeTypeInterface $node_type
-   *   The node type.
+   * @param \Drupal\Core\Config\Entity\ConfigEntityInterface $entity_bundle
+   *   The bundle entity.
    * @param \Drupal\localgov_finders\Plugin\FinderType\FinderTypeInterface $finder_type
    *   The finder type plugin.
    */
@@ -234,8 +233,8 @@ class FinderConfigManager {
   /**
    * Add settings for bundle as finder entry.
    *
-   * @param \Drupal\node\NodeTypeInterface $node_type
-   *   The node type.
+   * @param \Drupal\Core\Config\Entity\ConfigEntityInterface $entity_bundle
+   *   The bundle entity.
    * @param \Drupal\localgov_finders\Plugin\FinderType\FinderTypeInterface $finder_type
    *   The finder type plugin.
    */
