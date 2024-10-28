@@ -24,9 +24,28 @@ use Drupal\search_api\Item\Field as SearchIndexField;
 class LegacyDirectories extends FinderTypeBase {
 
   /**
-   * Legacy finder doesn't add bundle fields.
+   * {@inheritdoc}
+   */
+  const string CHANNEL_TYPES_FIELD = 'localgov_directory_channel_types';
+
+  /**
+   * {@inheritdoc}
+   */
+  const string CHANNEL_SELECTION_FIELD = Constants::CHANNEL_SELECTION_FIELD;
+
+  /**
+   * {@inheritdoc}
    */
   public function getChannelFieldDefinitions(ConfigEntityInterface $bundle): array {
+    // Legacy directories finder doesn't add bundle fields.
+    return [];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getEntryFieldDefinitions(ConfigEntityInterface $bundle): array {
+    // Legacy directories finder doesn't add bundle fields.
     return [];
   }
 
