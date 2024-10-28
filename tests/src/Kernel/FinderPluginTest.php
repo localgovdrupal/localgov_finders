@@ -7,7 +7,7 @@ namespace Drupal\Tests\localgov_finders\Kernel;
 use Drupal\entity_test\Entity\EntityTestWithBundle;
 use Drupal\entity_test\Entity\EntityTestBundle;
 use Drupal\KernelTests\KernelTestBase;
-use Drupal\localgov_finders\Constants\FinderField;
+use Drupal\localgov_finders\Plugin\FinderType\FinderTypeBase;
 use Hoa\File\Finder;
 
 /**
@@ -54,7 +54,7 @@ final class FinderPluginTest extends KernelTestBase {
       'type' => 'localgov_finders_channel',
     ]);
     $channel->save();
-    $this->assertTrue($channel->hasField(FinderField::CHANNEL_TYPES_FIELD));
+    $this->assertTrue($channel->hasField(FinderTypeBase::CHANNEL_TYPES_FIELD));
   }
 
   public function testUpdateBundle(): void {
@@ -68,7 +68,7 @@ final class FinderPluginTest extends KernelTestBase {
       'type' => 'test_channel_bundle',
     ]);
     $channel->save();
-    $this->assertFalse($channel->hasField(FinderField::CHANNEL_TYPES_FIELD));
+    $this->assertFalse($channel->hasField(FinderTypeBase::CHANNEL_TYPES_FIELD));
 
     $channel_bundle->setThirdPartySetting(
       'localgov_finders',
@@ -82,7 +82,7 @@ final class FinderPluginTest extends KernelTestBase {
     );
     $channel_bundle->save();
     $channel = EntityTestWithBundle::load($channel->id());
-    $this->assertTrue($channel->hasField(FinderField::CHANNEL_TYPES_FIELD));
+    $this->assertTrue($channel->hasField(FinderTypeBase::CHANNEL_TYPES_FIELD));
 
     $entry_bundle_one = EntityTestBundle::create([
       'id' => 'test_entry_bundle_one',
@@ -96,14 +96,14 @@ final class FinderPluginTest extends KernelTestBase {
     $entry_bundle_two->save();
     // @todo entry bundle third party setting.
     // At present unrestricted which test entity type bundles.
-    $channel->{FinderField::CHANNEL_TYPES_FIELD} = $channels = [
+    $channel->{FinderTypeBase::CHANNEL_TYPES_FIELD} = $channels = [
       ['target_id' => 'test_entry_bundle_one'],
       ['target_id' => 'test_entry_bundle_two'],
     ];
     $channel->save();
 
     $channel = EntityTestWithBundle::load($channel->id());
-    $this->assertEquals($channels, $channel->get(FinderField::CHANNEL_TYPES_FIELD)->getValue());
+    $this->assertEquals($channels, $channel->get(FinderTypeBase::CHANNEL_TYPES_FIELD)->getValue());
   }
 
 }
