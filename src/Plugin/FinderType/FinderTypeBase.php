@@ -8,6 +8,7 @@ use Drupal\Core\Config\Entity\ConfigEntityTypeInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\localgov_finders\Constants\FinderField;
 use Drupal\localgov_finders\Field\BundleFieldDefinition;
+use Drupal\search_api\Datasource\DatasourceInterface;
 use Drupal\search_api\IndexInterface;
 use Drupal\search_api\Item\Field as SearchIndexField;
 
@@ -68,6 +69,45 @@ abstract class FinderTypeBase extends PluginBase implements FinderTypeInterface 
    * {@inheritdoc}
    */
   public function alterIndex(IndexInterface $index): void {
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function indexAddBundle(IndexInterface $index, string $entity_type_id, string $entity_bundle): void {
+    $datasource = $this->indexGetDatasource($index, $entity_type_id);
+    if (!$datasource) {
+      throw new \Exception('Failed to update the directories search index with new bundle');
+    }
+
+    $configuration = $datasource->getConfiguration();
+    $configuration['bundles']['default'] = FALSE;
+    if (!in_array($entity_bundle, $configuration['bundles']['selected'])) {
+      $configuration['bundles']['selected'][] = $entity_bundle;
+    }
+    $datasource->setConfiguration($configuration);
+  }
+
+  /**
+   * Get index entity datasource.
+   *
+   * @param \Drupal\search_api\IndexInterface $index
+   *   The index to retrieve the datasource from.
+   * @param string $entity_type_id
+   *   The entity type ID.
+   *
+   * @return \Drupal\search_api\Datasource\DatasourceInterface
+   *   The datasource.
+   */
+  protected function indexGetDatasource(IndexInterface $index, string $entity_type_id): DatasourceInterface {
+    $datasource = $index->getDatasource('entity:' . $entity_type_id);
+    if (!$datasource) {
+      // If the content:node datasource has been lost so have the fields most
+      // probably and it's more of a mess. But leaving this here anyway.
+      $datasource = $this->pluginHelper->createDatasourcePlugin($index, 'entity:' . $entity_type_id);
+    }
+
+    return $datasource;
   }
 
   /**

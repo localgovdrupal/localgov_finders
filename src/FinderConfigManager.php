@@ -186,7 +186,14 @@ class FinderConfigManager {
     foreach ($finder_type->getIndexIds() as $index_id) {
       $index = $this->entityTypeManager->getStorage('search_api_index')->load($index_id);
       assert($index instanceof IndexInterface);
-      $this->indexAddBundle($index, $entity_type_id, $bundle_id);
+
+      try {
+        $finder_type->indexAddBundle($index, $entity_type_id, $bundle_id);
+      }
+      catch (\Exception $e) {
+        $this->logger->error('Failed to update the directories search index with new bundle');
+      }
+
       // Configure fields on the index.
       // There are fields that need only adding once, they just can't exist
       // on the index till the content type and field is there.
@@ -249,57 +256,6 @@ class FinderConfigManager {
     // Create config.
 
     // Update existing config.
-  }
-
-  /**
-   * Add entity bundle to index datasource.
-   *
-   * @todo could this be replaced with a Search API plugin that looks for
-   * enabled bundles. It would be of all entity types though. And we still add
-   * fields so change the config, so it's maybe fine to keep doing here?
-   *
-   * @param \Drupal\search_api\IndexInterface $index
-   *   The index to add bundle to.
-   * @param string $entity_type_id
-   *   Entity type ID.
-   * @param string $entity_bundle
-   *   The bundle ID.
-   */
-  protected function indexAddBundle(IndexInterface $index, string $entity_type_id, string $entity_bundle): void {
-    $datasource = $this->indexGetDatasource($index, $entity_type_id);
-    if (!$datasource) {
-      $this->logger->error('Failed to update the directories search index with new bundle');
-      return;
-    }
-
-    $configuration = $datasource->getConfiguration();
-    $configuration['bundles']['default'] = FALSE;
-    if (!in_array($entity_bundle, $configuration['bundles']['selected'])) {
-      $configuration['bundles']['selected'][] = $entity_bundle;
-    }
-    $datasource->setConfiguration($configuration);
-  }
-
-  /**
-   * Get index entity datasource.
-   *
-   * @param \Drupal\search_api\IndexInterface $index
-   *   The index to retrieve the datasource from.
-   * @param string $entity_type_id
-   *   The entity type ID.
-   *
-   * @return \Drupal\search_api\Datasource\DatasourceInterface
-   *   The datasource.
-   */
-  protected function indexGetDatasource(IndexInterface $index, string $entity_type_id): DatasourceInterface {
-    $datasource = $index->getDatasource('entity:' . $entity_type_id);
-    if (!$datasource) {
-      // If the content:node datasource has been lost so have the fields most
-      // probably and it's more of a mess. But leaving this here anyway.
-      $datasource = $this->pluginHelper->createDatasourcePlugin($index, 'entity:' . $entity_type_id);
-    }
-
-    return $datasource;
   }
 
   /**

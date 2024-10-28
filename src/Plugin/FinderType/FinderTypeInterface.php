@@ -81,4 +81,23 @@ interface FinderTypeInterface extends PluginInspectionInterface, DerivativeInspe
    */
   public function alterIndex(IndexInterface $index): void;
 
+  /**
+   * Adds and entity bundle to an index datasource.
+   *
+   * @todo could this be replaced with a Search API plugin that looks for
+   * enabled bundles. It would be of all entity types though. And we still add
+   * fields so change the config, so it's maybe fine to keep doing here?
+   *
+   * @param \Drupal\search_api\IndexInterface $index
+   *   The index to add bundle to.
+   * @param string $entity_type_id
+   *   Entity type ID.
+   * @param string $entity_bundle
+   *   The bundle ID.
+   *
+   * @throws \Exception
+   *   Throws an exception if the bundle can't be added to the index datasource.
+   */
+  public function indexAddBundle(IndexInterface $index, string $entity_type_id, string $entity_bundle): void;
+
 }
