@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\localgov_finders\Kernel;
 
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\entity_test\Entity\EntityTestWithBundle;
 use Drupal\entity_test\Entity\EntityTestBundle;
 use Drupal\KernelTests\KernelTestBase;
@@ -25,6 +26,13 @@ final class FinderPluginTest extends KernelTestBase {
   protected $strictConfigSchema = FALSE;
 
   /**
+   * The entity type manager service.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected $entityTypeManager;
+
+  /**
    * {@inheritdoc}
    */
   protected static $modules = [
@@ -43,6 +51,8 @@ final class FinderPluginTest extends KernelTestBase {
 
     $this->installConfig('localgov_finders_test');
     $this->installEntitySchema('entity_test_with_bundle');
+
+    $this->entityTypeManager = $this->container->get('entity_type.manager');
   }
 
   /**
@@ -81,7 +91,7 @@ final class FinderPluginTest extends KernelTestBase {
       'channel'
     );
     $channel_bundle->save();
-    $channel = EntityTestWithBundle::load($channel->id());
+    $channel = $this->reloadEntity($channel);
     $this->assertTrue($channel->hasField(FinderTypeBase::CHANNEL_TYPES_FIELD));
 
     $entry_bundle_one = EntityTestBundle::create([
@@ -104,6 +114,24 @@ final class FinderPluginTest extends KernelTestBase {
 
     $channel = EntityTestWithBundle::load($channel->id());
     $this->assertEquals($channels, $channel->get(FinderTypeBase::CHANNEL_TYPES_FIELD)->getValue());
+  }
+
+  /**
+   * Reloads the given entity from the storage and returns it.
+   *
+   * TODO: Replace this with EntityTrait when 10.4.0 is minimum supported
+   * version.
+   *
+   * @param \Drupal\Core\Entity\EntityInterface $entity
+   *   The entity to be reloaded.
+   *
+   * @return \Drupal\Core\Entity\EntityInterface
+   *   The reloaded entity.
+   */
+  protected function reloadEntity(EntityInterface $entity) {
+    $controller = $this->entityTypeManager->getStorage($entity->getEntityTypeId());
+    $controller->resetCache([$entity->id()]);
+    return $controller->load($entity->id());
   }
 
 }
