@@ -93,7 +93,7 @@ interface FinderTypeInterface extends PluginInspectionInterface, DerivativeInspe
   public function alterIndex(IndexInterface $index): void;
 
   /**
-   * Adds and entity bundle to an index datasource.
+   * Adds an entity bundle to an index datasource.
    *
    * @todo could this be replaced with a Search API plugin that looks for
    * enabled bundles. It would be of all entity types though. And we still add
