@@ -76,6 +76,11 @@ abstract class FinderTypeBase extends PluginBase implements FinderTypeInterface 
 
     // TODO: further fields:
 
+    foreach ($field_definitions as $field_definition) {
+      // Set the target bundle on all bundle fields.
+      $field_definition->setTargetBundle($bundle->id());
+    }
+
     return $field_definitions;
   }
 
