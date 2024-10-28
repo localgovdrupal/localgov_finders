@@ -202,7 +202,7 @@ class FinderConfigManager {
         $field = $index->getField($field_name);
         $finder_type->alterField($field_name, $field);
       }
-      $this->renderedItemAddBundle($index, $entity_type_id, $entity_id);
+      $this->renderedItemAddBundle($index, $entity_type_id, $bundle_id);
       $this->indexAddChannelsField($index);
       // The Channel is also the trigger for adding/removing from the index.
       // So also handle fields already existing on the entity that should be
