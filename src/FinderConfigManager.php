@@ -245,7 +245,26 @@ class FinderConfigManager {
     // @see Drupal\localgov_finders\Hook\EntityHooks::entityUpdate
   }
 
+  /**
+   * Sets up a bundle as finder entries.
+   *
+   * @param \Drupal\Core\Config\Entity\ConfigEntityInterface $entity_bundle
+   *   The entity bundle entity.
+   * @param \Drupal\localgov_finders\Plugin\FinderType\FinderTypeInterface $finder_type
+   *   The finder type plugin.
+   */
   public function configureAsEntry(ConfigEntityInterface $entity_bundle, FinderTypeInterface $finder_type): void {
+    $entity_type_id = $entity_bundle->getEntityType()->getBundleOf();
+    $bundle_id = $entity_bundle->id();
+
+    // Register bundle fields on the entity type.
+    foreach ($finder_type->getEntryFieldDefinitions($entity_bundle) as $field_definition) {
+      // Notify the field definition listeners. This is what updates core's
+      // field map.
+      $this->fieldStorageDefinitionListener->onFieldStorageDefinitionCreate($field_definition);
+      $this->fieldDefinitionListener->onFieldDefinitionCreate($field_definition);
+    }
+
     // fields:
     // localgov_directory_channels
     // localgov_directory_facets_select

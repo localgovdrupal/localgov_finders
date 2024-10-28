@@ -144,8 +144,7 @@ final class FinderPluginTest extends KernelTestBase {
     $entry = EntityTestWithBundle::create([
       'name' => 'test entry',
       'type' => 'test_entry_bundle_one',
-      // TODO: This crashes and I don't know why.
-      // FinderTypeBase::CHANNEL_SELECTION_FIELD => $channel->id(),
+      FinderTypeBase::CHANNEL_SELECTION_FIELD => $channel->id(),
     ]);
     $entry->save();
 
