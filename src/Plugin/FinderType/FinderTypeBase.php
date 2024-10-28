@@ -32,6 +32,19 @@ abstract class FinderTypeBase extends PluginBase implements FinderTypeInterface 
   const string CHANNEL_SELECTION_FIELD = 'localgov_finders_channels';
 
   /**
+   * Gets the name of a bundle field this plugin defines.
+   *
+   * @param string $field_constant
+   *   The name of a field name constant on the plugin class.
+   *
+   * @return string
+   *   The name of the field.
+   */
+  public function getFieldName(string $field_constant): string {
+    return constant(static::class . '::' . $field_constant);
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function getChannelFieldDefinitions(ConfigEntityInterface $bundle): array {
