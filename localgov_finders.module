@@ -18,6 +18,7 @@ use Drupal\node\NodeTypeInterface;
  * Implements hook_entity_bundle_field_info().
  */
 function localgov_finders_entity_bundle_field_info(EntityTypeInterface $entity_type, string $bundle_id, array $base_field_definitions): array {
+  // Only act on content entity types.
   if (!$entity_type instanceof ContentEntityTypeInterface) {
     return [];
   }
@@ -29,8 +30,8 @@ function localgov_finders_entity_bundle_field_info(EntityTypeInterface $entity_t
     return [];
   }
 
-  // Entity Bundle Field does get called with entities that only have one
-  // bundle and no bundle type class.
+  // Only act on entity types whose bundles are provided by a bundle entity
+  // type.
   $bundle_type_id = $entity_type->getBundleEntityType();
   if (empty($bundle_type_id)) {
     return [];
