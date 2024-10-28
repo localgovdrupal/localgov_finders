@@ -147,7 +147,7 @@ class FinderConfigManager {
     $entity_type_id = $entity_bundle->getEntityType()->getBundleOf();
     $bundle_id = $entity_bundle->id();
 
-    // Create bundle fields on the entity type.
+    // Register bundle fields on the entity type.
     foreach ($finder_type->getChannelFieldDefinitions($entity_bundle) as $field_definition) {
       // Notify the field definition listeners. This is what updates core's
       // field map.
