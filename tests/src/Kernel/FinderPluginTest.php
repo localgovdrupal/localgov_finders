@@ -131,7 +131,6 @@ final class FinderPluginTest extends KernelTestBase {
     );
     $entry_bundle_two->save();
 
-    // @todo entry bundle third party setting.
     // At present unrestricted which test entity type bundles.
     $channel->{FinderTypeBase::CHANNEL_TYPES_FIELD} = $channels = [
       ['target_id' => 'test_entry_bundle_one'],
