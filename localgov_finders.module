@@ -43,11 +43,8 @@ function localgov_finders_entity_bundle_field_info(EntityTypeInterface $entity_t
     return [];
   }
 
-  // @todo channel/entry
-  //   Should all that third party logic go into the FinderConfigManager.
-  //   Also then the insert/update.
-  // Return fields from finder type.
-  return $finder_type->getChannelFieldDefinitions($bundle);
+  $finder_config_manager = \Drupal::service('localgov_finders.finder_config_manager');
+  return $finder_config_manager->getBundleFieldDefinitions($bundle);
 }
 
 /**

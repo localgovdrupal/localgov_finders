@@ -37,6 +37,13 @@ abstract class FinderTypeBase extends PluginBase implements FinderTypeInterface 
   /**
    * {@inheritdoc}
    */
+  public function getEntryFieldDefinitions(ConfigEntityInterface $bundle): array {
+    return [];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getIndexIds(): array {
     return [];
   }

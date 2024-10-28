@@ -121,6 +121,33 @@ class FinderConfigManager {
   }
 
   /**
+   * Gets the finder bundle fields for a given bundle.
+   *
+   * @param \Drupal\Core\Config\Entity\ConfigEntityInterface $bundle
+   *   The bundle entity.
+   *
+   * @return array
+   *   An array bundle field definitions, for either channel bundles or entry
+   *   bundles as appropriate, keyed by the field name. If the given bundle
+   *   entity is not configured for finders, an empty array is returned.
+   */
+  public function getBundleFieldDefinitions(ConfigEntityInterface $bundle): array {
+    $finder_type_manager = \Drupal::service('plugin.manager.localgov_finders_finder_type');
+    $finder_type = $finder_type_manager->getBundleFinderType($bundle);
+    $finder_role_name = $bundle->getThirdPartySetting('localgov_finders', 'finder_role', '');
+
+    if (!$finder_type) {
+      return [];
+    }
+    else {
+      return match ($finder_role_name) {
+        FinderRole::Channel->value => $finder_type->getChannelFieldDefinitions($bundle),
+        FinderRole::Entries->value => $finder_type->getEntryFieldDefinitions($bundle),
+      };
+    }
+  }
+
+  /**
    * Sets configuration on a bundle entity as finder channels.
    *
    * @param \Drupal\node\NodeTypeInterface $node_type
