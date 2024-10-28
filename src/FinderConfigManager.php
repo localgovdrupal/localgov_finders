@@ -121,7 +121,7 @@ class FinderConfigManager {
   }
 
   /**
-   * Sets up a node type as finder channels.
+   * Sets configuration on a bundle entity as finder channels.
    *
    * @param \Drupal\node\NodeTypeInterface $node_type
    *   The node type.
@@ -135,6 +135,14 @@ class FinderConfigManager {
     // @see Drupal\localgov_finders\Hook\EntityHooks::entityUpdate
   }
 
+  /**
+   * Sets up a bundle as finder channels.
+   *
+   * @param \Drupal\Core\Config\Entity\ConfigEntityInterface $entity_bundle
+   *   The entity bundle entity.
+   * @param \Drupal\localgov_finders\Plugin\FinderType\FinderTypeInterface $finder_type
+   *   The finder type plugin.
+   */
   public function configureAsChannel(ConfigEntityInterface $entity_bundle, FinderTypeInterface $finder_type): void {
     $entity_type_id = $entity_bundle->getEntityType()->getBundleOf();
     $bundle_id = $entity_bundle->id();
