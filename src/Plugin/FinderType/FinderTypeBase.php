@@ -130,10 +130,12 @@ abstract class FinderTypeBase extends PluginBase implements FinderTypeInterface 
    *   The bundle field definition.
    */
   protected function getChannelTypesFieldDefinition(ConfigEntityInterface $bundle): FieldDefinitionInterface {
-    $entity_type = $bundle->getEntityType();
+    $bundle_entity_type = $bundle->getEntityType();
+    $content_entity_type = $bundle_entity_type->getBundleOf();
+
     return BundleFieldDefinition::create('entity_reference')
       ->setName(FinderField::CHANNEL_TYPES_FIELD)
-      ->setTargetEntityTypeId($entity_type->getBundleOf())
+      ->setTargetEntityTypeId($content_entity_type)
       ->setLabel(t('Enabled Content types'))
       ->setRequired(FALSE)
       ->setTranslatable(FALSE)
