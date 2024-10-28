@@ -52,13 +52,13 @@ class FinderTypeManager extends DefaultPluginManager {
   }
 
   /**
-   * Gets the finder type plugin for a node type.
+   * Gets the finder type plugin for an entity bundle entity.
    *
-   * @param \Drupal\node\NodeTypeInterface $node_type
-   *   The node type.
+   * @param \Drupal\Core\Config\Entity\ConfigEntityInterface $bundle
+   *   The bundle entity.
    *
    * @return \Drupal\localgov_finders\Plugin\FinderType\FinderTypeInterface
-   *   A finder type plugin if the node type has one set, or NULL otherwise.
+   *   A finder type plugin if the bundle entity has one set, or NULL otherwise.
    */
   public function getBundleFinderType(ConfigEntityInterface $bundle): ?FinderTypeInterface {
     $finder_type_id = $bundle->getThirdPartySetting('localgov_finders', 'finder_type', '');
