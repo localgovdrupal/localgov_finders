@@ -105,6 +105,32 @@ final class FinderPluginTest extends KernelTestBase {
       'status' => TRUE,
     ]);
     $entry_bundle_two->save();
+
+    // Set up the entry bundles as finder entries.
+    $entry_bundle_one->setThirdPartySetting(
+      'localgov_finders',
+      'finder_type',
+      'test'
+    );
+    $entry_bundle_one->setThirdPartySetting(
+      'localgov_finders',
+      'finder_role',
+      FinderRole::Entries->value,
+    );
+    $entry_bundle_one->save();
+
+    $entry_bundle_two->setThirdPartySetting(
+      'localgov_finders',
+      'finder_type',
+      'test'
+    );
+    $entry_bundle_two->setThirdPartySetting(
+      'localgov_finders',
+      'finder_role',
+      FinderRole::Entries->value,
+    );
+    $entry_bundle_two->save();
+
     // @todo entry bundle third party setting.
     // At present unrestricted which test entity type bundles.
     $channel->{FinderTypeBase::CHANNEL_TYPES_FIELD} = $channels = [
