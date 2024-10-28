@@ -195,7 +195,7 @@ class FinderConfigManager {
       // or other configuration or settings on them.
       // eg The rendered item bundle.
 
-      foreach ($finder_type->getIndexFields($entity_bundle) as $field_name => $field_definition) {
+      foreach ($finder_type->getIndexFields($entity_bundle, $index) as $field_name => $field_definition) {
         if (!$index->getField($field_name)) {
           $index->addField($field_definition);
         }
