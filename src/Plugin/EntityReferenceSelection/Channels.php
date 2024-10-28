@@ -2,6 +2,7 @@
 
 namespace Drupal\localgov_finders\Plugin\EntityReferenceSelection;
 
+use Drupal\Core\Database\Query\SelectInterface;
 use Drupal\Core\Entity\Attribute\EntityReferenceSelection;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityRepositoryInterface;
@@ -12,6 +13,8 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\localgov_finders\FinderTypeManager;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Selection plugin for finder channels.
@@ -26,13 +29,76 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
 class Channels extends DefaultSelection {
 
   /**
+   * The entity type manager.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected $entityTypeManager;
+
+  /**
+   * The finder type manager.
+   *
+   * @var \Drupal\localgov_finders\FinderTypeManager
+   */
+  protected $finderTypeManager;
+
+  /**
    * {@inheritdoc}
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityTypeManagerInterface $entity_type_manager, ModuleHandlerInterface $module_handler, AccountInterface $current_user, ?EntityFieldManagerInterface $entity_field_manager = NULL, ?EntityTypeBundleInfoInterface $entity_type_bundle_info = NULL, ?EntityRepositoryInterface $entity_repository = NULL) {
-    $configuration['target_bundles'] = NULL;
-    $configuration['auto_create'] = NULL;
-    $configuration['auto_create_bundle'] = NULL;
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+    return new static(
+      $configuration,
+      $plugin_id,
+      $plugin_definition,
+      $container->get('entity_type.manager'),
+      $container->get('module_handler'),
+      $container->get('current_user'),
+      $container->get('entity_field.manager'),
+      $container->get('entity_type.bundle.info'),
+      $container->get('entity.repository'),
+      $container->get('plugin.manager.localgov_finders_finder_type'),
+    );
+  }
+
+  /**
+   * Creates a Channels instance.
+   *
+   * @param array $configuration
+   *   A configuration array containing information about the plugin instance.
+   * @param string $plugin_id
+   *   The plugin_id for the plugin instance.
+   * @param mixed $plugin_definition
+   *   The plugin implementation definition.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager.
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   *   The module handler.
+   * @param \Drupal\Core\Session\AccountInterface $current_user
+   *   The current user.
+   * @param \Drupal\Core\Entity\EntityFieldManagerInterface $entity_field_manager
+   *   The entity field manager.
+   * @param \Drupal\Core\Entity\EntityTypeBundleInfoInterface $entity_type_bundle_info
+   *   The entity type bundle info.
+   * @param \Drupal\Core\Entity\EntityRepositoryInterface $entity_repository
+   *   The entity repository.
+   * @param \Drupal\localgov_finders\FinderTypeManager $finder_type_manager
+   *   The finder type manager.
+   */
+  public function __construct(
+    array $configuration,
+    $plugin_id,
+    $plugin_definition,
+    EntityTypeManagerInterface $entity_type_manager,
+    ModuleHandlerInterface $module_handler,
+    AccountInterface $current_user,
+    EntityFieldManagerInterface $entity_field_manager,
+    EntityTypeBundleInfoInterface $entity_type_bundle_info,
+    EntityRepositoryInterface $entity_repository,
+    FinderTypeManager $finder_type_manager,
+  ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $entity_type_manager, $module_handler, $current_user, $entity_field_manager, $entity_type_bundle_info, $entity_repository);
+    $this->entityTypeManager = $entity_type_manager;
+    $this->finderTypeManager = $finder_type_manager;
   }
 
   /**
