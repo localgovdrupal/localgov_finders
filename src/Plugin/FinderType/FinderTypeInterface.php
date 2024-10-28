@@ -14,7 +14,7 @@ use Drupal\search_api\Item\Field as SearchIndexField;
 interface FinderTypeInterface extends PluginInspectionInterface, DerivativeInspectionInterface {
 
   /**
-   * Gets the bundle field definitions for a finder channel node type.
+   * Gets the bundle field definitions for a finder channel bundle.
    *
    * @param \Drupal\Core\Config\Entity\ConfigEntityInterface
    *   Entity bundle.
