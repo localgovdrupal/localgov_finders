@@ -8,6 +8,7 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\entity_test\Entity\EntityTestWithBundle;
 use Drupal\entity_test\Entity\EntityTestBundle;
 use Drupal\KernelTests\KernelTestBase;
+use Drupal\localgov_finders\Enum\FinderRole;
 use Drupal\localgov_finders\Plugin\FinderType\FinderTypeBase;
 use Hoa\File\Finder;
 
