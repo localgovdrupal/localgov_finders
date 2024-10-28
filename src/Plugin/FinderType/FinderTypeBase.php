@@ -10,7 +10,6 @@ use Drupal\localgov_finders\Constants\FinderField;
 use Drupal\localgov_finders\Field\BundleFieldDefinition;
 use Drupal\search_api\IndexInterface;
 use Drupal\search_api\Item\Field as SearchIndexField;
-use Drupal\search_api\Entity\Index;
 
 /**
  * Base class for Finder Type plugins.
@@ -58,7 +57,7 @@ abstract class FinderTypeBase extends PluginBase implements FinderTypeInterface 
   /**
    * {@inheritdoc}
    */
-  public function alterIndex(Index $index): void {
+  public function alterIndex(IndexInterface $index): void {
   }
 
   /**

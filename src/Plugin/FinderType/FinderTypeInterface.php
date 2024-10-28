@@ -5,7 +5,6 @@ namespace Drupal\localgov_finders\Plugin\FinderType;
 use Drupal\Component\Plugin\DerivativeInspectionInterface;
 use Drupal\Component\Plugin\PluginInspectionInterface;
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
-use Drupal\search_api\Entity\Index;
 use Drupal\search_api\IndexInterface;
 use Drupal\search_api\Item\Field as SearchIndexField;
 
@@ -69,6 +68,6 @@ interface FinderTypeInterface extends PluginInspectionInterface, DerivativeInspe
    * @param \Drupal\search_api\IndexInterface $index
    *   The updated index about to be saved.
    */
-  public function alterIndex(Index $index): void;
+  public function alterIndex(IndexInterface $index): void;
 
 }
