@@ -191,7 +191,7 @@ class FinderConfigManager {
         $finder_type->indexAddBundle($index, $entity_type_id, $bundle_id);
       }
       catch (\Exception $e) {
-        $this->logger->error('Failed to update the directories search index with new bundle');
+        $this->loggerChannelFactory->get('localgov_finders')->error('Failed to update the directories search index with new bundle');
       }
 
       // Configure fields on the index.
