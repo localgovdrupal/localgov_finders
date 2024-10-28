@@ -111,7 +111,16 @@ abstract class FinderTypeBase extends PluginBase implements FinderTypeInterface 
   }
 
   /**
-   * {@inheritdoc}
+   * Gets the definition for the channel types field.
+   *
+   * This field on channels controls which entry bundles can be set as being in
+   * the channel.
+   *
+   * @param \Drupal\Core\Config\Entity\ConfigEntityInterface $bundle
+   *   The bundle entity.
+   *
+   * @return \Drupal\Core\Field\FieldDefinitionInterface
+   *   The bundle field definition.
    */
   protected function getChannelTypesFieldDefinition(ConfigEntityInterface $bundle): FieldDefinitionInterface {
     $entity_type = $bundle->getEntityType();
