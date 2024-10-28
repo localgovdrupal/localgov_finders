@@ -23,13 +23,6 @@ function localgov_finders_entity_bundle_field_info(EntityTypeInterface $entity_t
     return [];
   }
 
-  if (empty($bundle_id)) {
-    // FieldStorageReuseForm invokes this with a NULL bundle, which is probably
-    // a bug.
-    // TODO: no, it was probably my field map which was corrupted.
-    return [];
-  }
-
   // Only act on entity types whose bundles are provided by a bundle entity
   // type.
   $bundle_type_id = $entity_type->getBundleEntityType();
