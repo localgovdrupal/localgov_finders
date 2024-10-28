@@ -42,7 +42,14 @@ abstract class FinderTypeBase extends PluginBase implements FinderTypeInterface 
    * {@inheritdoc}
    */
   public function getEntryFieldDefinitions(ConfigEntityInterface $bundle): array {
-    return [];
+    $field_definitions = [];
+
+    $channels_selection_field_definition = $this->getChannelSelectionFieldDefinition($bundle);
+    $field_definitions[$channels_selection_field_definition->getName()] = $channels_selection_field_definition;
+
+    // TODO: further fields:
+
+    return $field_definitions;
   }
 
   /**
@@ -135,6 +142,45 @@ abstract class FinderTypeBase extends PluginBase implements FinderTypeInterface 
         // TODO! this needs to move into Finders
         'handler' => 'default',
         'target_type' => $entity_type->id(),
+      ])
+      ->setDisplayConfigurable('form', TRUE)
+      ->setDisplayOptions('form', [
+        'type' => 'options_buttons',
+      ]);
+  }
+
+  /**
+   * Gets the definition for the channel selection field.
+   *
+   * This field on entries controls which channels an entry entity appears in.
+   *
+   * @param \Drupal\Core\Config\Entity\ConfigEntityInterface $bundle
+   *   The bundle entity.
+   *
+   * @return \Drupal\Core\Field\FieldDefinitionInterface
+   *   The bundle field definition.
+   */
+  protected function getChannelSelectionFieldDefinition(ConfigEntityInterface $bundle): FieldDefinitionInterface {
+    $bundle_entity_type = $bundle->getEntityType();
+    $content_entity_type = $bundle_entity_type->getBundleOf();
+
+    return BundleFieldDefinition::create('entity_reference')
+      ->setName(FinderField::CHANNEL_SELECTION_FIELD)
+      ->setTargetEntityTypeId($content_entity_type)
+      ->setLabel(t('Directory channels'))
+      ->setRequired(FALSE)
+      ->setTranslatable(FALSE)
+      ->setCardinality(BundleFieldDefinition::CARDINALITY_UNLIMITED)
+      ->setSettings([
+        // TODO! this needs to move into Finders
+        'handler' => 'default', // localgov_directories_channels_selection
+        'target_type' => $content_entity_type,
+        'handler_settings' => [
+          'sort' => [
+            'field' => 'title',
+            'direction' => 'DESC',
+          ],
+        ],
       ])
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayOptions('form', [
