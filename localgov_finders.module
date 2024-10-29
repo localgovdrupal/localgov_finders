@@ -172,7 +172,7 @@ function localgov_finders_form_node_type_form_submit(array $form, FormStateInter
   $node_type = $form_state->getFormObject()->getEntity();
   assert($node_type instanceof NodeTypeInterface);
 
-  if (!empty($form_state->getValue(['localgov_finders', 'finder_type'])) && empty($form_state->getValue(['localgov_finders', 'finder_role']))) {
+  if (!empty($form_state->getValue(['localgov_finders', 'finder_type'])) && !empty($form_state->getValue(['localgov_finders', 'finder_role']))) {
     $node_type->setThirdPartySetting(
       'localgov_finders',
       'finder_type',
