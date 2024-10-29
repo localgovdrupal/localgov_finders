@@ -125,7 +125,7 @@ class FinderConfigManager {
    * @param \Drupal\Core\Config\Entity\ConfigEntityInterface $bundle
    *   The bundle entity.
    *
-   * @return array
+   * @return \Drupal\localgov_finders\Field\BundleFieldDefinition[]
    *   An array bundle field definitions, for either channel bundles or entry
    *   bundles as appropriate, keyed by the field name. If the given bundle
    *   entity is not configured for finders, an empty array is returned.
