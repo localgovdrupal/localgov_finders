@@ -149,32 +149,32 @@ class FinderConfigManager {
   /**
    * Sets configuration on a bundle entity as finder channels.
    *
-   * @param \Drupal\Core\Config\Entity\ConfigEntityInterface $entity_bundle
+   * @param \Drupal\Core\Config\Entity\ConfigEntityInterface $bundle_entity
    *   The bundle entity.
    * @param \Drupal\localgov_finders\Plugin\FinderType\FinderTypeInterface $finder_type
    *   The finder type plugin.
    */
-  public function enableAsChannel(ConfigEntityInterface $entity_bundle, FinderTypeInterface $finder_type): void {
-    $entity_bundle->setThirdPartySetting('localgov_finders', 'finder_type', $finder_type->getPluginId());
-    $entity_bundle->setThirdPartySetting('localgov_finders', 'finder_role', FinderRole::Channel->value);
-    $entity_bundle->save();
+  public function enableAsChannel(ConfigEntityInterface $bundle_entity, FinderTypeInterface $finder_type): void {
+    $bundle_entity->setThirdPartySetting('localgov_finders', 'finder_type', $finder_type->getPluginId());
+    $bundle_entity->setThirdPartySetting('localgov_finders', 'finder_role', FinderRole::Channel->value);
+    $bundle_entity->save();
     // @see Drupal\localgov_finders\Hook\EntityHooks::entityUpdate
   }
 
   /**
    * Sets up a bundle as finder channels.
    *
-   * @param \Drupal\Core\Config\Entity\ConfigEntityInterface $entity_bundle
+   * @param \Drupal\Core\Config\Entity\ConfigEntityInterface $bundle_entity
    *   The entity bundle entity.
    * @param \Drupal\localgov_finders\Plugin\FinderType\FinderTypeInterface $finder_type
    *   The finder type plugin.
    */
-  public function configureAsChannel(ConfigEntityInterface $entity_bundle, FinderTypeInterface $finder_type): void {
-    $entity_type_id = $entity_bundle->getEntityType()->getBundleOf();
-    $bundle_id = $entity_bundle->id();
+  public function configureAsChannel(ConfigEntityInterface $bundle_entity, FinderTypeInterface $finder_type): void {
+    $entity_type_id = $bundle_entity->getEntityType()->getBundleOf();
+    $bundle_id = $bundle_entity->id();
 
     // Register bundle fields on the entity type.
-    foreach ($finder_type->getChannelFieldDefinitions($entity_bundle) as $field_definition) {
+    foreach ($finder_type->getChannelFieldDefinitions($bundle_entity) as $field_definition) {
       // Notify the field definition listeners. This is what updates core's
       // field map.
       $this->fieldStorageDefinitionListener->onFieldStorageDefinitionCreate($field_definition);
@@ -201,7 +201,7 @@ class FinderConfigManager {
       // or other configuration or settings on them.
       // eg The rendered item bundle.
 
-      foreach ($finder_type->getIndexFields($entity_bundle, $index) as $field_name => $field_definition) {
+      foreach ($finder_type->getIndexFields($bundle_entity, $index) as $field_name => $field_definition) {
         if (!$index->getField($field_name)) {
           $index->addField($field_definition);
         }
@@ -213,7 +213,7 @@ class FinderConfigManager {
       // The Channel is also the trigger for adding/removing from the index.
       // So also handle fields already existing on the entity that should be
       // included in the index.
-      //$entity_fields = $this->entityFieldManager->getFieldDefinitions($entity_type_id, $entity_bundle);
+      //$entity_fields = $this->entityFieldManager->getFieldDefinitions($entity_type_id, $bundle_entity);
       //if (array_key_exists(Constants::FACET_SELECTION_FIELD, $entity_fields)) {
       //  $this->indexAddFacetField($index);
       //}
@@ -233,32 +233,32 @@ class FinderConfigManager {
   /**
    * Add settings for bundle as finder entry.
    *
-   * @param \Drupal\Core\Config\Entity\ConfigEntityInterface $entity_bundle
+   * @param \Drupal\Core\Config\Entity\ConfigEntityInterface $bundle_entity
    *   The bundle entity.
    * @param \Drupal\localgov_finders\Plugin\FinderType\FinderTypeInterface $finder_type
    *   The finder type plugin.
    */
-  public function enableAsEntry(ConfigEntityInterface $entity_bundle, FinderTypeInterface $finder_type): void {
-    $entity_bundle->setThirdPartySetting('localgov_finders', 'finder_type', $finder_type->getPluginId());
-    $entity_bundle->setThirdPartySetting('localgov_finders', 'finder_role', FinderRole::Entries->value);
-    $entity_bundle->save();
+  public function enableAsEntry(ConfigEntityInterface $bundle_entity, FinderTypeInterface $finder_type): void {
+    $bundle_entity->setThirdPartySetting('localgov_finders', 'finder_type', $finder_type->getPluginId());
+    $bundle_entity->setThirdPartySetting('localgov_finders', 'finder_role', FinderRole::Entries->value);
+    $bundle_entity->save();
     // @see Drupal\localgov_finders\Hook\EntityHooks::entityUpdate
   }
 
   /**
    * Sets up a bundle as finder entries.
    *
-   * @param \Drupal\Core\Config\Entity\ConfigEntityInterface $entity_bundle
+   * @param \Drupal\Core\Config\Entity\ConfigEntityInterface $bundle_entity
    *   The entity bundle entity.
    * @param \Drupal\localgov_finders\Plugin\FinderType\FinderTypeInterface $finder_type
    *   The finder type plugin.
    */
-  public function configureAsEntry(ConfigEntityInterface $entity_bundle, FinderTypeInterface $finder_type): void {
-    $entity_type_id = $entity_bundle->getEntityType()->getBundleOf();
-    $bundle_id = $entity_bundle->id();
+  public function configureAsEntry(ConfigEntityInterface $bundle_entity, FinderTypeInterface $finder_type): void {
+    $entity_type_id = $bundle_entity->getEntityType()->getBundleOf();
+    $bundle_id = $bundle_entity->id();
 
     // Register bundle fields on the entity type.
-    foreach ($finder_type->getEntryFieldDefinitions($entity_bundle) as $field_definition) {
+    foreach ($finder_type->getEntryFieldDefinitions($bundle_entity) as $field_definition) {
       // Notify the field definition listeners. This is what updates core's
       // field map.
       $this->fieldStorageDefinitionListener->onFieldStorageDefinitionCreate($field_definition);
