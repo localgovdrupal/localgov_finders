@@ -78,9 +78,7 @@ class Events extends FinderTypeBase {
       ->setCardinality(1)
       ->setSettings([
         'target_type' => 'view',
-        // @todo Custom selection handler which limits views to those whose base
-        // is the entry entity type.
-        'handler' => 'default:view',
+        'handler' => 'localgov_finders_channel_views',
         'handler_settings' => [
           'target_bundles' => NULL,
           'auto_create' => FALSE,
@@ -120,9 +118,7 @@ class Events extends FinderTypeBase {
       ->setCardinality(1)
       ->setSettings([
         'target_type' => 'view',
-        // @todo Custom selection handler which limits views to those whose base
-        // is the entry entity type.
-        'handler' => 'default:view',
+        'handler' => 'localgov_finders_channel_views',
         'handler_settings' => [
           'target_bundles' => NULL,
           'auto_create' => FALSE,
