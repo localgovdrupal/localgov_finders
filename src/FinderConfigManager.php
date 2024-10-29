@@ -122,7 +122,7 @@ class FinderConfigManager {
   /**
    * Gets the finder bundle fields for a given bundle.
    *
-   * @param \Drupal\Core\Config\Entity\ConfigEntityInterface $bundle
+   * @param \Drupal\Core\Config\Entity\ConfigEntityInterface $bundle_entity
    *   The bundle entity.
    *
    * @return \Drupal\localgov_finders\Field\BundleFieldDefinition[]
@@ -130,18 +130,18 @@ class FinderConfigManager {
    *   bundles as appropriate, keyed by the field name. If the given bundle
    *   entity is not configured for finders, an empty array is returned.
    */
-  public function getBundleFieldDefinitions(ConfigEntityInterface $bundle): array {
+  public function getBundleFieldDefinitions(ConfigEntityInterface $bundle_entity): array {
     $finder_type_manager = \Drupal::service('plugin.manager.localgov_finders_finder_type');
-    $finder_type = $finder_type_manager->getBundleFinderType($bundle);
-    $finder_role_name = $bundle->getThirdPartySetting('localgov_finders', 'finder_role', '');
+    $finder_type = $finder_type_manager->getBundleFinderType($bundle_entity);
+    $finder_role_name = $bundle_entity->getThirdPartySetting('localgov_finders', 'finder_role', '');
 
     if (!$finder_type) {
       return [];
     }
     else {
       return match ($finder_role_name) {
-        FinderRole::Channel->value => $finder_type->getChannelFieldDefinitions($bundle),
-        FinderRole::Entries->value => $finder_type->getEntryFieldDefinitions($bundle),
+        FinderRole::Channel->value => $finder_type->getChannelFieldDefinitions($bundle_entity),
+        FinderRole::Entries->value => $finder_type->getEntryFieldDefinitions($bundle_entity),
       };
     }
   }

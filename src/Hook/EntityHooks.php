@@ -48,21 +48,21 @@ final class EntityHooks {
   /**
    * Call the appropriate plugin configuration management.
    *
-   * @param \Drupal\Core\Config\Entity\ConfigEntityInterface $entity_bundle
+   * @param \Drupal\Core\Config\Entity\ConfigEntityInterface $bundle_entity
    *   The entity bundle to configure.
    * @param string $finder_type_id
    *   The finder type plugin ID.
    */
-  private function configureFinder(ConfigEntityInterface $entity_bundle, string $finder_type_id): void {
+  private function configureFinder(ConfigEntityInterface $bundle_entity, string $finder_type_id): void {
     $finder_type = $this->finderTypeManager->createInstance($finder_type_id);
-    $finder_role_name = $entity_bundle->getThirdPartySetting('localgov_finders', 'finder_role', '');
+    $finder_role_name = $bundle_entity->getThirdPartySetting('localgov_finders', 'finder_role', '');
     match ($finder_role_name) {
       FinderRole::Channel->value => $this->finderConfigManager->configureAsChannel(
-        $entity_bundle,
+        $bundle_entity,
         $finder_type
       ),
       FinderRole::Entries->value => $this->finderConfigManager->configureAsEntry(
-        $entity_bundle,
+        $bundle_entity,
         $finder_type
       ),
     };
