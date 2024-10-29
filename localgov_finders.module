@@ -64,6 +64,9 @@ function localgov_finders_form_node_type_form_alter(&$form, FormStateInterface $
   ];
 
   $finder_type_definitions = \Drupal::service('plugin.manager.localgov_finders_finder_type')->getDefinitions();
+
+  // @todo Remove empty options when
+  // https://www.drupal.org/project/drupal/issues/3194345 is fixed in core.
   $options = [
     '' => t('None'),
   ];
