@@ -103,12 +103,12 @@ interface FinderTypeInterface extends PluginInspectionInterface, DerivativeInspe
    *   The index to add bundle to.
    * @param string $entity_type_id
    *   Entity type ID.
-   * @param string $entity_bundle
-   *   The bundle ID.
+   * @param \Drupal\Core\Config\Entity\ConfigEntityInterface
+   *   The bundle entity to add to the index.
    *
    * @throws \Exception
    *   Throws an exception if the bundle can't be added to the index datasource.
    */
-  public function indexAddBundle(IndexInterface $index, string $entity_type_id, string $entity_bundle): void;
+  public function indexAddBundle(IndexInterface $index, ConfigEntityInterface $bundle_entity): void;
 
 }

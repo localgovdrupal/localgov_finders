@@ -187,7 +187,8 @@ class FinderConfigManager {
       assert($index instanceof IndexInterface);
 
       try {
-        $finder_type->indexAddBundle($index, $entity_type_id, $bundle_id);
+        // This doesn't look right -- it's adding the channel bundle!
+        $finder_type->indexAddBundle($index, $bundle_entity);
       }
       catch (\Exception $e) {
         $this->loggerChannelFactory->get('localgov_finders')->error('Failed to update the directories search index with new bundle');
@@ -274,6 +275,10 @@ class FinderConfigManager {
     // Create config.
 
     // Update existing config.
+    foreach ($finder_type->getIndexIds() as $index_id) {
+      $index = $this->entityTypeManager->getStorage('search_api_index')->load($index_id);
+      $finder_type->indexAddBundle($index, $bundle_entity);
+    }
   }
 
   /**

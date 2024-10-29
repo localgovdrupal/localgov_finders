@@ -116,7 +116,10 @@ abstract class FinderTypeBase extends PluginBase implements FinderTypeInterface 
   /**
    * {@inheritdoc}
    */
-  public function indexAddBundle(IndexInterface $index, string $entity_type_id, string $entity_bundle): void {
+  public function indexAddBundle(IndexInterface $index, ConfigEntityInterface $bundle_entity): void {
+    $entity_type_id = $bundle_entity->getEntityType()->getBundleOf();
+    $bundle_id = $bundle_entity->id();
+
     $datasource = $this->indexGetDatasource($index, $entity_type_id);
     if (!$datasource) {
       throw new \Exception('Failed to update the directories search index with new bundle');
