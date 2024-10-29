@@ -56,11 +56,11 @@ class Events extends FinderTypeBase {
    */
   protected function getListViewFieldDefinition(ConfigEntityInterface $bundle): BundleFieldDefinition {
     $bundle_entity_type = $bundle->getEntityType();
-    $content_entity_type = $bundle_entity_type->getBundleOf();
+    $content_entity_type_id = $bundle_entity_type->getBundleOf();
 
     return BundleFieldDefinition::create('viewsreference')
       ->setName(static::LIST_VIEW_FIELD)
-      ->setTargetEntityTypeId($bundle_entity_type)
+      ->setTargetEntityTypeId($content_entity_type_id)
       ->setLabel(t('Event list view'))
       ->setRequired(FALSE)
       ->setTranslatable(FALSE)

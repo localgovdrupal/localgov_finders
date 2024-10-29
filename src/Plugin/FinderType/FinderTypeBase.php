@@ -168,11 +168,11 @@ abstract class FinderTypeBase extends PluginBase implements FinderTypeInterface 
    */
   protected function getChannelTypesFieldDefinition(ConfigEntityInterface $bundle): BundleFieldDefinition {
     $bundle_entity_type = $bundle->getEntityType();
-    $content_entity_type = $bundle_entity_type->getBundleOf();
+    $content_entity_type_id = $bundle_entity_type->getBundleOf();
 
     return BundleFieldDefinition::create('entity_reference')
       ->setName(static::CHANNEL_TYPES_FIELD)
-      ->setTargetEntityTypeId($content_entity_type)
+      ->setTargetEntityTypeId($content_entity_type_id)
       ->setLabel(t('Enabled Content types'))
       ->setRequired(FALSE)
       ->setTranslatable(FALSE)
@@ -200,18 +200,18 @@ abstract class FinderTypeBase extends PluginBase implements FinderTypeInterface 
    */
   protected function getChannelSelectionFieldDefinition(ConfigEntityInterface $bundle): BundleFieldDefinition {
     $bundle_entity_type = $bundle->getEntityType();
-    $content_entity_type = $bundle_entity_type->getBundleOf();
+    $content_entity_type_id = $bundle_entity_type->getBundleOf();
 
     return BundleFieldDefinition::create('entity_reference')
       ->setName(static::CHANNEL_SELECTION_FIELD)
-      ->setTargetEntityTypeId($content_entity_type)
+      ->setTargetEntityTypeId($content_entity_type_id)
       ->setLabel(t('Directory channels'))
       ->setRequired(FALSE)
       ->setTranslatable(FALSE)
       ->setCardinality(BundleFieldDefinition::CARDINALITY_UNLIMITED)
       ->setSettings([
         'handler' => 'localgov_finders_channels',
-        'target_type' => $content_entity_type,
+        'target_type' => $content_entity_type_id,
         'handler_settings' => [
           // We don't use this setting in our selection plugin, but the class it
           // inherits from does. Setting this to NULL means it skips its bundle
@@ -242,11 +242,11 @@ abstract class FinderTypeBase extends PluginBase implements FinderTypeInterface 
    */
   protected function getTitleSortFieldDefinition(ConfigEntityInterface $bundle): BundleFieldDefinition {
     $bundle_entity_type = $bundle->getEntityType();
-    $content_entity_type = $bundle_entity_type->getBundleOf();
+    $content_entity_type_id = $bundle_entity_type->getBundleOf();
 
     return BundleFieldDefinition::create('string')
       ->setName(static::TITLE_SORT_FIELD)
-      ->setTargetEntityTypeId($content_entity_type)
+      ->setTargetEntityTypeId($content_entity_type_id)
       ->setLabel(t('Title used for sorting'))
       ->setDescription(t("<strong>Can be left blank</strong>. If this field is completed it will be used instead of the <em>Title</em> for alphabetically sorted lists. For example to move 'The' or 'A' from the beginning of a name."))
       ->setRequired(FALSE)
