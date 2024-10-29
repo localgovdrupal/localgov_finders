@@ -123,17 +123,20 @@ function localgov_finders_form_node_type_form_validate(array $form, FormStateInt
 function localgov_finders_form_node_type_form_submit(array $form, FormStateInterface $form_state) {
   $node_type = $form_state->getFormObject()->getEntity();
   assert($node_type instanceof NodeTypeInterface);
-  $node_type->setThirdPartySetting(
-    'localgov_finders',
-    'finder_type',
-    $form_state->getValue(['localgov_finders', 'finder_type'])
-  );
-  $node_type->setThirdPartySetting(
-    'localgov_finders',
-    'finder_role',
-    $form_state->getValue(['localgov_finders', 'finder_role'])
-  );
-  $node_type->save();
+
+  if (!empty($form_state->getValue(['localgov_finders', 'finder_type'])) && empty($form_state->getValue(['localgov_finders', 'finder_role']))) {
+    $node_type->setThirdPartySetting(
+      'localgov_finders',
+      'finder_type',
+      $form_state->getValue(['localgov_finders', 'finder_type'])
+    );
+    $node_type->setThirdPartySetting(
+      'localgov_finders',
+      'finder_role',
+      $form_state->getValue(['localgov_finders', 'finder_role'])
+    );
+    $node_type->save();
+  }
 }
 
 #[LegacyHook]
