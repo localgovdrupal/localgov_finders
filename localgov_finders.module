@@ -48,6 +48,38 @@ function localgov_finders_entity_bundle_field_info(EntityTypeInterface $entity_t
 }
 
 /**
+ * Implements hook_entity_field_storage_info().
+ */
+function localgov_finders_entity_field_storage_info(EntityTypeInterface $entity_type) {
+  // Only act on content entity types.
+  if (!$entity_type instanceof ContentEntityTypeInterface) {
+    return [];
+  }
+
+  // Only act on entity types whose bundles are provided by a bundle entity
+  // type.
+  $bundle_entity_type_id = $entity_type->getBundleEntityType();
+  if (empty($bundle_entity_type_id)) {
+    return [];
+  }
+
+  $fields = [];
+
+  $entity_type_manager = \Drupal::service('entity_type.manager');
+  $bundle_entities = $entity_type_manager->getStorage($bundle_entity_type_id)->loadMultiple();
+
+  /** @var \Drupal\localgov_finders\FinderConfigManager $finder_config_manager */
+  $finder_config_manager = \Drupal::service('localgov_finders.finder_config_manager');
+  foreach ($bundle_entities as $bundle_entity) {
+    // @todo Check that plugins don't change base field properties from other
+    // plugins.
+    $fields += $finder_config_manager->getBundleFieldDefinitions($bundle_entity);
+  }
+
+  return $fields;
+}
+
+/**
  * Implements hook_form_BASE_FORM_ID_alter(): node_type_form.
  */
 function localgov_finders_form_node_type_form_alter(&$form, FormStateInterface $form_state, $form_id) {
