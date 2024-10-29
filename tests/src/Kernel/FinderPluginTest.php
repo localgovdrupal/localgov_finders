@@ -20,13 +20,6 @@ use Hoa\File\Finder;
 final class FinderPluginTest extends KernelTestBase {
 
   /**
-   * Ignore lack of schema for now.
-   *
-   * @todo add schema and remove.
-   */
-  protected $strictConfigSchema = FALSE;
-
-  /**
    * The entity type manager service.
    *
    * @var \Drupal\Core\Entity\EntityTypeManagerInterface

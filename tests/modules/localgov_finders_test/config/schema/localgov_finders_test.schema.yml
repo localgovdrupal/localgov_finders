@@ -1,0 +1,2 @@
+entity_test.entity_test_bundle.*.third_party.localgov_finders:
+  type: local_gov_finders.third_party_settings
