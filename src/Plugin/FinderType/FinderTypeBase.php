@@ -32,6 +32,11 @@ abstract class FinderTypeBase extends PluginBase implements FinderTypeInterface 
   const string CHANNEL_SELECTION_FIELD = 'localgov_finders_channels';
 
   /**
+   * The field name for the title sort field.
+   */
+  const string TITLE_SORT_FIELD = 'localgov_finders_title_sort';
+
+  /**
    * {@inheritdoc}
    */
   public function getFieldName(string $field_constant): string {
@@ -68,6 +73,9 @@ abstract class FinderTypeBase extends PluginBase implements FinderTypeInterface 
 
     $channels_selection_field_definition = $this->getChannelSelectionFieldDefinition($bundle);
     $field_definitions[$channels_selection_field_definition->getName()] = $channels_selection_field_definition;
+
+    $title_sort_field = $this->getTitleSortFieldDefinition($bundle);
+    $field_definitions[$title_sort_field->getName()] = $title_sort_field;
 
     // TODO: further fields:
 
@@ -218,6 +226,35 @@ abstract class FinderTypeBase extends PluginBase implements FinderTypeInterface 
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayOptions('form', [
         'type' => 'options_buttons',
+      ]);
+  }
+
+  /**
+   * Gets the definition for the title sort field.
+   *
+   * This field on entries allows an override of the entity label for sorting.
+   *
+   * @param \Drupal\Core\Config\Entity\ConfigEntityInterface $bundle
+   *   The bundle entity.
+   *
+   * @return \Drupal\localgov_finders\Field\BundleFieldDefinition
+   *   The bundle field definition.
+   */
+  protected function getTitleSortFieldDefinition(ConfigEntityInterface $bundle): BundleFieldDefinition {
+    $bundle_entity_type = $bundle->getEntityType();
+    $content_entity_type = $bundle_entity_type->getBundleOf();
+
+    return BundleFieldDefinition::create('string')
+      ->setName(static::TITLE_SORT_FIELD)
+      ->setTargetEntityTypeId($content_entity_type)
+      ->setLabel(t('Title used for sorting'))
+      ->setDescription(t("<strong>Can be left blank</strong>. If this field is completed it will be used instead of the <em>Title</em> for alphabetically sorted lists. For example to move 'The' or 'A' from the beginning of a name."))
+      ->setRequired(FALSE)
+      ->setTranslatable(TRUE)
+      ->setCardinality(1)
+      ->setDisplayConfigurable('form', TRUE)
+      ->setDisplayOptions('form', [
+        'type' => 'string_textfield',
       ]);
   }
 

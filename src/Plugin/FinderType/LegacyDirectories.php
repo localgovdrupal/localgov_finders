@@ -36,6 +36,11 @@ class LegacyDirectories extends FinderTypeBase {
   /**
    * {@inheritdoc}
    */
+  const string TITLE_SORT_FIELD = Constants::TITLE_SORT_FIELD;
+
+  /**
+   * {@inheritdoc}
+   */
   public function getChannelFieldDefinitions(ConfigEntityInterface $bundle): array {
     // Legacy directories finder doesn't add bundle fields.
     return [];
