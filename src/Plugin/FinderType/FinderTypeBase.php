@@ -51,6 +51,7 @@ abstract class FinderTypeBase extends PluginBase implements FinderTypeInterface 
     // enabled facets
     // finder view.
 
+    /** @var \Drupal\localgov_finders\Field\BundleFieldDefinition $field_definition */
     foreach ($field_definitions as $field_definition) {
       // Set the target bundle on all bundle fields.
       $field_definition->setTargetBundle($bundle->id());
@@ -152,12 +153,12 @@ abstract class FinderTypeBase extends PluginBase implements FinderTypeInterface 
    * @param \Drupal\Core\Config\Entity\ConfigEntityInterface $bundle
    *   The bundle entity.
    *
-   * @return \Drupal\Core\Field\FieldDefinitionInterface
+   * @return \Drupal\localgov_finders\Field\BundleFieldDefinition
    *   The bundle field definition.
    *
    * @see \Drupal\localgov_finders\Plugin\EntityReferenceSelection\EntryTypes
    */
-  protected function getChannelTypesFieldDefinition(ConfigEntityInterface $bundle): FieldDefinitionInterface {
+  protected function getChannelTypesFieldDefinition(ConfigEntityInterface $bundle): BundleFieldDefinition {
     $bundle_entity_type = $bundle->getEntityType();
     $content_entity_type = $bundle_entity_type->getBundleOf();
 
@@ -186,10 +187,10 @@ abstract class FinderTypeBase extends PluginBase implements FinderTypeInterface 
    * @param \Drupal\Core\Config\Entity\ConfigEntityInterface $bundle
    *   The bundle entity.
    *
-   * @return \Drupal\Core\Field\FieldDefinitionInterface
+   * @return \Drupal\localgov_finders\Field\BundleFieldDefinition
    *   The bundle field definition.
    */
-  protected function getChannelSelectionFieldDefinition(ConfigEntityInterface $bundle): FieldDefinitionInterface {
+  protected function getChannelSelectionFieldDefinition(ConfigEntityInterface $bundle): BundleFieldDefinition {
     $bundle_entity_type = $bundle->getEntityType();
     $content_entity_type = $bundle_entity_type->getBundleOf();
 

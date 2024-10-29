@@ -30,8 +30,8 @@ interface FinderTypeInterface extends PluginInspectionInterface, DerivativeInspe
    * @param \Drupal\Core\Config\Entity\ConfigEntityInterface
    *   Entity bundle.
    *
-   * @return array
-   *   An array of field definitions, keyed by the field name.
+   * @return \Drupal\localgov_finders\Field\BundleFieldDefinition[]
+   *   An array of bundle field definitions, keyed by the field name.
    */
   public function getChannelFieldDefinitions(ConfigEntityInterface $bundle): array;
 
@@ -41,8 +41,8 @@ interface FinderTypeInterface extends PluginInspectionInterface, DerivativeInspe
    * @param \Drupal\Core\Config\Entity\ConfigEntityInterface
    *   The bundle entity.
    *
-   * @return array
-   *   An array of field definitions, keyed by the field name.
+   * @return \Drupal\localgov_finders\Field\BundleFieldDefinition[]
+   *   An array of bundle field definitions, keyed by the field name.
    */
   public function getEntryFieldDefinitions(ConfigEntityInterface $bundle): array;
 
