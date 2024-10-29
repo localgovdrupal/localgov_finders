@@ -63,6 +63,7 @@ function localgov_finders_entity_field_storage_info(EntityTypeInterface $entity_
     return [];
   }
 
+  /** @var \Drupal\localgov_finders\Field\BundleFieldDefinition[] $fields */
   $fields = [];
 
   $entity_type_manager = \Drupal::service('entity_type.manager');
@@ -71,9 +72,21 @@ function localgov_finders_entity_field_storage_info(EntityTypeInterface $entity_
   /** @var \Drupal\localgov_finders\FinderConfigManager $finder_config_manager */
   $finder_config_manager = \Drupal::service('localgov_finders.finder_config_manager');
   foreach ($bundle_entities as $bundle_entity) {
-    // @todo Check that plugins don't change base field properties from other
+    $bundle_fields = $finder_config_manager->getBundleFieldDefinitions($bundle_entity);
+
+    // Check that plugins don't change base field properties from other
     // plugins.
-    $fields += $finder_config_manager->getBundleFieldDefinitions($bundle_entity);
+    foreach ($bundle_fields as $field_name => $bundle_field) {
+      if (isset($fields[$field_name])) {
+        assert($bundle_field->getType() == $fields[$field_name]->getType());
+        assert($bundle_field->getTargetEntityTypeId() == $fields[$field_name]->getTargetEntityTypeId());
+        assert($bundle_field->getCardinality() == $fields[$field_name]->getCardinality());
+        // @todo Check field settings could cause problems if changed, such as
+        // entity reference target type.
+      }
+    }
+
+    $fields += $bundle_fields;
   }
 
   return $fields;
