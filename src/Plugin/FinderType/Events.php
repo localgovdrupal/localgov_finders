@@ -30,6 +30,13 @@ class Events extends FinderTypeBase {
   const LIST_VIEW_FIELD = 'localgov_events_list_view';
 
   /**
+   * The field name for the calendar view field.
+   *
+   * @see self::getListViewFieldDefinition()
+   */
+  const CALENDAR_VIEW_FIELD = 'localgov_events_cal_view';
+
+  /**
    * {@inheritdoc}
    */
   public function getChannelFieldDefinitions(ConfigEntityInterface $bundle): array {
@@ -38,6 +45,10 @@ class Events extends FinderTypeBase {
     $list_view_field = $this->getListViewFieldDefinition($bundle);
     $list_view_field->setTargetBundle($bundle->id());
     $field_definitions[$list_view_field->getName()] = $list_view_field;
+
+    $calendar_view_field = $this->getCalendarViewFieldDefinition($bundle);
+    $calendar_view_field->setTargetBundle($bundle->id());
+    $field_definitions[$calendar_view_field->getName()] = $calendar_view_field;
 
     return $field_definitions;
   }
@@ -62,6 +73,48 @@ class Events extends FinderTypeBase {
       ->setName(static::LIST_VIEW_FIELD)
       ->setTargetEntityTypeId($content_entity_type_id)
       ->setLabel(t('Event list view'))
+      ->setRequired(FALSE)
+      ->setTranslatable(FALSE)
+      ->setCardinality(1)
+      ->setSettings([
+        'target_type' => 'view',
+        // @todo Custom selection handler which limits views to those whose base
+        // is the entry entity type.
+        'handler' => 'default:view',
+        'handler_settings' => [
+          'target_bundles' => NULL,
+          'auto_create' => FALSE,
+        ],
+        'plugin_types' => [
+          'embed' => 'embed',
+        ],
+      ])
+      ->setDisplayConfigurable('form', TRUE)
+      ->setDisplayOptions('form', [
+        'type' => 'viewsreference_select',
+      ]);
+  }
+
+  /**
+   * Gets the definition for the list view selection field.
+   *
+   * This field on channels controls allows selecting the view to show a listing
+   * of event entries.
+   *
+   * @param \Drupal\Core\Config\Entity\ConfigEntityInterface $bundle
+   *   The bundle entity.
+   *
+   * @return \Drupal\localgov_finders\Field\BundleFieldDefinition
+   *   The bundle field definition.
+   */
+  protected function getCalendarViewFieldDefinition(ConfigEntityInterface $bundle): BundleFieldDefinition {
+    $bundle_entity_type = $bundle->getEntityType();
+    $content_entity_type_id = $bundle_entity_type->getBundleOf();
+
+    return BundleFieldDefinition::create('viewsreference')
+      ->setName(static::CALENDAR_VIEW_FIELD)
+      ->setTargetEntityTypeId($content_entity_type_id)
+      ->setLabel(t('Event calendar view'))
       ->setRequired(FALSE)
       ->setTranslatable(FALSE)
       ->setCardinality(1)
