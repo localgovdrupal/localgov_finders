@@ -93,6 +93,7 @@ class ChannelViews extends SelectionPluginBase implements ContainerFactoryPlugin
 
     if (empty($finder_type_plugin)) {
       \Drupal::messenger()->addError('This entity selection plugin must be used on fields which are on a finder channel bundle.');
+      return [];
     }
 
     $index_ids = $finder_type_plugin->getIndexIds();
