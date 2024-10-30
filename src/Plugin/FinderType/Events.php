@@ -39,6 +39,15 @@ class Events extends FinderTypeBase {
   /**
    * {@inheritdoc}
    */
+  public function getIndexIds(): array {
+    return [
+      'localgov_finders_index_events',
+    ];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getChannelFieldDefinitions(ConfigEntityInterface $bundle): array {
     $field_definitions = parent::getChannelFieldDefinitions($bundle);
 
