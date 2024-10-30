@@ -91,8 +91,11 @@ final class FinderPluginTest extends KernelTestBase {
 
     $channel = $this->reloadEntity($channel);
     $this->assertTrue($channel->hasField(FinderTypeBase::CHANNEL_TYPES_FIELD));
+
+    // A search index has been created by the creation of the channel bundle.
     $search_index = Index::load('localgov_finders_index_default');
     $this->assertNotEmpty($search_index);
+    $this->assertEmpty($search_index->getFields());
 
     $entry_bundle_one = EntityTestBundle::create([
       'id' => 'test_entry_bundle_one',
@@ -130,6 +133,12 @@ final class FinderPluginTest extends KernelTestBase {
     );
     $entry_bundle_two->save();
 
+    // The search index has been updated by the creation of the entry bundles.
+    $search_index = $this->reloadEntity($search_index);
+    $fields = $search_index->getFields();
+    $this->assertArrayHasKey('rendered_item', $fields);
+    $this->assertArrayHasKey('localgov_finders_title_sort', $fields);
+
     // At present unrestricted which test entity type bundles.
     $channel->{FinderTypeBase::CHANNEL_TYPES_FIELD} = $channels = [
       ['target_id' => 'test_entry_bundle_one'],
@@ -146,7 +155,6 @@ final class FinderPluginTest extends KernelTestBase {
       FinderTypeBase::CHANNEL_SELECTION_FIELD => $channel->id(),
     ]);
     $entry->save();
-
   }
 
   /**

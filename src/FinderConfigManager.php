@@ -287,11 +287,12 @@ class FinderConfigManager {
     // TODO:
     // Create config.
 
-    // Update existing config.
+    // Update search indexes.
+    // TODO: There is no guarantee the channel got configured first!!!!
     foreach ($finder_type->getIndexIds() as $index_id) {
       $index = $this->entityTypeManager->getStorage('search_api_index')->load($index_id);
-      // TODO! not yet working!
-      // $finder_type->indexAddBundle($index, $bundle_entity);
+      $finder_type->alterSearchIndexForEntry($index, $bundle_entity);
+      $index->save();
     }
   }
 

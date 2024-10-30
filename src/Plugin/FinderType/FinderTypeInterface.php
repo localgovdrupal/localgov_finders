@@ -95,22 +95,13 @@ interface FinderTypeInterface extends PluginInspectionInterface, DerivativeInspe
   public function alterSearchIndexForChannel(IndexInterface $index, ConfigEntityInterface $channel_bundle_entity): void;
 
   /**
-   * Adds an entity bundle to an index datasource.
-   *
-   * @todo could this be replaced with a Search API plugin that looks for
-   * enabled bundles. It would be of all entity types though. And we still add
-   * fields so change the config, so it's maybe fine to keep doing here?
+   * Alter the Search API index when an entry bundle is configured.
    *
    * @param \Drupal\search_api\IndexInterface $index
-   *   The index to add bundle to.
-   * @param string $entity_type_id
-   *   Entity type ID.
-   * @param \Drupal\Core\Config\Entity\ConfigEntityInterface
-   *   The bundle entity to add to the index.
-   *
-   * @throws \Exception
-   *   Throws an exception if the bundle can't be added to the index datasource.
+   *   The updated index about to be saved.
+   * @param \Drupal\Core\Config\Entity\ConfigEntityInterface $entry_bundle_entity
+   *   The entry bundle.
    */
-  public function indexAddBundle(IndexInterface $index, ConfigEntityInterface $bundle_entity): void;
+  public function alterSearchIndexForEntry(IndexInterface $index, ConfigEntityInterface $entry_bundle_entity): void;
 
 }

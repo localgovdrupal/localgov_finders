@@ -6,6 +6,7 @@ use Drupal\Component\Plugin\PluginBase;
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
 use Drupal\Core\Config\Entity\ConfigEntityTypeInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\localgov_finders\Constants\FinderField;
 use Drupal\localgov_finders\Field\BundleFieldDefinition;
 use Drupal\search_api\Datasource\DatasourceInterface;
@@ -125,25 +126,102 @@ abstract class FinderTypeBase extends PluginBase implements FinderTypeInterface 
   /**
    * {@inheritdoc}
    */
-  public function indexAddBundle(IndexInterface $index, ConfigEntityInterface $bundle_entity): void {
-    $entity_type_id = $bundle_entity->getEntityType()->getBundleOf();
-    $bundle_id = $bundle_entity->id();
+  public function alterSearchIndexForEntry(IndexInterface $index, ConfigEntityInterface $entry_bundle_entity): void {
+    $this->addEntryBundleToDatasource($index, $entry_bundle_entity);
+    $this->alterIndexFields($index, $entry_bundle_entity);
+  }
 
-    $datasource = $this->indexGetDatasource($index, $entity_type_id);
+  /**
+   * Adds an entry bundle to an index's datasource.
+   *
+   * @todo could this be replaced with a Search API plugin that looks for
+   * enabled bundles. It would be of all entity types though. And we still add
+   * fields so change the config, so it's maybe fine to keep doing here?
+   *
+   * @param \Drupal\search_api\IndexInterface $index
+   *   The search index being updated.
+   * @param \Drupal\Core\Config\Entity\ConfigEntityInterface $entry_bundle_entity
+   *   The bundle entity being added.
+   *
+   * @throws \Exception
+   *   Throws an exception if the bundle can't be added to the index datasource.
+   */
+  protected function addEntryBundleToDatasource(IndexInterface $index, ConfigEntityInterface $entry_bundle_entity): void {
+    $entry_entity_type_id = $entry_bundle_entity->getEntityType()->getBundleOf();
+    $entry_bundle_id = $entry_bundle_entity->id();
+
+    $datasource = $this->indexGetDatasource($index, $entry_entity_type_id);
     if (!$datasource) {
       throw new \Exception('Failed to update the directories search index with new bundle');
     }
 
     $configuration = $datasource->getConfiguration();
     $configuration['bundles']['default'] = FALSE;
-    if (!in_array($entity_bundle, $configuration['bundles']['selected'])) {
-      $configuration['bundles']['selected'][] = $entity_bundle;
+    if (!in_array($entry_bundle_id, $configuration['bundles']['selected'])) {
+      $configuration['bundles']['selected'][] = $entry_bundle_id;
     }
     $datasource->setConfiguration($configuration);
   }
 
   /**
-   * Get index entity datasource.
+   * Adds and updates fields on an index.
+   *
+   * @param \Drupal\search_api\IndexInterface $index
+   *   The search index being updated.
+   * @param \Drupal\Core\Config\Entity\ConfigEntityInterface $entry_bundle_entity
+   *   The bundle entity being added.
+   */
+  protected function alterIndexFields(IndexInterface $index, ConfigEntityInterface $entry_bundle_entity): void {
+    // Get the entity type ID of the entry entities that the entry bundle entity
+    // defines.
+    $entry_entity_type_id = $entry_bundle_entity->getEntityType()->getBundleOf();
+    $entry_bundle_id = $entry_bundle_entity->id();
+
+    $datasource_id = $this->getIndexDatasourceId($index, $entry_entity_type_id);
+
+    if (!$index->getField(static::TITLE_SORT_FIELD)) {
+      $sort_title_field = new SearchIndexField($index, static::TITLE_SORT_FIELD);
+      $sort_title_field->setDatasourceId($datasource_id);
+      $sort_title_field->setType('string');
+      $sort_title_field->setPropertyPath(static::TITLE_SORT_FIELD);
+      $sort_title_field->setLabel('Title (sort)');
+
+      $index->addField($sort_title_field);
+    }
+
+    $rendered_item_field = $index->getField('rendered_item');
+    if (!$rendered_item_field) {
+      // There is no rendered item field yet on this index, so create it.
+      // The rendered_item index field is independent of datasource, so should
+      // not have a datasource set on it.
+      $rendered_item_field = new SearchIndexField($index, 'rendered_item');
+      $rendered_item_field->setType('text');
+      $rendered_item_field->setPropertyPath('rendered_item');
+      $rendered_item_field->setLabel('Rendered HTML output');
+
+      $configuration = $rendered_item_field->getConfiguration();
+      $configuration['roles'][AccountInterface::ANONYMOUS_ROLE] = AccountInterface::ANONYMOUS_ROLE;
+      $configuration['view_mode'][$datasource_id][$entry_bundle_id] = 'directory_index';
+      $rendered_item_field->setConfiguration($configuration);
+
+      $index->addField($rendered_item_field);
+    }
+    else {
+      // The rendered item field already exists on this index. Add the new entry
+      // bumdle to the field's view mode configuration.
+      $configuration = $rendered_item_field->getConfiguration();
+      // TODO make the view mode a plugin constant.
+      $configuration['view_mode'][$datasource_id][$entry_bundle_id] = 'directory_index';
+      $rendered_item_field->setConfiguration($configuration);
+    }
+
+    // TODO
+    // - localgov_directory_channels
+    // - localgov_directory_title_sort
+  }
+
+  /**
+   * Get index entity datasource or create it if it is not found.
    *
    * @param \Drupal\search_api\IndexInterface $index
    *   The index to retrieve the datasource from.
@@ -156,13 +234,16 @@ abstract class FinderTypeBase extends PluginBase implements FinderTypeInterface 
   protected function indexGetDatasource(IndexInterface $index, string $entity_type_id): DatasourceInterface {
     $datasource_id = $this->getIndexDatasourceId($index, $entity_type_id);
 
-    if (!$index->isValidDatasource($datasource_id)) {
-      // If the content:node datasource has been lost so have the fields most
-      // probably and it's more of a mess. But leaving this here anyway.
-      $datasource = $this->pluginHelper->createDatasourcePlugin($index, $datasource_id);
+    if ($index->isValidDatasource($datasource_id)) {
+      $datasource = $index->getDatasource($datasource_id);
     }
+    else {
+      $pluginHelper = \Drupal::service('search_api.plugin_helper');
 
-    $datasource = $index->getDatasource($datasource_id);
+      $datasource = $pluginHelper->createDatasourcePlugin($index, $datasource_id);
+
+      $index->addDatasource($datasource);
+    }
 
     return $datasource;
   }
