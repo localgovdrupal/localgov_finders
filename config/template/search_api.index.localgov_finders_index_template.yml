@@ -1,3 +1,6 @@
+# TODO
+# commented-out bits are the bits that need to be added dynamically
+# replace them with a docs comment once the code is written
 langcode: en
 status: false
 dependencies:
