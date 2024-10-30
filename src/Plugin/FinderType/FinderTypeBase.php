@@ -179,12 +179,45 @@ abstract class FinderTypeBase extends PluginBase implements FinderTypeInterface 
 
     $datasource_id = $this->getIndexDatasourceId($index, $entry_entity_type_id);
 
+    // TODO DI
+    $entityTypeManager = \Drupal::service('entity_type.manager');
+    $label_field_name = $entityTypeManager->getDefinition($entry_entity_type_id)->getKey('label');
+    if (!$index->getField($label_field_name)) {
+      $title_field = new SearchIndexField($index, $label_field_name);
+      $title_field->setDatasourceId($datasource_id);
+      $title_field->setType('text');
+      $title_field->setPropertyPath($label_field_name);
+      $title_field->setBoost(5.0);
+      $title_field->setLabel('Title');
+
+      $index->addField($title_field);
+    }
+
+    if (!$index->getField(static::CHANNEL_SELECTION_FIELD)) {
+      $channel_selection_field = new SearchIndexField($index, static::CHANNEL_SELECTION_FIELD);
+      $channel_selection_field->setLabel('Directory channels');
+      $channel_selection_field->setDatasourceId($datasource_id);
+      $channel_selection_field->setPropertyPath(static::CHANNEL_SELECTION_FIELD);
+      $channel_selection_field->setType('string');
+      $channel_selection_field->setDependencies([
+        'config' => [
+          'field.storage.node.' . $entry_entity_type_id . '.' . static::CHANNEL_SELECTION_FIELD,
+        ],
+      ]);
+      $index->addField($channel_selection_field);
+    }
+
     if (!$index->getField(static::TITLE_SORT_FIELD)) {
       $sort_title_field = new SearchIndexField($index, static::TITLE_SORT_FIELD);
       $sort_title_field->setDatasourceId($datasource_id);
       $sort_title_field->setType('string');
       $sort_title_field->setPropertyPath(static::TITLE_SORT_FIELD);
       $sort_title_field->setLabel('Title (sort)');
+      $sort_title_field->setDependencies([
+        'config' => [
+          'field.storage.' . $entry_entity_type_id . '.' . static::TITLE_SORT_FIELD,
+        ],
+      ]);
 
       $index->addField($sort_title_field);
     }
@@ -214,10 +247,6 @@ abstract class FinderTypeBase extends PluginBase implements FinderTypeInterface 
       $configuration['view_mode'][$datasource_id][$entry_bundle_id] = 'directory_index';
       $rendered_item_field->setConfiguration($configuration);
     }
-
-    // TODO
-    // - localgov_directory_channels
-    // - localgov_directory_title_sort
   }
 
   /**

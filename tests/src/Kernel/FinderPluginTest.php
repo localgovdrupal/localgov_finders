@@ -136,8 +136,11 @@ final class FinderPluginTest extends KernelTestBase {
     // The search index has been updated by the creation of the entry bundles.
     $search_index = $this->reloadEntity($search_index);
     $fields = $search_index->getFields();
+    // The entity_test_with_bundle label field is 'name', unlike nodes.
+    $this->assertArrayHasKey('name', $fields);
     $this->assertArrayHasKey('rendered_item', $fields);
     $this->assertArrayHasKey('localgov_finders_title_sort', $fields);
+    $this->assertArrayHasKey('localgov_finders_channels', $fields);
 
     // At present unrestricted which test entity type bundles.
     $channel->{FinderTypeBase::CHANNEL_TYPES_FIELD} = $channels = [
