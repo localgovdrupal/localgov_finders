@@ -91,7 +91,9 @@ abstract class FinderTypeBase extends PluginBase implements FinderTypeInterface 
    * {@inheritdoc}
    */
   public function getIndexIds(): array {
-    return [];
+    return [
+      'localgov_finders_index_default',
+    ];
   }
 
   /**
@@ -117,7 +119,7 @@ abstract class FinderTypeBase extends PluginBase implements FinderTypeInterface 
   /**
    * {@inheritdoc}
    */
-  public function alterIndex(IndexInterface $index): void {
+  public function alterSearchIndexForChannel(IndexInterface $index, ConfigEntityInterface $channel_bundle_entity): void {
   }
 
   /**

@@ -10,6 +10,7 @@ use Drupal\entity_test\Entity\EntityTestBundle;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\localgov_finders\Enum\FinderRole;
 use Drupal\localgov_finders\Plugin\FinderType\FinderTypeBase;
+use Drupal\search_api\Entity\Index;
 use Hoa\File\Finder;
 
 /**
@@ -42,6 +43,8 @@ final class FinderPluginTest extends KernelTestBase {
    */
   protected function setUp(): void {
     parent::setUp();
+
+    $this->installEntitySchema('search_api_task');
 
     $this->installConfig('localgov_finders_test');
     $this->installEntitySchema('entity_test_with_bundle');
@@ -85,8 +88,11 @@ final class FinderPluginTest extends KernelTestBase {
       'channel'
     );
     $channel_bundle->save();
+
     $channel = $this->reloadEntity($channel);
     $this->assertTrue($channel->hasField(FinderTypeBase::CHANNEL_TYPES_FIELD));
+    $search_index = Index::load('localgov_finders_index_default');
+    $this->assertNotEmpty($search_index);
 
     $entry_bundle_one = EntityTestBundle::create([
       'id' => 'test_entry_bundle_one',

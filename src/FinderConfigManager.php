@@ -6,6 +6,7 @@ use Drupal\Core\Config\ConfigInstallerInterface;
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
 use Drupal\Core\Config\Entity\ConfigEntityType;
 use Drupal\Core\Config\Entity\ConfigEntityTypeInterface;
+use Drupal\Core\Config\FileStorage as ConfigFileStorage;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ModuleExtensionList;
@@ -181,7 +182,19 @@ class FinderConfigManager {
       $this->fieldDefinitionListener->onFieldDefinitionCreate($field_definition);
     }
 
-    //
+    // Create the finder type's search indexes if they don't already.
+    $index_ids = $finder_type->getIndexIds();
+    foreach ($index_ids as $index_id) {
+      $index = $this->entityTypeManager->getStorage('search_api_index')->load($index_id);
+
+      if (empty($index)) {
+        $this->createSearchIndex($bundle_entity, $finder_type, $index_id);
+      }
+    }
+
+    // TEMP! The rest of this method doesn't work yet!
+    return;
+
     foreach ($finder_type->getIndexIds() as $index_id) {
       $index = $this->entityTypeManager->getStorage('search_api_index')->load($index_id);
       assert($index instanceof IndexInterface);
@@ -277,8 +290,45 @@ class FinderConfigManager {
     // Update existing config.
     foreach ($finder_type->getIndexIds() as $index_id) {
       $index = $this->entityTypeManager->getStorage('search_api_index')->load($index_id);
-      $finder_type->indexAddBundle($index, $bundle_entity);
+      // TODO! not yet working!
+      // $finder_type->indexAddBundle($index, $bundle_entity);
     }
+  }
+
+  /**
+   * Creates a search index when a channel is created for a new finder type.
+   *
+   * This uses a template YAML config file in the config/template directory to
+   * create a stub search index.
+   *
+   * The search index is not yet functional until at least one entry bundle is
+   * created and a Search API backend set on it.
+   *
+   * @param \Drupal\Core\Config\Entity\ConfigEntityInterface $channel_bundle_entity
+   *   The channel bundle entity.
+   * @param \Drupal\localgov_finders\Plugin\FinderType\FinderTypeInterface $finder_type
+   *   The finder type plugin.
+   * @param string $index_id
+   *   The ID of the search index to create.
+   */
+  protected function createSearchIndex(ConfigEntityInterface $channel_bundle_entity, FinderTypeInterface $finder_type, string $index_id): void {
+    $template_config_path = $this->moduleExtensionList->getPath('localgov_finders') . '/config/template';
+
+    $config_src = new ConfigFileStorage($template_config_path);
+
+    $config_filename = 'search_api.index.localgov_finders_index_template';
+
+    $config_values = $config_src->read($config_filename);
+    // dump($config_values);
+
+    // Set the search index ID and create it.
+    $config_values['id'] = $index_id;
+    $search_index = $this->entityTypeManager->getStorage('search_api_index')->create($config_values);
+
+    // Allow the finder type plugin to make changes.
+    $finder_type->alterSearchIndexForChannel($search_index, $channel_bundle_entity);
+
+    $search_index->save();
   }
 
   /**

@@ -83,14 +83,16 @@ interface FinderTypeInterface extends PluginInspectionInterface, DerivativeInspe
   public function alterField(string $field_name, SearchIndexField $field_definition): void;
 
   /**
-   * Alter the Search API index.
+   * Alter the Search API index when a channel bundle is configured.
    *
    * After it is configured, for anything unusual we've not thought of.
    *
    * @param \Drupal\search_api\IndexInterface $index
    *   The updated index about to be saved.
+   * @param \Drupal\Core\Config\Entity\ConfigEntityInterface
+   *   The channel bundle.
    */
-  public function alterIndex(IndexInterface $index): void;
+  public function alterSearchIndexForChannel(IndexInterface $index, ConfigEntityInterface $channel_bundle_entity): void;
 
   /**
    * Adds an entity bundle to an index datasource.
