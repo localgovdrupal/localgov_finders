@@ -97,6 +97,13 @@ abstract class FinderTypeBase extends PluginBase implements FinderTypeInterface 
   /**
    * {@inheritdoc}
    */
+  public function getIndexDatasourceId(IndexInterface $index, string $entity_type_id) {
+    return 'entity:' . $entity_type_id;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getIndexFields(ConfigEntityInterface $bundle, IndexInterface $index): array {
     return [];
   }
@@ -145,12 +152,15 @@ abstract class FinderTypeBase extends PluginBase implements FinderTypeInterface 
    *   The datasource.
    */
   protected function indexGetDatasource(IndexInterface $index, string $entity_type_id): DatasourceInterface {
-    $datasource = $index->getDatasource('entity:' . $entity_type_id);
-    if (!$datasource) {
+    $datasource_id = $this->getIndexDatasourceId($index, $entity_type_id);
+
+    if (!$index->isValidDatasource($datasource_id)) {
       // If the content:node datasource has been lost so have the fields most
       // probably and it's more of a mess. But leaving this here anyway.
-      $datasource = $this->pluginHelper->createDatasourcePlugin($index, 'entity:' . $entity_type_id);
+      $datasource = $this->pluginHelper->createDatasourcePlugin($index, $datasource_id);
     }
+
+    $datasource = $index->getDatasource($datasource_id);
 
     return $datasource;
   }
