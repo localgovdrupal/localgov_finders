@@ -89,7 +89,7 @@ interface FinderTypeInterface extends PluginInspectionInterface, DerivativeInspe
    *
    * @param \Drupal\search_api\IndexInterface $index
    *   The updated index about to be saved.
-   * @param \Drupal\Core\Config\Entity\ConfigEntityInterface
+   * @param \Drupal\Core\Config\Entity\ConfigEntityInterface $channel_bundle_entity
    *   The channel bundle.
    */
   public function alterSearchIndexForChannel(IndexInterface $index, ConfigEntityInterface $channel_bundle_entity): void;
