@@ -18,6 +18,8 @@ use Drupal\search_api\Item\Field as SearchIndexField;
  */
 abstract class FinderTypeBase extends PluginBase implements FinderTypeInterface {
 
+  // @todo Confirm we want typed constants, and target ≥ PHP8.3
+
   /**
    * The field name for the channel types field.
    *

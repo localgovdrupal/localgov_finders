@@ -6,6 +6,7 @@
     "license": "GPL-2.0-or-later",
     "minimum-stability": "dev",
     "require": {
+        "php": ">=8.3",
         "drupal/core": "^10.2",
         "drupal/search_api": "^1.29"
     },

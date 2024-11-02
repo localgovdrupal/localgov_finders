@@ -3,6 +3,7 @@ type: module
 description: 'Common finders functionality, display, index, filter.'
 package: LocalGov Drupal
 core_version_requirement: ^10.2
+php: 8.3
 dependencies:
   - drupal:views
   - search_api:search_api
