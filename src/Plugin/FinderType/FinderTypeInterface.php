@@ -55,32 +55,12 @@ interface FinderTypeInterface extends PluginInspectionInterface, DerivativeInspe
   public function getIndexIds(): array;
 
   /**
-   * Get Search API index fields.
+   * Gets the View ID(s) for the finder.
    *
-   * @todo As this has to get the index passed into it I wonder if it should
-   *   just be the alter index method and the plugins do their thing?
-   *   Or maybe passing a array of expected settings, and the the configuration
-   *   manager goes through and applies them if different - seems much more
-   *   work for little additional value.
-   *   Bonus of this way is it is more structured at the moment.
-   *
-   * @param \Drupal\Core\Config\Entity\ConfigEntityInterface
-   *   Entity bundle.
-   *
-   * @return \Drupal\search_api\Item\Field[]
-   *   An array of field definitions, keyed by the field name.
+   * @return string[]
+   *   An array of the view machine names.
    */
-  public function getIndexFields(ConfigEntityInterface $bundle, IndexInterface $index): array;
-
-  /**
-   * Alter Search API index fields.
-   *
-   * @param string $field_name
-   *   Field name.
-   * @param \Drupal\search_api\Index\Field $field_definition
-   *   Search API field definition.
-   */
-  public function alterField(string $field_name, SearchIndexField $field_definition): void;
+  public function getViewIds(): array;
 
   /**
    * Alter the Search API index when a channel bundle is configured.

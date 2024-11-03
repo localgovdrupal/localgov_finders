@@ -11,7 +11,6 @@ use Drupal\KernelTests\KernelTestBase;
 use Drupal\localgov_finders\Enum\FinderRole;
 use Drupal\localgov_finders\Plugin\FinderType\FinderTypeBase;
 use Drupal\search_api\Entity\Index;
-use Hoa\File\Finder;
 
 /**
  * Test description.

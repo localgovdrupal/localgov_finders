@@ -4,8 +4,6 @@ namespace Drupal\localgov_finders;
 
 use Drupal\Core\Config\ConfigInstallerInterface;
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
-use Drupal\Core\Config\Entity\ConfigEntityType;
-use Drupal\Core\Config\Entity\ConfigEntityTypeInterface;
 use Drupal\Core\Config\FileStorage as ConfigFileStorage;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
@@ -15,7 +13,6 @@ use Drupal\Core\Field\FieldStorageDefinitionListenerInterface;
 use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Drupal\localgov_finders\Enum\FinderRole;
 use Drupal\localgov_finders\Plugin\FinderType\FinderTypeInterface;
-use Drupal\search_api\Datasource\DatasourceInterface;
 use Drupal\search_api\IndexInterface;
 use Drupal\search_api\Utility\PluginHelperInterface;
 
@@ -182,66 +179,16 @@ class FinderConfigManager {
       $this->fieldDefinitionListener->onFieldDefinitionCreate($field_definition);
     }
 
-    // Create the finder type's search indexes if they don't already.
-    $index_ids = $finder_type->getIndexIds();
-    foreach ($index_ids as $index_id) {
-      $index = $this->entityTypeManager->getStorage('search_api_index')->load($index_id);
-
-      if (empty($index)) {
-        $this->createSearchIndex($bundle_entity, $finder_type, $index_id);
-      }
-    }
-
-    // TEMP! The rest of this method doesn't work yet!
-    return;
-
     foreach ($finder_type->getIndexIds() as $index_id) {
       $index = $this->entityTypeManager->getStorage('search_api_index')->load($index_id);
+      // Create the Finder's search indexe if it doesn't already exist.
+      if (empty($index)) {
+        $index = $this->loadTemplateIndex($index_id, $finder_type);
+      }
       assert($index instanceof IndexInterface);
-
-      try {
-        // This doesn't look right -- it's adding the channel bundle!
-        $finder_type->indexAddBundle($index, $bundle_entity);
-      }
-      catch (\Exception $e) {
-        $this->loggerChannelFactory->get('localgov_finders')->error('Failed to update the directories search index with new bundle');
-      }
-
-      // Configure fields on the index.
-      // There are fields that need only adding once, they just can't exist
-      // on the index till the content type and field is there.
-      // eg The Directory Channel selection field.
-      // There are also fields that could already exist that need the bundle
-      // or other configuration or settings on them.
-      // eg The rendered item bundle.
-
-      foreach ($finder_type->getIndexFields($bundle_entity, $index) as $field_name => $field_definition) {
-        if (!$index->getField($field_name)) {
-          $index->addField($field_definition);
-        }
-        $field = $index->getField($field_name);
-        $finder_type->alterField($field_name, $field);
-      }
-      $this->renderedItemAddBundle($index, $entity_type_id, $bundle_id);
-      $this->indexAddChannelsField($index);
-      // The Channel is also the trigger for adding/removing from the index.
-      // So also handle fields already existing on the entity that should be
-      // included in the index.
-      //$entity_fields = $this->entityFieldManager->getFieldDefinitions($entity_type_id, $bundle_entity);
-      //if (array_key_exists(Constants::FACET_SELECTION_FIELD, $entity_fields)) {
-      //  $this->indexAddFacetField($index);
-      //}
-      //if (array_key_exists(Constants::TITLE_SORT_FIELD, $entity_fields)) {
-      //  $this->indexAddTitleSortField($index);
-      //}
-      $finder_type->indexAlter($index);
+      $finder_type->alterSearchIndexForChannel($index, $bundle_entity);
       $index->save();
-
     }
-    // TODO:
-    // Create config.
-
-    // Update existing config.
   }
 
   /**
@@ -289,6 +236,12 @@ class FinderConfigManager {
 
     // Update search indexes.
     // TODO: There is no guarantee the channel got configured first!!!!
+    // @todo Maybe it only makes sense to be able to create a entry type once
+    //   there is a channel type? Make config depend on each other?
+    //   Equally the you can't remove the channel type till the entry types are
+    //   gone.
+    // Facets is also an extension (and seperate plugin probably), that could
+    // should depend on the existence of the channel.
     foreach ($finder_type->getIndexIds() as $index_id) {
       $index = $this->entityTypeManager->getStorage('search_api_index')->load($index_id);
       $finder_type->alterSearchIndexForEntry($index, $bundle_entity);
@@ -301,64 +254,32 @@ class FinderConfigManager {
    *
    * This uses a template YAML config file in the config/template directory to
    * create a stub search index.
+   * If there exists a Search API Index Config YAML file in the plugin module
+   * config/template this will be used. If not the default index template will be used.
    *
-   * The search index is not yet functional until at least one entry bundle is
-   * created and a Search API backend set on it.
-   *
-   * @param \Drupal\Core\Config\Entity\ConfigEntityInterface $channel_bundle_entity
-   *   The channel bundle entity.
-   * @param \Drupal\localgov_finders\Plugin\FinderType\FinderTypeInterface $finder_type
-   *   The finder type plugin.
    * @param string $index_id
    *   The ID of the search index to create.
+   * @param \Drupal\localgov_finders\Plugin\FinderType\FinderTypeInterface $finder_type
+   *   The finder type plugin.
+   *
+   * @return \Drupal\search_api\IndexInterface
+   *   The search index created from the template configuration.
    */
-  protected function createSearchIndex(ConfigEntityInterface $channel_bundle_entity, FinderTypeInterface $finder_type, string $index_id): void {
-    $template_config_path = $this->moduleExtensionList->getPath('localgov_finders') . '/config/template';
+  protected function loadTemplateIndex(string $index_id, FinderTypeInterface $finder_type): IndexInterface {
+    $template_directory = $this->moduleExtensionList->getPath($finder_type->getPluginDefinition()['provider']) . '/config/template';
+    $config_source = new ConfigFileStorage($template_directory);
+    $config_filename = 'search_api.index.' . $index_id;
+    if (!$config_source->exists($config_filename)) {
+      $template_directory = $this->moduleExtensionList->getPath('localgov_finders') . '/config/template';
+      $config_source = new ConfigFileStorage($template_directory);
+      $config_filename = 'search_api.index.localgov_finders_index_template';
+    }
 
-    $config_src = new ConfigFileStorage($template_config_path);
-
-    $config_filename = 'search_api.index.localgov_finders_index_template';
-
-    $config_values = $config_src->read($config_filename);
-    // dump($config_values);
-
-    // Set the search index ID and create it.
+    $config_values = $config_source->read($config_filename);
     $config_values['id'] = $index_id;
     $search_index = $this->entityTypeManager->getStorage('search_api_index')->create($config_values);
 
-    // Allow the finder type plugin to make changes.
-    $finder_type->alterSearchIndexForChannel($search_index, $channel_bundle_entity);
-
-    $search_index->save();
+    return $search_index;
   }
-
-  /**
-   * Add entity bundle to index rendered item field.
-   *
-   * @param \Drupal\search_api\IndexInterface $index
-   *   The index to add bundle to.
-   * @param string $entity_type_id
-   *   Entity type ID.
-   * @param string $entity_bundle
-   *   The bundle ID.
-   */
-  protected function renderedItemAddBundle(IndexInterface $index, string $entity_type_id, string $entity_bundle): void {
-    $index_field = $index->getField('rendered_item');
-    if ($index_field) {
-      $configuration = $index_field->getConfiguration();
-      $configuration['view_mode']['entity:' . $entity_type_id][$entity_bundle] = 'directory_index';
-      $index_field->setConfiguration($configuration);
-    }
-  }
-
-  /**
-   * Setup indexing on the Directory channels field of Directory entries.
-   *
-   * @param \Drupal\search_api\IndexInterface $index
-   *   The index to the channel field to.
-   */
-  protected function indexAddChannelsField(IndexInterface $index): void {
-  }
-
 
 }

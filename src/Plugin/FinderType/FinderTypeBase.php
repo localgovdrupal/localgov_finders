@@ -4,10 +4,7 @@ namespace Drupal\localgov_finders\Plugin\FinderType;
 
 use Drupal\Component\Plugin\PluginBase;
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
-use Drupal\Core\Config\Entity\ConfigEntityTypeInterface;
-use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Session\AccountInterface;
-use Drupal\localgov_finders\Constants\FinderField;
 use Drupal\localgov_finders\Field\BundleFieldDefinition;
 use Drupal\search_api\Datasource\DatasourceInterface;
 use Drupal\search_api\IndexInterface;
@@ -15,6 +12,9 @@ use Drupal\search_api\Item\Field as SearchIndexField;
 
 /**
  * Base class for Finder Type plugins.
+ *
+ * @todo there's a lot in here now.
+ * Should some maybe go out into Traits / Services?
  */
 abstract class FinderTypeBase extends PluginBase implements FinderTypeInterface {
 
@@ -102,6 +102,13 @@ abstract class FinderTypeBase extends PluginBase implements FinderTypeInterface 
   /**
    * {@inheritdoc}
    */
+  public function getViewIds(): array {
+    return [];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getIndexDatasourceId(IndexInterface $index, string $entity_type_id) {
     return 'entity:' . $entity_type_id;
   }
@@ -109,20 +116,9 @@ abstract class FinderTypeBase extends PluginBase implements FinderTypeInterface 
   /**
    * {@inheritdoc}
    */
-  public function getIndexFields(ConfigEntityInterface $bundle, IndexInterface $index): array {
-    return [];
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function alterField(string $field_name, SearchIndexField $field_definition): void {
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function alterSearchIndexForChannel(IndexInterface $index, ConfigEntityInterface $channel_bundle_entity): void {
+    // Additional configuration to the default template could be done here.
+    // Or use a preconfigured template in /config/template/search_api.index.[index_name].yml
   }
 
   /**
