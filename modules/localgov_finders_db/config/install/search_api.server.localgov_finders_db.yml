@@ -1,0 +1,14 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - search_api_db
+id: localgov_finders_db
+name: 'Localgov Finders DB'
+description: 'Default database backend server for Finders Indexes.'
+backend: search_api_db
+backend_config:
+  database: 'default:default'
+  min_chars: 1
+  matching: words
+  phrase: bigram

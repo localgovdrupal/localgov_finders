@@ -1,0 +1,4 @@
+services:
+  Drupal\localgov_finders_db\BundleConfigForm:
+    decorates: Drupal\localgov_finders\BundleConfigForm
+    arguments: ['@.inner']

@@ -1,0 +1,8 @@
+name: 'LocalGov Finders DB'
+type: module
+description: 'Default Search API Database backend for Finders.'
+package: LocalGov Drupal
+core_version_requirement: ^10.2
+dependencies:
+  - search_api:search_api_db
+  - localgov_finders:localgov_finders
