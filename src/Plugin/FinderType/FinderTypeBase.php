@@ -229,7 +229,28 @@ abstract class FinderTypeBase extends PluginBase implements FinderTypeInterface,
 
     $datasource_id = $this->getIndexDatasourceId($index, $entry_entity_type_id);
 
+    $this->ensureIndexLabelField($index, $entry_bundle_entity, $datasource_id);
+    $this->ensureIndexTitleSortField($index, $entry_bundle_entity, $datasource_id);
+    $this->ensureIndexChannelSelectionField($index, $entry_bundle_entity, $datasource_id);
+    $this->alterIndexRenderedItemField($index, $entry_bundle_entity, $datasource_id);
+  }
+
+  /**
+   * Ensures the index has a label field for the entry bundle.
+   *
+   * @param \Drupal\search_api\IndexInterface $index
+   *   The search index being updated.
+   * @param \Drupal\Core\Config\Entity\ConfigEntityInterface $entry_bundle_entity
+   *   The bundle entity being added.
+   * @param string $datasource_id
+   *   The ID of the datasource for the entry bundle.
+   *
+   * @see self::alterIndexFields()
+   */
+  protected function ensureIndexLabelField(IndexInterface $index, ConfigEntityInterface $entry_bundle_entity, string $datasource_id): void {
+    $entry_entity_type_id = $entry_bundle_entity->getEntityType()->getBundleOf();
     $label_field_name = $this->entityTypeManager->getDefinition($entry_entity_type_id)->getKey('label');
+
     if (!$index->getField($label_field_name)) {
       $title_field = new SearchIndexField($index, $label_field_name);
       $title_field->setDatasourceId($datasource_id);
@@ -240,20 +261,22 @@ abstract class FinderTypeBase extends PluginBase implements FinderTypeInterface,
 
       $index->addField($title_field);
     }
+  }
 
-    if (!$index->getField(static::CHANNEL_SELECTION_FIELD)) {
-      $channel_selection_field = new SearchIndexField($index, static::CHANNEL_SELECTION_FIELD);
-      $channel_selection_field->setLabel('Directory channels');
-      $channel_selection_field->setDatasourceId($datasource_id);
-      $channel_selection_field->setPropertyPath(static::CHANNEL_SELECTION_FIELD);
-      $channel_selection_field->setType('string');
-      $channel_selection_field->setDependencies([
-        'config' => [
-          'field.storage.node.' . $entry_entity_type_id . '.' . static::CHANNEL_SELECTION_FIELD,
-        ],
-      ]);
-      $index->addField($channel_selection_field);
-    }
+  /**
+   * Ensures the index has a title sort field for the entry bundle.
+   *
+   * @param \Drupal\search_api\IndexInterface $index
+   *   The search index being updated.
+   * @param \Drupal\Core\Config\Entity\ConfigEntityInterface $entry_bundle_entity
+   *   The bundle entity being added.
+   * @param string $datasource_id
+   *   The ID of the datasource for the entry bundle.
+   *
+   * @see self::alterIndexFields()
+   */
+  protected function ensureIndexTitleSortField(IndexInterface $index, ConfigEntityInterface $entry_bundle_entity, string $datasource_id): void {
+    $entry_entity_type_id = $entry_bundle_entity->getEntityType()->getBundleOf();
 
     if (!$index->getField(static::TITLE_SORT_FIELD)) {
       $sort_title_field = new SearchIndexField($index, static::TITLE_SORT_FIELD);
@@ -269,8 +292,36 @@ abstract class FinderTypeBase extends PluginBase implements FinderTypeInterface,
 
       $index->addField($sort_title_field);
     }
+  }
 
-    $this->alterIndexRenderedItemField($index, $entry_bundle_entity, $datasource_id);
+  /**
+   * Ensures the index has a channel selection field for the entry bundle.
+   *
+   * @param \Drupal\search_api\IndexInterface $index
+   *   The search index being updated.
+   * @param \Drupal\Core\Config\Entity\ConfigEntityInterface $entry_bundle_entity
+   *   The bundle entity being added.
+   * @param string $datasource_id
+   *   The ID of the datasource for the entry bundle.
+   *
+   * @see self::alterIndexFields()
+   */
+  protected function ensureIndexChannelSelectionField(IndexInterface $index, ConfigEntityInterface $entry_bundle_entity, string $datasource_id): void {
+    $entry_entity_type_id = $entry_bundle_entity->getEntityType()->getBundleOf();
+
+    if (!$index->getField(static::CHANNEL_SELECTION_FIELD)) {
+      $channel_selection_field = new SearchIndexField($index, static::CHANNEL_SELECTION_FIELD);
+      $channel_selection_field->setLabel('Directory channels');
+      $channel_selection_field->setDatasourceId($datasource_id);
+      $channel_selection_field->setPropertyPath(static::CHANNEL_SELECTION_FIELD);
+      $channel_selection_field->setType('string');
+      $channel_selection_field->setDependencies([
+        'config' => [
+          'field.storage.node.' . $entry_entity_type_id . '.' . static::CHANNEL_SELECTION_FIELD,
+        ],
+      ]);
+      $index->addField($channel_selection_field);
+    }
   }
 
   /**
