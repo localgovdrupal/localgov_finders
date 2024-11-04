@@ -270,6 +270,26 @@ abstract class FinderTypeBase extends PluginBase implements FinderTypeInterface,
       $index->addField($sort_title_field);
     }
 
+    $this->alterIndexRenderedItemField($index, $entry_bundle_entity, $datasource_id);
+  }
+
+  /**
+   * Adds an entry bundle to the index's rendered item field.
+   *
+   * If the rendered item field does not yet exist on the index, it is created.
+   *
+   * @param \Drupal\search_api\IndexInterface $index
+   *   The search index being updated.
+   * @param \Drupal\Core\Config\Entity\ConfigEntityInterface $entry_bundle_entity
+   *   The bundle entity being added.
+   * @param string $datasource_id
+   *   The ID of the datasource for the entry bundle.
+   *
+   * @see self::alterIndexFields()
+   */
+  protected function alterIndexRenderedItemField(IndexInterface $index, ConfigEntityInterface $entry_bundle_entity, string $datasource_id): void {
+    $entry_bundle_id = $entry_bundle_entity->id();
+
     $rendered_item_field = $index->getField('rendered_item');
     if (!$rendered_item_field) {
       // There is no rendered item field yet on this index, so create it.
