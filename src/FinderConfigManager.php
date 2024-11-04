@@ -181,7 +181,7 @@ class FinderConfigManager {
 
     foreach ($finder_type->getIndexIds() as $index_id) {
       $index = $this->entityTypeManager->getStorage('search_api_index')->load($index_id);
-      // Create the Finder's search indexe if it doesn't already exist.
+      // Create the Finder's search index if it doesn't already exist.
       if (empty($index)) {
         $index = $this->loadTemplateIndex($index_id, $finder_type);
       }
