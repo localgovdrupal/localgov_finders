@@ -7,11 +7,14 @@ namespace Drupal\localgov_finders;
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 
 /**
  * Form section added to configure Finder on bundle.
  */
 class BundleConfigForm implements BundleConfigFormInterface {
+
+  use StringTranslationTrait;
 
   /**
    * Creates a BundleConfigForm instance.
@@ -44,7 +47,7 @@ class BundleConfigForm implements BundleConfigFormInterface {
     $form['localgov_finders'] = [
       '#type' => 'details',
       '#group' => 'additional_settings',
-      '#title' => t('LocalGov Finder type'),
+      '#title' => $this->t('LocalGov Finder type'),
       '#attributes' => ['class' => ['localgov-finders-type']],
       '#tree' => TRUE,
       '#weight' => 10,
@@ -55,13 +58,13 @@ class BundleConfigForm implements BundleConfigFormInterface {
     // @todo Remove empty options when
     // https://www.drupal.org/project/drupal/issues/3194345 is fixed in core.
     $options = [
-      '' => t('None'),
+      '' => $this->t('None'),
     ];
     $options += array_map(fn($definition) => $definition['label'], $finder_type_definitions);
 
     $form['localgov_finders']['finder_type'] = [
       '#type' => 'radios',
-      '#title' => t("Finder type"),
+      '#title' => $this->t("Finder type"),
       '#options' => $options,
       '#empty_value' => '',
       '#default_value' => $bundle_type->getThirdPartySetting('localgov_finders', 'finder_type', ''),
@@ -73,11 +76,11 @@ class BundleConfigForm implements BundleConfigFormInterface {
 
     $form['localgov_finders']['finder_role'] = [
       '#type' => 'radios',
-      '#title' => t("Finder role"),
+      '#title' => $this->t("Finder role"),
       '#options' => [
-        '' => t('None'),
-        'channel' => t('Finder channel: nodes of this type are finders'),
-        'entries' => t('Entries: nodes of this type are entries that can be shown in finders'),
+        '' => $this->t('None'),
+        'channel' => $this->t('Finder channel: nodes of this type are finders'),
+        'entries' => $this->t('Entries: nodes of this type are entries that can be shown in finders'),
       ],
       '#default_value' => $bundle_type->getThirdPartySetting('localgov_finders', 'finder_role', ''),
       // @todo Use States to hide this & make it required if a type is selected.
@@ -96,7 +99,7 @@ class BundleConfigForm implements BundleConfigFormInterface {
    */
   public function validate(array $form, FormStateInterface $form_state): void {
     if (!empty($form_state->getValue(['localgov_finders', 'finder_type'])) && empty($form_state->getValue(['localgov_finders', 'finder_role']))) {
-      $form_state->setError($form['localgov_finders']['finder_role'], t('The Finder role must be set if a Finder type is set.'));
+      $form_state->setError($form['localgov_finders']['finder_role'], $this->t('The Finder role must be set if a Finder type is set.'));
     }
   }
 
