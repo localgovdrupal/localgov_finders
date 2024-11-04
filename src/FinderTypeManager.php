@@ -131,4 +131,28 @@ class FinderTypeManager extends DefaultPluginManager {
     );
   }
 
+  /**
+   * Gets all the active finder type plugins for a content entity type.
+   *
+   * @param \Drupal\Core\Entity\EntityTypeInterface $content_entity_type
+   *   The content entity type to get finder plugins for.
+   *
+   * @return \Drupal\localgov_finders\Plugin\FinderType\FinderTypeInterface[]
+   *   An array of finder type plugins, keyed by the plugin ID.
+   */
+  public function getActiveFinderTypes(EntityTypeInterface $content_entity_type): array {
+    $entity_type_manager = \Drupal::service('entity_type.manager');
+    $bundle_entity_type_id = $content_entity_type->getBundleEntityType();
+    $bundle_entities = $entity_type_manager->getStorage($bundle_entity_type_id)->loadMultiple();
+
+    $finder_type_plugins = array_map($this->getBundleFinderType(...), $bundle_entities);
+    $finder_type_plugins = array_filter($finder_type_plugins);
+
+    $finder_type_plugins_keyed = [];
+    foreach ($finder_type_plugins as $finder_type_plugin) {
+      $finder_type_plugins_keyed[$finder_type_plugin->getPluginId()] = $finder_type_plugin;
+    }
+    return $finder_type_plugins_keyed;
+  }
+
 }
