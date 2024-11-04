@@ -235,7 +235,6 @@ class FinderConfigManager {
     // Create config.
 
     // Update search indexes.
-    // TODO: There is no guarantee the channel got configured first!!!!
     // @todo Maybe it only makes sense to be able to create a entry type once
     //   there is a channel type? Make config depend on each other?
     //   Equally the you can't remove the channel type till the entry types are
@@ -244,6 +243,12 @@ class FinderConfigManager {
     // should depend on the existence of the channel.
     foreach ($finder_type->getIndexIds() as $index_id) {
       $index = $this->entityTypeManager->getStorage('search_api_index')->load($index_id);
+      // Create the Finder's search index if it doesn't already exist.
+      if (empty($index)) {
+        $index = $this->loadTemplateIndex($index_id, $finder_type);
+      }
+      assert($index instanceof IndexInterface);
+
       $finder_type->alterSearchIndexForEntry($index, $bundle_entity);
       $index->save();
     }
