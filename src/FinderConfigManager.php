@@ -250,12 +250,11 @@ class FinderConfigManager {
   }
 
   /**
-   * Creates a search index when a channel is created for a new finder type.
+   * Creates a stub search index template from a template YAML config file.
    *
-   * This uses a template YAML config file in the config/template directory to
-   * create a stub search index.
-   * If there exists a Search API Index Config YAML file in the plugin module
-   * config/template this will be used. If not the default index template will be used.
+   * If there exists a Search API Index Config YAML file in the config/template
+   * directory of the module that provides the finder type, then this is used as
+   * the template. If not, the default index template will be used.
    *
    * @param string $index_id
    *   The ID of the search index to create.
@@ -263,12 +262,16 @@ class FinderConfigManager {
    *   The finder type plugin.
    *
    * @return \Drupal\search_api\IndexInterface
-   *   The search index created from the template configuration.
+   *   The search index created from the template configuration. It is the
+   *   caller's responsibility to save this.
    */
   protected function loadTemplateIndex(string $index_id, FinderTypeInterface $finder_type): IndexInterface {
     $template_directory = $this->moduleExtensionList->getPath($finder_type->getPluginDefinition()['provider']) . '/config/template';
     $config_source = new ConfigFileStorage($template_directory);
     $config_filename = 'search_api.index.' . $index_id;
+
+    // Fall back to the default index template if the finder type module does
+    // not provide a template for the index ID.
     if (!$config_source->exists($config_filename)) {
       $template_directory = $this->moduleExtensionList->getPath('localgov_finders') . '/config/template';
       $config_source = new ConfigFileStorage($template_directory);
