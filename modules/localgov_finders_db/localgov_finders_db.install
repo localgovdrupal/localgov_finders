@@ -41,8 +41,6 @@ function localgov_finders_db_install($is_syncing) {
       $index->save();
     }
   }
-
-  // TODO: if a server other than ours declares it is default, remove that.
 }
 
 /**
