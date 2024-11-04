@@ -9,6 +9,10 @@ use Drupal\localgov_finders\Field\BundleFieldDefinition;
 use Drupal\search_api\Datasource\DatasourceInterface;
 use Drupal\search_api\IndexInterface;
 use Drupal\search_api\Item\Field as SearchIndexField;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\search_api\Utility\PluginHelperInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Base class for Finder Type plugins.
@@ -16,9 +20,57 @@ use Drupal\search_api\Item\Field as SearchIndexField;
  * @todo there's a lot in here now.
  * Should some maybe go out into Traits / Services?
  */
-abstract class FinderTypeBase extends PluginBase implements FinderTypeInterface {
+abstract class FinderTypeBase extends PluginBase implements FinderTypeInterface, ContainerFactoryPluginInterface {
 
   // @todo Confirm we want typed constants, and target ≥ PHP8.3
+
+  /**
+   * The entity type manager.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected $entityTypeManager;
+
+  /**
+   * The plugin helper service.
+   *
+   * @var \Drupal\search_api\Utility\PluginHelperInterface
+   */
+  protected $pluginHelper;
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+    return new static(
+      $configuration,
+      $plugin_id,
+      $plugin_definition,
+      $container->get('entity_type.manager'),
+      $container->get('search_api.plugin_helper'),
+    );
+  }
+
+  /**
+   * Creates a FinderTypeBase instance.
+   *
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager.
+   * @param \Drupal\search_api\Utility\PluginHelperInterface $plugin_helper
+   *   The plugin helper service.
+   */
+  public function __construct(
+    array $configuration,
+    $plugin_id,
+    $plugin_definition,
+    EntityTypeManagerInterface $entity_type_manager,
+    PluginHelperInterface $plugin_helper,
+  ) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
+
+    $this->entityTypeManager = $entity_type_manager;
+    $this->pluginHelper = $plugin_helper;
+  }
 
   /**
    * The field name for the channel types field.
@@ -177,9 +229,7 @@ abstract class FinderTypeBase extends PluginBase implements FinderTypeInterface 
 
     $datasource_id = $this->getIndexDatasourceId($index, $entry_entity_type_id);
 
-    // TODO DI
-    $entityTypeManager = \Drupal::service('entity_type.manager');
-    $label_field_name = $entityTypeManager->getDefinition($entry_entity_type_id)->getKey('label');
+    $label_field_name = $this->entityTypeManager->getDefinition($entry_entity_type_id)->getKey('label');
     if (!$index->getField($label_field_name)) {
       $title_field = new SearchIndexField($index, $label_field_name);
       $title_field->setDatasourceId($datasource_id);
@@ -265,9 +315,7 @@ abstract class FinderTypeBase extends PluginBase implements FinderTypeInterface 
       $datasource = $index->getDatasource($datasource_id);
     }
     else {
-      $pluginHelper = \Drupal::service('search_api.plugin_helper');
-
-      $datasource = $pluginHelper->createDatasourcePlugin($index, $datasource_id);
+      $datasource = $this->pluginHelper->createDatasourcePlugin($index, $datasource_id);
 
       $index->addDatasource($datasource);
     }
