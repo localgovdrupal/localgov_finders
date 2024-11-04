@@ -287,6 +287,15 @@ class FinderConfigManager {
     $config_values['id'] = $index_id;
     $search_index = $this->entityTypeManager->getStorage('search_api_index')->create($config_values);
 
+    // Set a default server if one exists.
+    $servers = $this->entityTypeManager->getStorage('search_api_server')->loadMultiple();
+    foreach ($servers as $server_id => $server) {
+      if ($server->getThirdPartySetting('localgov_finders', 'default_server', NULL)) {
+        $search_index->setServer($server);
+        $search_index->setStatus(TRUE);
+      }
+    }
+
     return $search_index;
   }
 

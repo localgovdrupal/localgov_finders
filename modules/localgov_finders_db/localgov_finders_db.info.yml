@@ -1,0 +1,9 @@
+name: 'LocalGov Finders Database'
+description: 'Installs initial SQL database index and configuration for Finders.'
+core_version_requirement: ^10.2
+type: module
+package: LocalGov Drupal
+
+dependencies:
+  - localgov_finders:localgov_finders
+  - search_api:search_api_db
