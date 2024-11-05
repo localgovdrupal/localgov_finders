@@ -5,65 +5,59 @@
  * Hooks provided by the Localgov Finders module.
  */
 
+use Drupal\Core\Config\Entity\ConfigEntityInterface;
+use Drupal\localgov_finders\Plugin\FinderType\FinderTypeInterface;
+
 /**
  * @addtogroup hooks
  * @{
  */
 
 /**
- * TODO: write summary line.
+ * Perform alterations on the channel bundle fields before they are created.
  *
- * TODO: longer description.
- *
- * @param $channel_field_definitions
- *   TODO: document this parameter.
- * @param $bundle_entity
- *   TODO: document this parameter.
- * @param $finder_type
- *   TODO: document this parameter.
- *
- * @return
- *   TODO: Document return value if there is one.
+ * @param \Drupal\localgov_finders\Field\BundleFieldDefinition[] $channel_field_definitions
+ *   An array of bundle field definitions to be added to the channel bundle.
+ *   These have not yet been declared to the field system.
+ * @param \Drupal\Core\Config\Entity\ConfigEntityInterface $bundle_entity
+ *   The bundle entity that is being configured as a channel.
+ * @param \Drupal\localgov_finders\Plugin\FinderType\FinderTypeInterface $finder_type
+ *   The finder type used for the bundle entity.
  */
-function hook_finders_channel_fields_alter($channel_field_definitions, $bundle_entity, $finder_type) {
+function hook_finders_channel_fields_alter(array &$channel_field_definitions, ConfigEntityInterface $bundle_entity, FinderTypeInterface $finder_type) {
   // TODO: write sample code.
 }
 
 /**
- * TODO: write summary line.
+ * Perform alterations on a finder search index when it is being updated.
  *
- * TODO: longer description.
+ * This hook is called a bundle entity is being configured as either a channel
+ * or an entry bundle.
  *
  * @param $index
- *   TODO: document this parameter.
- * @param $bundle_entity
- *   TODO: document this parameter.
- * @param $finder_type
- *   TODO: document this parameter.
- *
- * @return
- *   TODO: Document return value if there is one.
+ *   The search index. It has not yet been saved, and will be saved by the
+ *   invoker of this hook.
+ * @param \Drupal\Core\Config\Entity\ConfigEntityInterface $bundle_entity
+ *   The bundle entity that is being configured as either a channel or an entry.
+ * @param \Drupal\localgov_finders\Plugin\FinderType\FinderTypeInterface $finder_type
+ *   The finder type used for the bundle entity.
  */
-function hook_finders_index_alter($index, $bundle_entity, $finder_type) {
+function hook_finders_index_alter($index, ConfigEntityInterface $bundle_entity, FinderTypeInterface $finder_type) {
   // TODO: write sample code.
 }
 
 /**
- * TODO: write summary line.
+ * Perform alterations on the entry bundle fields before they are created.
  *
- * TODO: longer description.
- *
- * @param $channel_field_definitions
- *   TODO: document this parameter.
- * @param $bundle_entity
- *   TODO: document this parameter.
- * @param $finder_type
- *   TODO: document this parameter.
- *
- * @return
- *   TODO: Document return value if there is one.
+ * @param \Drupal\localgov_finders\Field\BundleFieldDefinition[] $channel_field_definitions
+ *   An array of bundle field definitions to be added to the entry bundle.
+ *   These have not yet been declared to the field system.
+ * @param \Drupal\Core\Config\Entity\ConfigEntityInterface $bundle_entity
+ *   The bundle entity that is being configured as an entry.
+ * @param \Drupal\localgov_finders\Plugin\FinderType\FinderTypeInterface $finder_type
+ *   The finder type used for the bundle entity.
  */
-function hook_finders_entry_fields_alter($channel_field_definitions, $bundle_entity, $finder_type) {
+function hook_finders_entry_fields_alter(array &$channel_field_definitions, ConfigEntityInterface $bundle_entity, FinderTypeInterface $finder_type) {
   // TODO: write sample code.
 }
 
