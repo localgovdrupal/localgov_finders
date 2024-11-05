@@ -5,17 +5,36 @@
  * Contains hook implementations for the Finders facets module.
  */
 
+use Drupal\Core\Hook\LegacyHook;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\finders_facets\Hooks\FindersFacetsHooks;
 
 /**
- * Implements hook_help().
+ * Legacy hook implementation.
+ *
+ * @todo Remove this method when support for Drupal core < 11.1 is dropped.
  */
+#[LegacyHook]
 function finders_facets_help($route_name, RouteMatchInterface $route_match) {
-  switch ($route_name) {
-    case 'help.page.finders_facets':
-      return t("TODO: Create admin help text.");
+  \Drupal::service(FindersFacetsHooks::class)->help($route_name, $route_match);
+}
 
-    // OPTIONAL: Add additional cases for other paths that should display
-    // help text.
-  }
+/**
+ * Legacy hook implementation.
+ *
+ * @todo Remove this method when support for Drupal core < 11.1 is dropped.
+ */
+#[LegacyHook]
+function finders_facets_finders_channel_fields_alter($channel_field_definitions, $bundle_entity, $finder_type) {
+  \Drupal::service(FindersFacetsHooks::class)->findersChannelFieldsAlter($channel_field_definitions, $bundle_entity, $finder_type);
+}
+
+/**
+ * Legacy hook implementation.
+ *
+ * @todo Remove this method when support for Drupal core < 11.1 is dropped.
+ */
+#[LegacyHook]
+function finders_facets_finders_entry_fields_alter($channel_field_definitions, $bundle_entity, $finder_type) {
+  \Drupal::service(FindersFacetsHooks::class)->findersEntryFieldsAlter($channel_field_definitions, $bundle_entity, $finder_type);
 }

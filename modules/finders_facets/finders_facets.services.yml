@@ -3,3 +3,7 @@ services:
     class: Drupal\finders_facets\BundleConfigFormFacets
     decorates: Drupal\localgov_finders\BundleConfigForm
     arguments: ['@.inner']
+
+  Drupal\finders_facets\Hooks\FindersFacetsHooks:
+    class: Drupal\finders_facets\Hooks\FindersFacetsHooks
+    autowire: true
