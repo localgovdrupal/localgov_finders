@@ -108,7 +108,9 @@ class LocalGovFindersDbInstallTest extends KernelTestBase {
   protected function reloadEntity(EntityInterface $entity) {
     // AAAAAAARGGGGGH
     // https://www.drupal.org/project/drupal/issues/3485409
-    \Drupal::configFactory()->clearStaticCache();
+    $this->entityTypeManager->clearCachedDefinitions();
+    \Drupal::service('config.factory')->clearStaticCache();
+    \Drupal::service('config.factory')->reset();
 
     $this->container->get('config.factory')->reset();
     $this->container->get('config.factory')->clearStaticCache();
