@@ -2,10 +2,12 @@
 
 namespace Drupal\finders_facets;
 
+use Drupal\Core\Config\Entity\ConfigEntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\localgov_finders\BundleConfigForm;
+use Drupal\localgov_finders\Enum\FinderRole;
 
 /**
  * Alters the bundle entity form to add form elements for facets.
@@ -38,7 +40,10 @@ class BundleConfigFormFacets {
   public function alterBundleForm(&$form, FormStateInterface $form_state): void {
     $this->inner->alterBundleForm($form, $form_state);
 
-    $form['localgov_finders'] += $this->getFacetsFormElements($form_state);
+    $bundle_type = $form_state->getFormObject()->getEntity();
+
+    // Add our form elements into the 'localgov_finders' form group.
+    $form['localgov_finders'] += $this->getFacetsFormElements($bundle_type, $form_state);
 
     foreach (Element::children($form['actions']) as $action) {
       $form['actions'][$action]['#validate'][] = $this->validate(...);
@@ -46,13 +51,31 @@ class BundleConfigFormFacets {
     }
   }
 
-
-  public function getFacetsFormElements(FormStateInterface $form_state): array {
+  /**
+   * Gets the form elements for the bundle entity form.
+   *
+   * @param \Drupal\Core\Config\Entity\ConfigEntityInterface $bundle_type
+   *   The bundle entity.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The form state.
+   *
+   * @return array
+   *   An array of form elements.
+   */
+  public function getFacetsFormElements(ConfigEntityInterface $bundle_type, FormStateInterface $form_state): array {
     $form = [];
 
     $form['facets'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Use facets with this channel'),
+      '#default_value' => $bundle_type->getThirdPartySetting('finders_facets', 'facets', FALSE),
+      '#states' => [
+        'invisible' => [
+          ':input[name="localgov_finders[finder_role]"]' => [
+            '!value' => FinderRole::Channel,
+          ],
+        ],
+      ]
     ];
 
     return $form;
@@ -68,7 +91,23 @@ class BundleConfigFormFacets {
    * {@inheritdoc}
    */
   public function submit(array $form, FormStateInterface $form_state): void {
+    $bundle_type = $form_state->getFormObject()->getEntity();
+    assert($bundle_type instanceof ConfigEntityInterface);
 
+    if (empty($form_state->getValue(['localgov_finders', 'facets']))) {
+      $bundle_type->unsetThirdPartySetting(
+        'finders_facets',
+        'facets',
+      );
+    }
+    else {
+      $bundle_type->setThirdPartySetting(
+        'finders_facets',
+        'facets',
+        $form_state->getValue(['localgov_finders', 'facets'])
+      );
+      $bundle_type->save();
+    }
   }
 
 }
