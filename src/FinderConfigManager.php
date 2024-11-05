@@ -171,8 +171,13 @@ class FinderConfigManager {
     $entity_type_id = $bundle_entity->getEntityType()->getBundleOf();
     $bundle_id = $bundle_entity->id();
 
+    $channel_field_definitions = $finder_type->getChannelFieldDefinitions($bundle_entity);
+
+    // Allow modules to alter the channel field definitions.
+    \Drupal::moduleHandler()->alter('finders_channel_fields', $channel_field_definitions, $bundle_entity, $finder_type);
+
     // Register bundle fields on the entity type.
-    foreach ($finder_type->getChannelFieldDefinitions($bundle_entity) as $field_definition) {
+    foreach ($channel_field_definitions as $field_definition) {
       // Notify the field definition listeners. This is what updates core's
       // field map.
       $this->fieldStorageDefinitionListener->onFieldStorageDefinitionCreate($field_definition);
@@ -187,6 +192,12 @@ class FinderConfigManager {
       }
       assert($index instanceof IndexInterface);
       $finder_type->alterSearchIndexForChannel($index, $bundle_entity);
+
+      // Allow modules to alter the channel field definitions.
+      // This is a separate alter hook so that the bundle fields exist for
+      // implementations of this hook to check.
+      \Drupal::moduleHandler()->alter('finders_index', $index, $bundle_entity, $finder_type);
+
       $index->save();
     }
   }
@@ -218,8 +229,13 @@ class FinderConfigManager {
     $entity_type_id = $bundle_entity->getEntityType()->getBundleOf();
     $bundle_id = $bundle_entity->id();
 
+    $entry_field_definitions = $finder_type->getEntryFieldDefinitions($bundle_entity);
+
+    // Allow modules to alter the entry field definitions.
+    \Drupal::moduleHandler()->alter('finders_entry_fields', $channel_field_definitions, $bundle_entity, $finder_type);
+
     // Register bundle fields on the entity type.
-    foreach ($finder_type->getEntryFieldDefinitions($bundle_entity) as $field_definition) {
+    foreach ($entry_field_definitions as $field_definition) {
       // Notify the field definition listeners. This is what updates core's
       // field map.
       $this->fieldStorageDefinitionListener->onFieldStorageDefinitionCreate($field_definition);
@@ -250,6 +266,9 @@ class FinderConfigManager {
       assert($index instanceof IndexInterface);
 
       $finder_type->alterSearchIndexForEntry($index, $bundle_entity);
+
+      \Drupal::moduleHandler()->alter('finders_index', $index, $bundle_entity, $finder_type);
+
       $index->save();
     }
   }
