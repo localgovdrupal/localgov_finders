@@ -2,8 +2,10 @@
 
 namespace Drupal\finders_facets\Hooks;
 
+use Drupal\Core\Config\Entity\ConfigEntityInterface;
 use Drupal\Core\Hook\Attribute\Hook;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\localgov_finders\Plugin\FinderType\FinderTypeInterface;
 
 /**
  * Contains hook implementations for the Finders facets module.
@@ -28,7 +30,7 @@ class FindersFacetsHooks {
    * Implements hook_finders_channel_fields_alter().
    */
   #[Hook('finders_channel_fields_alter')]
-  public function findersChannelFieldsAlter($channel_field_definitions, $bundle_entity, $finder_type) {
+  public function findersChannelFieldsAlter(&array &$channel_field_definitions, ConfigEntityInterface $bundle_entity, FinderTypeInterface $finder_type) {
     // TODO: write sample code.
   }
 
@@ -36,7 +38,7 @@ class FindersFacetsHooks {
    * Implements hook_finders_entry_fields_alter().
    */
   #[Hook('finders_entry_fields_alter')]
-  public function findersEntryFieldsAlter($channel_field_definitions, $bundle_entity, $finder_type) {
+  public function findersEntryFieldsAlter(&array &$channel_field_definitions, ConfigEntityInterface $bundle_entity, FinderTypeInterface $finder_type) {
     // TODO: write sample code.
   }
 
