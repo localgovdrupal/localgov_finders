@@ -1,0 +1,6 @@
+name: Finders facets
+type: module
+description: 'TODO: Description of module'
+core_version_requirement: ^8 || ^9 || ^10 || ^11
+dependencies:
+  - 'facets:facets'

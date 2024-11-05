@@ -1,0 +1,21 @@
+entity.finders_facet_type.edit_form:
+  title: Edit
+  route_name: entity.finders_facet_type.edit_form
+  base_route: entity.finders_facet_type.edit_form
+entity.finders_facet.collection:
+  title: Finders Facets
+  route_name: entity.finders_facet.collection
+  base_route: system.admin_content
+  weight: 15
+entity.finders_facet.canonical:
+  title: View
+  route_name: entity.finders_facet.canonical
+  base_route: entity.finders_facet.canonical
+entity.finders_facet.edit_form:
+  title: Edit
+  route_name: entity.finders_facet.edit_form
+  base_route: entity.finders_facet.canonical
+entity.finders_facet.delete_form:
+  title: Delete
+  route_name: entity.finders_facet.delete_form
+  base_route: entity.finders_facet.canonical

@@ -1,0 +1,13 @@
+finders_facets.finders_facet_type.*:
+  type: config_entity
+  label: Finders Facet Type
+  mapping:
+    id:
+      type: text
+      label: Machine name
+    label:
+      type: label
+      label: Name
+    weight:
+      type: weight
+      label: Weight

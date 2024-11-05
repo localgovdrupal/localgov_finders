@@ -1,0 +1,6 @@
+administer finders_facet_type entities:
+  title: Administer Finders facet type entities
+  description: Description for Administer Finders facet type entities.
+administer finders_facet entities:
+  title: Administer Finders facet entities
+  description: Description for Administer Finders facet entities.
