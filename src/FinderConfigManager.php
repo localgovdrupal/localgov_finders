@@ -303,7 +303,11 @@ class FinderConfigManager {
     }
 
     $config_values = $config_source->read($config_filename);
+
+    // Set the ID and name of the index.
     $config_values['id'] = $index_id;
+    $config_values['name'] = $finder_type->getPluginDefinition()['label'];
+
     $search_index = $this->entityTypeManager->getStorage('search_api_index')->create($config_values);
 
     // Set a default server if one exists.
