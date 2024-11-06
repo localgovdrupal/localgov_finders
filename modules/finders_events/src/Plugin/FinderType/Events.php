@@ -7,6 +7,7 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\localgov_finders\Attribute\FinderType;
 use Drupal\localgov_finders\Field\BundleFieldDefinition;
 use Drupal\localgov_finders\Plugin\FinderType\FinderTypeBase;
+use Drupal\search_api\IndexInterface;
 
 /**
  * Finder type for events.
@@ -48,6 +49,13 @@ class Events extends FinderTypeBase {
     return [
       'localgov_finders_index_events',
     ];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getIndexDatasourceId(IndexInterface $index, string $entity_type_id): string {
+    return 'date_recur:' . $entity_type_id . '__' . static::EVENT_DATE_FIELD;
   }
 
   /**
