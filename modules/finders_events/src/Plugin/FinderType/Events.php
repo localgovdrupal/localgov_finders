@@ -39,7 +39,7 @@ class Events extends FinderTypeBase {
    *
    * @see self::getEventDateFieldDefinition()
    */
-  const EVENT_DATE_FIELD = 'localgov_events_date';
+  const EVENT_DATE_FIELD = 'finders_events_date';
 
   /**
    * {@inheritdoc}
