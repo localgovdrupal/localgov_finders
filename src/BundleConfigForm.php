@@ -33,8 +33,8 @@ class BundleConfigForm implements BundleConfigFormInterface {
     assert($bundle_type instanceof ConfigEntityInterface);
     $form += $this->getFormElements($bundle_type);
     foreach (Element::children($form['actions']) as $action) {
-      $form['actions'][$action]['#validate'][] = $this->validate(...);
-      $form['actions'][$action]['#submit'][] = $this->submit(...);
+      $form['actions'][$action]['#validate'][] = static::class . '::validate';
+      $form['actions'][$action]['#submit'][] = static::class . '::submit';
     }
   }
 
@@ -97,16 +97,16 @@ class BundleConfigForm implements BundleConfigFormInterface {
   /**
    * {@inheritdoc}
    */
-  public function validate(array $form, FormStateInterface $form_state): void {
+  public static function validate(array $form, FormStateInterface $form_state): void {
     if (!empty($form_state->getValue(['localgov_finders', 'finder_type'])) && empty($form_state->getValue(['localgov_finders', 'finder_role']))) {
-      $form_state->setError($form['localgov_finders']['finder_role'], $this->t('The Finder role must be set if a Finder type is set.'));
+      $form_state->setError($form['localgov_finders']['finder_role'], t('The Finder role must be set if a Finder type is set.'));
     }
   }
 
   /**
    * {@inheritdoc}
    */
-  public function submit(array $form, FormStateInterface $form_state): void {
+  public static function submit(array $form, FormStateInterface $form_state): void {
     $bundle_type = $form_state->getFormObject()->getEntity();
     assert($bundle_type instanceof ConfigEntityInterface);
 

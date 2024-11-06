@@ -25,11 +25,11 @@ interface BundleConfigFormInterface {
   /**
    * Validation handler.
    */
-  public function validate(array $form, FormStateInterface $form_state): void;
+  public static function validate(array $form, FormStateInterface $form_state): void;
 
   /**
    * Submit handler.
    */
-  public function submit(array $form, FormStateInterface $form_state): void;
+  public static function submit(array $form, FormStateInterface $form_state): void;
 
 }

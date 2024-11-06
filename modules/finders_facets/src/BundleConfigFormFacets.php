@@ -46,8 +46,8 @@ class BundleConfigFormFacets {
     $form['localgov_finders'] += $this->getFacetsFormElements($bundle_type, $form_state);
 
     foreach (Element::children($form['actions']) as $action) {
-      $form['actions'][$action]['#validate'][] = $this->validate(...);
-      $form['actions'][$action]['#submit'][] = $this->submit(...);
+      $form['actions'][$action]['#validate'][] = static::class . '::validate';
+      $form['actions'][$action]['#submit'][] = static::class . '::submit';
     }
   }
 
@@ -84,13 +84,13 @@ class BundleConfigFormFacets {
   /**
    * {@inheritdoc}
    */
-  public function validate(array $form, FormStateInterface $form_state): void {
+  public static function validate(array $form, FormStateInterface $form_state): void {
   }
 
   /**
    * {@inheritdoc}
    */
-  public function submit(array $form, FormStateInterface $form_state): void {
+  public static function submit(array $form, FormStateInterface $form_state): void {
     $bundle_type = $form_state->getFormObject()->getEntity();
     assert($bundle_type instanceof ConfigEntityInterface);
 
