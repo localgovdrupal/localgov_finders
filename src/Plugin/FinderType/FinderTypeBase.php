@@ -216,6 +216,9 @@ abstract class FinderTypeBase extends PluginBase implements FinderTypeInterface,
   /**
    * Adds and updates fields on an index.
    *
+   * The datasource for the entry bundle entity has already has the entry bundle
+   * added to it.
+   *
    * @param \Drupal\search_api\IndexInterface $index
    *   The search index being updated.
    * @param \Drupal\Core\Config\Entity\ConfigEntityInterface $entry_bundle_entity
