@@ -4,10 +4,12 @@ namespace Drupal\finders_events\Plugin\FinderType;
 
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\date_recur_search_api\Plugin\ComputedField\DateOccurrence;
 use Drupal\localgov_finders\Attribute\FinderType;
 use Drupal\localgov_finders\Field\BundleFieldDefinition;
 use Drupal\localgov_finders\Plugin\FinderType\FinderTypeBase;
 use Drupal\search_api\IndexInterface;
+use Drupal\search_api\Item\Field as SearchIndexField;
 
 /**
  * Finder type for events.
@@ -90,6 +92,35 @@ class Events extends FinderTypeBase {
     $field_definitions[$event_date_field->getName()] = $event_date_field;
 
     return $field_definitions;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function alterIndexFields(IndexInterface $index, ConfigEntityInterface $entry_bundle_entity): void {
+    parent::alterIndexFields($index, $entry_bundle_entity);
+
+    // Get the entity type ID of the entry entities that the entry bundle entity
+    // defines.
+    $entry_entity_type_id = $entry_bundle_entity->getEntityType()->getBundleOf();
+
+    $datasource_id = $this->getIndexDatasourceId($index, $entry_entity_type_id);
+    $datasource = $index->getDatasource($datasource_id);
+
+    // TODO: make DateRecur::getComputedFieldName() public so we can use that
+    // instead of accessing the DateOccurrence::COMPUTED_FIELD_SUFFIX constant
+    // directly.
+    $occurrence_field_name = static::EVENT_DATE_FIELD . DateOccurrence::COMPUTED_FIELD_SUFFIX;
+
+    if (!$index->getField($occurrence_field_name)) {
+      $date_field = new SearchIndexField($index, $occurrence_field_name);
+      $date_field->setDatasourceId($datasource_id);
+      $date_field->setType('date');
+      $date_field->setPropertyPath($occurrence_field_name);
+      $date_field->setLabel('Date occurrence');
+
+      $index->addField($date_field);
+    }
   }
 
   /**

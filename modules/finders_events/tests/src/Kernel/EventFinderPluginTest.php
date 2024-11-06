@@ -36,6 +36,7 @@ class EventFinderPluginTest extends KernelTestBase {
     'search_api',
     'viewsreference',
     'date_recur',
+    'computed_field',
     'date_recur_search_api',
     'finders_events',
   ];
@@ -118,11 +119,19 @@ class EventFinderPluginTest extends KernelTestBase {
     $search_index = Index::load('localgov_finders_index_events');
     $this->assertNotEmpty($search_index);
 
+    $datasources = $search_index->getDatasources();
+    $this->assertCount(1, $datasources);
+    $datasource = reset($datasources);
+    $this->assertEquals('date_recur', $datasource->getBaseId());
+    $this->assertEquals('date_recur:node__' . Events::EVENT_DATE_FIELD, $datasource->getPluginId());
+    $this->assertContains('test_entry_bundle_one', $datasource->getBundles());
+
     $fields = $search_index->getFields();
     $this->assertArrayHasKey('title', $fields);
     $this->assertArrayHasKey('rendered_item', $fields);
     $this->assertArrayHasKey('localgov_finders_title_sort', $fields);
     $this->assertArrayHasKey('localgov_finders_channels', $fields);
+    $this->assertArrayHasKey('finders_events_date_occurrence', $fields);
   }
 
 }
