@@ -13,6 +13,9 @@ use Drupal\search_api\IndexInterface;
  * Finder type for events.
  *
  * Provides calendars and listings.
+ *
+ * Event entries use the date_recur SearchAPI datasource, which adds an index
+ * item for each occurrence of a recurring date rather than for each node.
  */
 #[FinderType(
   id: "events",
@@ -55,6 +58,7 @@ class Events extends FinderTypeBase {
    * {@inheritdoc}
    */
   public function getIndexDatasourceId(IndexInterface $index, string $entity_type_id): string {
+    // See \Drupal\date_recur_search_api\Plugin\search_api\datasource\DateRecur
     return 'date_recur:' . $entity_type_id . '__' . static::EVENT_DATE_FIELD;
   }
 
