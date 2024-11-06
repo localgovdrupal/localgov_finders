@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\localgov_finders\Plugin\FinderType;
+namespace Drupal\finders_events\Plugin\FinderType;
 
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
@@ -12,8 +12,6 @@ use Drupal\localgov_finders\Plugin\FinderType\FinderTypeBase;
  * Finder type for events.
  *
  * Provides calendars and listings.
- *
- * POC -- will move to the LGD Directories module.
  */
 #[FinderType(
   id: "events",
@@ -37,6 +35,13 @@ class Events extends FinderTypeBase {
   const CALENDAR_VIEW_FIELD = 'localgov_events_cal_view';
 
   /**
+   * The field name for the event date field.
+   *
+   * @see self::getEventDateFieldDefinition()
+   */
+  const EVENT_DATE_FIELD = 'localgov_events_date';
+
+  /**
    * {@inheritdoc}
    */
   public function getIndexIds(): array {
@@ -58,6 +63,19 @@ class Events extends FinderTypeBase {
     $calendar_view_field = $this->getCalendarViewFieldDefinition($bundle);
     $calendar_view_field->setTargetBundle($bundle->id());
     $field_definitions[$calendar_view_field->getName()] = $calendar_view_field;
+
+    return $field_definitions;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getEntryFieldDefinitions(ConfigEntityInterface $bundle): array {
+    $field_definitions = parent::getEntryFieldDefinitions($bundle);
+
+    $event_date_field = $this->getEventDateFieldDefinition($bundle);
+    $event_date_field->setTargetBundle($bundle->id());
+    $field_definitions[$event_date_field->getName()] = $event_date_field;
 
     return $field_definitions;
   }
@@ -139,6 +157,58 @@ class Events extends FinderTypeBase {
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayOptions('form', [
         'type' => 'viewsreference_select',
+      ]);
+  }
+
+  /**
+   * Gets the definition for the event date field.
+   *
+   * @param \Drupal\Core\Config\Entity\ConfigEntityInterface $bundle
+   *   The bundle entity.
+   *
+   * @return \Drupal\localgov_finders\Field\BundleFieldDefinition
+   *   The bundle field definition.
+   */
+  protected function getEventDateFieldDefinition(ConfigEntityInterface $bundle): BundleFieldDefinition {
+    $bundle_entity_type = $bundle->getEntityType();
+    $content_entity_type_id = $bundle_entity_type->getBundleOf();
+
+    return BundleFieldDefinition::create('date_recur')
+      ->setName(static::EVENT_DATE_FIELD)
+      ->setTargetEntityTypeId($content_entity_type_id)
+      ->setLabel(t('Date'))
+      ->setRequired(TRUE)
+      ->setTranslatable(FALSE)
+      ->setCardinality(1)
+      ->setSettings([
+        'datetime_type' => 'datetime',
+        'rrule_max_length' => 256,
+        'precreate' => 'P2Y',
+        'parts' => [
+          'all' => TRUE,
+          'frequencies' => [
+            'SECONDLY' => [],
+            'MINUTELY' => [],
+            'HOURLY' => [],
+            'DAILY' => [],
+            'WEEKLY' => [],
+            'MONTHLY' => [],
+            'YEARLY' => [],
+          ],
+        ]
+      ])
+      ->setDefaultValue([
+        'default_date_type' => 'now',
+        'default_date' => 'now',
+        'default_end_date_type' => 'now',
+        'default_end_date' => 'now',
+        'default_date_time_zone' => 'Europe/London',
+        'default_time_zone' => 'Europe/London',
+        'default_rrule' => '',
+      ])
+      ->setDisplayConfigurable('form', TRUE)
+      ->setDisplayOptions('form', [
+        'type' => 'date_recur_modular_alpha',
       ]);
   }
 
