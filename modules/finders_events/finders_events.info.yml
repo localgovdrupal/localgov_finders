@@ -1,7 +1,7 @@
 name: Finders events
 type: module
 description: 'WIP - will move to its own repo; in here for convenience during development'
-core_version_requirement: ^8 || ^9 || ^10 || ^11
+core_version_requirement: ^10.2
 dependencies:
   # Contrib
   - date_recur:date_recur
