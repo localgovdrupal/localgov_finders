@@ -25,6 +25,7 @@ function localgov_finders_db_install($is_syncing) {
   foreach ($active_finder_types as $finder_type) {
     $index_ids = $finder_type->getIndexIds();
     foreach ($index_ids as $index_id) {
+      /** @var \Drupal\search_api\Entity\IndexInterface $index */
       $index = $entity_type_manager->getStorage('search_api_index')->load($index_id);
 
       // Skip an index that does not exist for some reason.

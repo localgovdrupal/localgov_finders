@@ -85,19 +85,23 @@ class LocalGovFindersDbInstallTest extends KernelTestBase {
     $search_index = Index::load('localgov_finders_index_default');
     $this->assertNotEmpty($search_index);
     $this->assertEmpty($search_index->getServerId());
+    $this->assertFalse($search_index->status());
 
     $this->moduleInstaller->install(['localgov_finders_db']);
 
-    // DOES NOT WORK!! AARGH!
+    /** @var \Drupal\search_api\Entity\IndexInterface $search_index */
     $search_index = $this->reloadEntity($search_index);
+
+    // The search index now has the server set and is enabled.
     $this->assertNotEmpty($search_index->getServerId());
+    $this->assertTrue($search_index->status());
   }
 
   /**
    * Reloads the given entity from the storage and returns it.
    *
-   * TODO: Replace this with EntityTrait when 10.4.0 is minimum supported
-   * version.
+   * TODO: Replace this with EntityTrait when
+   * https://www.drupal.org/project/drupal/issues/3485409 is fixed.
    *
    * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The entity to be reloaded.
@@ -105,21 +109,17 @@ class LocalGovFindersDbInstallTest extends KernelTestBase {
    * @return \Drupal\Core\Entity\EntityInterface
    *   The reloaded entity.
    */
-  protected function reloadEntity(EntityInterface $entity) {
-    // AAAAAAARGGGGGH
+  protected function reloadEntity(EntityInterface $entity): EntityInterface {
+    // Need to very forcibly clear lots of caches, AND get the relevant services
+    // from the Drupal object and NOT $this->container.
     // https://www.drupal.org/project/drupal/issues/3485409
-    $this->entityTypeManager->clearCachedDefinitions();
+    \Drupal::service('entity_type.manager')->clearCachedDefinitions();
     \Drupal::service('config.factory')->clearStaticCache();
     \Drupal::service('config.factory')->reset();
 
-    $this->container->get('config.factory')->reset();
-    $this->container->get('config.factory')->clearStaticCache();
-
-    $config = \Drupal::configFactory();
-
-    $controller = $this->entityTypeManager->getStorage($entity->getEntityTypeId());
-    $controller->resetCache([$entity->id()]);
-    return $controller->load($entity->id());
+    $storage = \Drupal::service('entity_type.manager')->getStorage($entity->getEntityTypeId());
+    $storage->resetCache([$entity->id()]);
+    return $storage->load($entity->id());
   }
 
 }
