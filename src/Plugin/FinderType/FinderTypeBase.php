@@ -161,7 +161,7 @@ abstract class FinderTypeBase extends PluginBase implements FinderTypeInterface,
   /**
    * {@inheritdoc}
    */
-  public function getIndexDatasourceId(IndexInterface $index, string $entity_type_id) {
+  public function getIndexDatasourceId(IndexInterface $index, string $entity_type_id): string {
     return 'entity:' . $entity_type_id;
   }
 

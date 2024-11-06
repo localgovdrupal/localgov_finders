@@ -63,6 +63,21 @@ interface FinderTypeInterface extends PluginInspectionInterface, DerivativeInspe
   public function getViewIds(): array;
 
   /**
+   * Gets the search datasource plugin ID for the given index and entity type.
+   *
+   * @param \Drupal\search_api\IndexInterface $index
+   *   The search index being altered.
+   * @param string $entity_type_id
+   *   The entity type ID that the datasource is for.
+   *
+   * @return string
+   *   The plugin ID of the datasource to use.
+   *
+   * @see \Drupal\search_api\Datasource\DatasourceInterface
+   */
+  public function getIndexDatasourceId(IndexInterface $index, string $entity_type_id): string;
+
+  /**
    * Alter the Search API index when a channel bundle is configured.
    *
    * After it is configured, for anything unusual we've not thought of.
