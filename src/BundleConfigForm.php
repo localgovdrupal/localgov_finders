@@ -47,8 +47,8 @@ class BundleConfigForm implements BundleConfigFormInterface {
     $form['finders'] = [
       '#type' => 'details',
       '#group' => 'additional_settings',
-      '#title' => $this->t('LocalGov Finder type'),
-      '#attributes' => ['class' => ['localgov-finders-type']],
+      '#title' => $this->t('Finder type'),
+      '#attributes' => ['class' => ['finders-type']],
       '#tree' => TRUE,
       '#weight' => 10,
     ];

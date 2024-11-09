@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Hooks provided by the Localgov Finders module.
+ * Hooks provided by the Finders module.
  */
 
 use Drupal\Core\Config\Entity\ConfigEntityInterface;

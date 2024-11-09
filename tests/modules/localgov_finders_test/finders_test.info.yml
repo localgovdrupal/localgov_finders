@@ -1,6 +1,6 @@
-name: 'LocalGov Finders tests'
+name: 'Finders tests'
 type: module
-description: 'Provides test fixtures for LocalGov finder.'
+description: 'Provides test fixtures for Finders.'
 package: Testing
 version: VERSION
 dependencies:

@@ -1,6 +1,7 @@
-name: Finders events
+name: LocalGov Finders events
 type: module
 description: 'WIP - will move to its own repo; in here for convenience during development'
+package: Search Finders
 core_version_requirement: ^10.2
 dependencies:
   # Contrib

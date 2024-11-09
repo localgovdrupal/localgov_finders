@@ -13,7 +13,7 @@ use Drupal\search_api\Entity\Index;
  *
  * @group finders_db
  */
-class LocalGovFindersDbInstallTest extends KernelTestBase {
+class FindersDbInstallTest extends KernelTestBase {
 
   /**
    * The modules to enable.

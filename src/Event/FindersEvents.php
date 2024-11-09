@@ -3,7 +3,7 @@
 namespace Drupal\finders\Event;
 
 /**
- * Defines events for the LocalGov Finders module.
+ * Defines events for the Finders module.
  */
 class FindersEvents {
 

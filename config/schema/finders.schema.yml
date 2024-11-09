@@ -1,4 +1,4 @@
-# Schema for LocalGov Finders third party settings on bundle entities.
+# Schema for Finders third party settings on bundle entities.
 # This is needed because apparently a schema name wildcard can't be used at the
 # start of the schema name, so this must be used in a schema definition for
 # every bundle entity config which uses finders.

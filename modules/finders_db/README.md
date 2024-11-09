@@ -1,4 +1,4 @@
-# Localgov Finders DB
+# Finders DB
 
 This module provides a default SearchAPI server using the database backend.
 
@@ -12,5 +12,5 @@ You can edit any of the finder search indexes and change the server it uses.
 
 ## Requirements
 
-- LocalGov Finders
+- Finders
 - SearchAPI DB

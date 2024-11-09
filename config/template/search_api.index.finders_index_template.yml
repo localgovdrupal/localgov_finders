@@ -7,9 +7,9 @@ dependencies:
   config: {  }
   module:
     - search_api
-id: localgov_directories_index_template
+id: finders_index_template
 name: Finders
-description: 'Template search index for LocalGov Finders channel.'
+description: 'Template search index for a Finders channel.'
 read_only: false
 field_settings: {  }
   # rendered_item:
