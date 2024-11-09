@@ -5,6 +5,8 @@ namespace Drupal\Tests\localgov_finders\Kernel;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\localgov_finders\Enum\FinderRole;
 use Drupal\localgov_finders\Plugin\FinderType\FinderTypeBase;
+use Drupal\search_api\IndexInterface;
+use Drupal\search_api\Utility\Utility;
 
 /**
  * Tests indexing entries.
@@ -14,6 +16,8 @@ use Drupal\localgov_finders\Plugin\FinderType\FinderTypeBase;
  * @group localgov_finders
  */
 class SearchIndexTest extends KernelTestBase {
+
+protected $strictConfigSchema = FALSE;
 
   /**
    * The modules to enable.
@@ -48,6 +52,16 @@ class SearchIndexTest extends KernelTestBase {
 
     $this->installEntitySchema('entity_test_with_bundle');
     $this->installEntitySchema('search_api_task');
+    $this->installSchema('search_api', ['search_api_item']);
+    $this->installConfig('search_api');
+    $this->installConfig(['localgov_finders_db']);
+
+    // Do not use a batch for tracking the initial items after creating an
+    // index when running the tests via the GUI. Otherwise, it seems Drupal's
+    // Batch API gets confused and the test fails.
+    if (!Utility::isRunningInCli()) {
+      \Drupal::state()->set('search_api_use_tracking_batch', FALSE);
+    }
 
     $this->installConfig('localgov_finders_test');
 
@@ -90,7 +104,7 @@ class SearchIndexTest extends KernelTestBase {
   /**
    * Tests that entries are indexed.
    */
-  public function testMyTest() {
+  public function testEntriesIndexed(): void {
     $channel = $this->entityTypeManager->getStorage('entity_test_with_bundle')->create([
       'name' => 'test channel',
       'type' => 'test_channel_bundle',
@@ -104,12 +118,9 @@ class SearchIndexTest extends KernelTestBase {
     ]);
     $entry->save();
 
-    /** @var \Drupal\search_api\IndexInterface */
     $index = $this->entityTypeManager->getStorage('search_api_index')->load('localgov_finders_index_default');
-    $index->reindex();
     $indexed = $index->indexItems();
-    // TODO: doesn't work!
-    dump($indexed);
+    $this->assertEquals(1, $indexed);
   }
 
 }
