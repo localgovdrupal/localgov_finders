@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\localgov_finders\Attribute;
+namespace Drupal\finders\Attribute;
 
 use Drupal\Component\Plugin\Attribute\Plugin;
 use Drupal\Core\StringTranslation\TranslatableMarkup;

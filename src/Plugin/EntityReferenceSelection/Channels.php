@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\localgov_finders\Plugin\EntityReferenceSelection;
+namespace Drupal\finders\Plugin\EntityReferenceSelection;
 
 use Drupal\Core\Entity\Attribute\EntityReferenceSelection;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
@@ -12,16 +12,16 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
-use Drupal\localgov_finders\FinderTypeManager;
+use Drupal\finders\FinderTypeManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Selection plugin for finder channels.
  */
 #[EntityReferenceSelection(
-  id: 'localgov_finders_channels',
+  id: 'finders_channels',
   label: new TranslatableMarkup("Finder channels"),
-  group: 'localgov_finders_channels',
+  group: 'finders_channels',
   weight: 0,
   entity_types: [],
 )]
@@ -37,7 +37,7 @@ class Channels extends DefaultSelection {
   /**
    * The finder type manager.
    *
-   * @var \Drupal\localgov_finders\FinderTypeManager
+   * @var \Drupal\finders\FinderTypeManager
    */
   protected $finderTypeManager;
 
@@ -55,7 +55,7 @@ class Channels extends DefaultSelection {
       $container->get('entity_field.manager'),
       $container->get('entity_type.bundle.info'),
       $container->get('entity.repository'),
-      $container->get('plugin.manager.localgov_finders_finder_type'),
+      $container->get('plugin.manager.finders_finder_type'),
     );
   }
 
@@ -80,7 +80,7 @@ class Channels extends DefaultSelection {
    *   The entity type bundle info.
    * @param \Drupal\Core\Entity\EntityRepositoryInterface $entity_repository
    *   The entity repository.
-   * @param \Drupal\localgov_finders\FinderTypeManager $finder_type_manager
+   * @param \Drupal\finders\FinderTypeManager $finder_type_manager
    *   The finder type manager.
    */
   public function __construct(

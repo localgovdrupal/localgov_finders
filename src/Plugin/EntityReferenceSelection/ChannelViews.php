@@ -1,13 +1,13 @@
 <?php
 
-namespace Drupal\localgov_finders\Plugin\EntityReferenceSelection;
+namespace Drupal\finders\Plugin\EntityReferenceSelection;
 
 use Drupal\Core\Entity\Attribute\EntityReferenceSelection;
 use Drupal\Core\Entity\EntityReferenceSelection\SelectionPluginBase;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
-use Drupal\localgov_finders\FinderTypeManager;
+use Drupal\finders\FinderTypeManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -17,9 +17,9 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * index for the same finder type as the host entity.
  */
 #[EntityReferenceSelection(
-  id: 'localgov_finders_channel_views',
+  id: 'finders_channel_views',
   label: new TranslatableMarkup("Channel Views"),
-  group: 'localgov_finders_channel_views',
+  group: 'finders_channel_views',
   weight: 0,
   entity_types: [
     'view',
@@ -37,7 +37,7 @@ class ChannelViews extends SelectionPluginBase implements ContainerFactoryPlugin
   /**
    * The finder type manager.
    *
-   * @var \Drupal\localgov_finders\FinderTypeManager
+   * @var \Drupal\finders\FinderTypeManager
    */
   protected $finderTypeManager;
 
@@ -50,7 +50,7 @@ class ChannelViews extends SelectionPluginBase implements ContainerFactoryPlugin
       $plugin_id,
       $plugin_definition,
       $container->get('entity_type.manager'),
-      $container->get('plugin.manager.localgov_finders_finder_type'),
+      $container->get('plugin.manager.finders_finder_type'),
     );
   }
 
@@ -65,7 +65,7 @@ class ChannelViews extends SelectionPluginBase implements ContainerFactoryPlugin
    *   The plugin implementation definition.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
-   * @param \Drupal\localgov_finders\FinderTypeManager $finder_type_manager
+   * @param \Drupal\finders\FinderTypeManager $finder_type_manager
    *   The finder type manager.
    */
   public function __construct(

@@ -3,7 +3,7 @@ status: true
 dependencies:
   module:
     - search_api_db
-id: localgov_finders_default
+id: finders_default
 name: Finders
 description: 'Default finders search server. For convenience of installation. Can be used or replaced.'
 backend: search_api_db
@@ -15,5 +15,5 @@ backend_config:
     suggest_suffix: true
     suggest_words: true
 third_party_settings:
-  localgov_finders:
+  finders:
     default_server: true

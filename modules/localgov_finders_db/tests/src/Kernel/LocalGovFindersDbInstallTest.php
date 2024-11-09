@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\localgov_finders_db\Kernel;
+namespace Drupal\Tests\finders_db\Kernel;
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
@@ -11,7 +11,7 @@ use Drupal\search_api\Entity\Index;
 /**
  * Tests installing the module.
  *
- * @group localgov_finders_db
+ * @group finders_db
  */
 class LocalGovFindersDbInstallTest extends KernelTestBase {
 
@@ -26,8 +26,8 @@ class LocalGovFindersDbInstallTest extends KernelTestBase {
     'node',
     'search_api',
     'search_api_db',
-    'localgov_finders',
-    'localgov_finders_test',
+    'finders',
+    'finders_test',
   ];
 
   // Disable config checking -- the schema is in the test module and we don't
@@ -54,7 +54,7 @@ class LocalGovFindersDbInstallTest extends KernelTestBase {
 
     $this->installEntitySchema('search_api_task');
 
-    $this->installConfig('localgov_finders_test');
+    $this->installConfig('finders_test');
     $this->installEntitySchema('node');
 
     $this->entityTypeManager = $this->container->get('entity_type.manager');
@@ -62,7 +62,7 @@ class LocalGovFindersDbInstallTest extends KernelTestBase {
   }
 
   /**
-   * Tests installing the localgov_finders_db module.
+   * Tests installing the finders_db module.
    */
   public function testInstall() {
     $channel_bundle = $this->entityTypeManager->getStorage('node_type')->create([
@@ -70,24 +70,24 @@ class LocalGovFindersDbInstallTest extends KernelTestBase {
       'status' => TRUE,
     ]);
     $channel_bundle->setThirdPartySetting(
-      'localgov_finders',
+      'finders',
       'finder_type',
       'test'
     );
     $channel_bundle->setThirdPartySetting(
-      'localgov_finders',
+      'finders',
       'finder_role',
       'channel'
     );
     $channel_bundle->save();
 
     // A search index has been created by the creation of the channel bundle.
-    $search_index = Index::load('localgov_finders_index_default');
+    $search_index = Index::load('finders_index_default');
     $this->assertNotEmpty($search_index);
     $this->assertEmpty($search_index->getServerId());
     $this->assertFalse($search_index->status());
 
-    $this->moduleInstaller->install(['localgov_finders_db']);
+    $this->moduleInstaller->install(['finders_db']);
 
     /** @var \Drupal\search_api\Entity\IndexInterface $search_index */
     $search_index = $this->reloadEntity($search_index);

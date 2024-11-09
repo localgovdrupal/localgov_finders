@@ -5,9 +5,9 @@ namespace Drupal\finders_events\Plugin\FinderType;
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\date_recur_search_api\Plugin\ComputedField\DateOccurrence;
-use Drupal\localgov_finders\Attribute\FinderType;
-use Drupal\localgov_finders\Field\BundleFieldDefinition;
-use Drupal\localgov_finders\Plugin\FinderType\FinderTypeBase;
+use Drupal\finders\Attribute\FinderType;
+use Drupal\finders\Field\BundleFieldDefinition;
+use Drupal\finders\Plugin\FinderType\FinderTypeBase;
 use Drupal\search_api\IndexInterface;
 use Drupal\search_api\Item\Field as SearchIndexField;
 
@@ -52,7 +52,7 @@ class Events extends FinderTypeBase {
    */
   public function getIndexIds(): array {
     return [
-      'localgov_finders_index_events',
+      'finders_index_events',
     ];
   }
 
@@ -132,7 +132,7 @@ class Events extends FinderTypeBase {
    * @param \Drupal\Core\Config\Entity\ConfigEntityInterface $bundle
    *   The bundle entity.
    *
-   * @return \Drupal\localgov_finders\Field\BundleFieldDefinition
+   * @return \Drupal\finders\Field\BundleFieldDefinition
    *   The bundle field definition.
    */
   protected function getListViewFieldDefinition(ConfigEntityInterface $bundle): BundleFieldDefinition {
@@ -148,7 +148,7 @@ class Events extends FinderTypeBase {
       ->setCardinality(1)
       ->setSettings([
         'target_type' => 'view',
-        'handler' => 'localgov_finders_channel_views',
+        'handler' => 'finders_channel_views',
         'handler_settings' => [
           'target_bundles' => NULL,
           'auto_create' => FALSE,
@@ -172,7 +172,7 @@ class Events extends FinderTypeBase {
    * @param \Drupal\Core\Config\Entity\ConfigEntityInterface $bundle
    *   The bundle entity.
    *
-   * @return \Drupal\localgov_finders\Field\BundleFieldDefinition
+   * @return \Drupal\finders\Field\BundleFieldDefinition
    *   The bundle field definition.
    */
   protected function getCalendarViewFieldDefinition(ConfigEntityInterface $bundle): BundleFieldDefinition {
@@ -188,7 +188,7 @@ class Events extends FinderTypeBase {
       ->setCardinality(1)
       ->setSettings([
         'target_type' => 'view',
-        'handler' => 'localgov_finders_channel_views',
+        'handler' => 'finders_channel_views',
         'handler_settings' => [
           'target_bundles' => NULL,
           'auto_create' => FALSE,
@@ -209,7 +209,7 @@ class Events extends FinderTypeBase {
    * @param \Drupal\Core\Config\Entity\ConfigEntityInterface $bundle
    *   The bundle entity.
    *
-   * @return \Drupal\localgov_finders\Field\BundleFieldDefinition
+   * @return \Drupal\finders\Field\BundleFieldDefinition
    *   The bundle field definition.
    */
   protected function getEventDateFieldDefinition(ConfigEntityInterface $bundle): BundleFieldDefinition {

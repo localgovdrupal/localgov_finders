@@ -1,15 +1,15 @@
 <?php
 
-namespace Drupal\localgov_finders;
+namespace Drupal\finders;
 
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Plugin\DefaultPluginManager;
-use Drupal\localgov_finders\Attribute\FinderType;
-use Drupal\localgov_finders\Enum\FinderRole;
-use Drupal\localgov_finders\Plugin\FinderType\FinderTypeInterface;
+use Drupal\finders\Attribute\FinderType;
+use Drupal\finders\Enum\FinderRole;
+use Drupal\finders\Plugin\FinderType\FinderTypeInterface;
 
 /**
  * Manages discovery and instantiation of Finder Type plugins.
@@ -57,11 +57,11 @@ class FinderTypeManager extends DefaultPluginManager {
    * @param \Drupal\Core\Config\Entity\ConfigEntityInterface $bundle
    *   The bundle entity.
    *
-   * @return \Drupal\localgov_finders\Plugin\FinderType\FinderTypeInterface
+   * @return \Drupal\finders\Plugin\FinderType\FinderTypeInterface
    *   A finder type plugin if the bundle entity has one set, or NULL otherwise.
    */
   public function getBundleFinderType(ConfigEntityInterface $bundle): ?FinderTypeInterface {
-    $finder_type_id = $bundle->getThirdPartySetting('localgov_finders', 'finder_type', '');
+    $finder_type_id = $bundle->getThirdPartySetting('finders', 'finder_type', '');
 
     if ($finder_type_id) {
       return $this->createInstance($finder_type_id);
@@ -80,7 +80,7 @@ class FinderTypeManager extends DefaultPluginManager {
    *
    * @param \Drupal\Core\Entity\EntityTypeInterface $content_entity_type
    *   The entity type to get bundles for.
-   * @param \Drupal\localgov_finders\Plugin\FinderType\FinderTypeInterface $finder_type
+   * @param \Drupal\finders\Plugin\FinderType\FinderTypeInterface $finder_type
    *   The finder type plugin to get bundles for.
    *
    * @return array
@@ -96,8 +96,8 @@ class FinderTypeManager extends DefaultPluginManager {
     return array_filter(
       $bundle_entities,
       fn ($bundle_entity) =>
-        $bundle_entity->getThirdPartySetting('localgov_finders', 'finder_type', '') == $finder_type_id &&
-        $bundle_entity->getThirdPartySetting('localgov_finders', 'finder_role', '') == FinderRole::Entries->value
+        $bundle_entity->getThirdPartySetting('finders', 'finder_type', '') == $finder_type_id &&
+        $bundle_entity->getThirdPartySetting('finders', 'finder_role', '') == FinderRole::Entries->value
     );
   }
 
@@ -110,7 +110,7 @@ class FinderTypeManager extends DefaultPluginManager {
    *
    * @param \Drupal\Core\Entity\EntityTypeInterface $content_entity_type
    *   The entity type to get bundles for.
-   * @param \Drupal\localgov_finders\Plugin\FinderType\FinderTypeInterface $finder_type
+   * @param \Drupal\finders\Plugin\FinderType\FinderTypeInterface $finder_type
    *   The finder type plugin to get bundles for.
    *
    * @return array
@@ -126,8 +126,8 @@ class FinderTypeManager extends DefaultPluginManager {
     return array_filter(
       $bundle_entities,
       fn ($bundle_entity) =>
-        $bundle_entity->getThirdPartySetting('localgov_finders', 'finder_type', '') == $finder_type_id &&
-        $bundle_entity->getThirdPartySetting('localgov_finders', 'finder_role', '') == FinderRole::Channel->value
+        $bundle_entity->getThirdPartySetting('finders', 'finder_type', '') == $finder_type_id &&
+        $bundle_entity->getThirdPartySetting('finders', 'finder_role', '') == FinderRole::Channel->value
     );
   }
 
@@ -137,7 +137,7 @@ class FinderTypeManager extends DefaultPluginManager {
    * @param \Drupal\Core\Entity\EntityTypeInterface $content_entity_type
    *   The content entity type to get finder plugins for.
    *
-   * @return \Drupal\localgov_finders\Plugin\FinderType\FinderTypeInterface[]
+   * @return \Drupal\finders\Plugin\FinderType\FinderTypeInterface[]
    *   An array of finder type plugins, keyed by the plugin ID.
    */
   public function getActiveFinderTypes(EntityTypeInterface $content_entity_type): array {

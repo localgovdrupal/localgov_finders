@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\localgov_finders\Field;
+namespace Drupal\finders\Field;
 
 use Drupal\Core\Field\BaseFieldDefinition;
 

@@ -8,4 +8,4 @@ dependencies:
   - date_recur_modular:date_recur_modular
   - search_api:search_api
   - date_recur_search_api:date_recur_search_api
-  - localgov_finders:localgov_finders
+  - finders:finders

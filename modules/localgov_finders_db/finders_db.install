@@ -2,26 +2,26 @@
 
 /**
  * @file
- * Contains install and update hooks for the localgov_finders_db module.
+ * Contains install and update hooks for the finders_db module.
  */
 
 /**
  * Implements hook_install().
  */
-function localgov_finders_db_install($is_syncing) {
+function finders_db_install($is_syncing) {
   if ($is_syncing) {
     return;
   }
 
   $entity_type_manager = \Drupal::service('entity_type.manager');
-  $finder_type_manager = \Drupal::service('plugin.manager.localgov_finders_finder_type');
+  $finder_type_manager = \Drupal::service('plugin.manager.finders_finder_type');
 
-  $server = $entity_type_manager->getStorage('search_api_server')->load('localgov_finders_default');
+  $server = $entity_type_manager->getStorage('search_api_server')->load('finders_default');
 
   // Only work on node finder types (for now? Performance issues?)
   $node_entity_type = $entity_type_manager->getDefinition('node');
   $active_finder_types = $finder_type_manager->getActiveFinderTypes($node_entity_type);
-  /** @var \Drupal\localgov_finders\Plugin\FinderType\FinderTypeInterface $finder_type */
+  /** @var \Drupal\finders\Plugin\FinderType\FinderTypeInterface $finder_type */
   foreach ($active_finder_types as $finder_type) {
     $index_ids = $finder_type->getIndexIds();
     foreach ($index_ids as $index_id) {
@@ -47,18 +47,18 @@ function localgov_finders_db_install($is_syncing) {
 /**
  * Implements hook_uninstall().
  */
-function localgov_finders_db_uninstall($is_syncing) {
+function finders_db_uninstall($is_syncing) {
   if ($is_syncing) {
     return;
   }
 
   $entity_type_manager = \Drupal::service('entity_type.manager');
-  $finder_type_manager = \Drupal::service('plugin.manager.localgov_finders_finder_type');
+  $finder_type_manager = \Drupal::service('plugin.manager.finders_finder_type');
 
   // Only work on node finder types (for now? Performance issues?)
   $node_entity_type = $entity_type_manager->getDefinition('node');
   $active_finder_types = $finder_type_manager->getActiveFinderTypes($node_entity_type);
-  /** @var \Drupal\localgov_finders\Plugin\FinderType\FinderTypeInterface $finder_type */
+  /** @var \Drupal\finders\Plugin\FinderType\FinderTypeInterface $finder_type */
   foreach ($active_finder_types as $finder_type) {
     $index_ids = $finder_type->getIndexIds();
     foreach ($index_ids as $index_id) {
@@ -70,7 +70,7 @@ function localgov_finders_db_uninstall($is_syncing) {
       }
 
       // Skip an index that has been customized with a server other than ours.
-      if ($index->getServerId() != 'localgov_finders_default') {
+      if ($index->getServerId() != 'finders_default') {
         continue;
       }
 

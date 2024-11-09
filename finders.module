@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains hook implementations for the localgov_finders module.
+ * Contains hook implementations for the finders module.
  */
 
 use Drupal\Core\Entity\ContentEntityTypeInterface;
@@ -11,14 +11,14 @@ use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Hook\Attribute\LegacyHook;
 use Drupal\Core\Render\Element;
-use Drupal\localgov_finders\BundleConfigForm;
-use Drupal\localgov_finders\Hook\EntityHooks;
+use Drupal\finders\BundleConfigForm;
+use Drupal\finders\Hook\EntityHooks;
 use Drupal\node\NodeTypeInterface;
 
 /**
  * Implements hook_entity_bundle_field_info().
  */
-function localgov_finders_entity_bundle_field_info(EntityTypeInterface $entity_type, string $bundle_id, array $base_field_definitions): array {
+function finders_entity_bundle_field_info(EntityTypeInterface $entity_type, string $bundle_id, array $base_field_definitions): array {
   // Only act on content entity types.
   if (!$entity_type instanceof ContentEntityTypeInterface) {
     return [];
@@ -38,20 +38,20 @@ function localgov_finders_entity_bundle_field_info(EntityTypeInterface $entity_t
   }
 
   // Get finder type, if there is one.
-  $finder_type_manager = \Drupal::service('plugin.manager.localgov_finders_finder_type');
+  $finder_type_manager = \Drupal::service('plugin.manager.finders_finder_type');
   $finder_type = $finder_type_manager->getBundleFinderType($bundle);
   if (empty($finder_type)) {
     return [];
   }
 
-  $finder_config_manager = \Drupal::service('localgov_finders.finder_config_manager');
+  $finder_config_manager = \Drupal::service('finders.finder_config_manager');
   return $finder_config_manager->getBundleFieldDefinitions($bundle);
 }
 
 /**
  * Implements hook_entity_field_storage_info().
  */
-function localgov_finders_entity_field_storage_info(EntityTypeInterface $entity_type) {
+function finders_entity_field_storage_info(EntityTypeInterface $entity_type) {
   // Only act on content entity types.
   if (!$entity_type instanceof ContentEntityTypeInterface) {
     return [];
@@ -64,14 +64,14 @@ function localgov_finders_entity_field_storage_info(EntityTypeInterface $entity_
     return [];
   }
 
-  /** @var \Drupal\localgov_finders\Field\BundleFieldDefinition[] $fields */
+  /** @var \Drupal\finders\Field\BundleFieldDefinition[] $fields */
   $fields = [];
 
   $entity_type_manager = \Drupal::service('entity_type.manager');
   $bundle_entities = $entity_type_manager->getStorage($bundle_entity_type_id)->loadMultiple();
 
-  /** @var \Drupal\localgov_finders\FinderConfigManager $finder_config_manager */
-  $finder_config_manager = \Drupal::service('localgov_finders.finder_config_manager');
+  /** @var \Drupal\finders\FinderConfigManager $finder_config_manager */
+  $finder_config_manager = \Drupal::service('finders.finder_config_manager');
   foreach ($bundle_entities as $bundle_entity) {
     $bundle_fields = $finder_config_manager->getBundleFieldDefinitions($bundle_entity);
 
@@ -96,16 +96,16 @@ function localgov_finders_entity_field_storage_info(EntityTypeInterface $entity_
 /**
  * Implements hook_form_BASE_FORM_ID_alter(): node_type_form.
  */
-function localgov_finders_form_node_type_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+function finders_form_node_type_form_alter(&$form, FormStateInterface $form_state, $form_id) {
   \Drupal::service(BundleConfigForm::class)->alterBundleForm($form, $form_state);
 }
 
 #[LegacyHook]
-function localgov_finders_entity_insert(EntityInterface $entity): void {
+function finders_entity_insert(EntityInterface $entity): void {
   \Drupal::service(EntityHooks::class)->entityInsert($entity);
 }
 
 #[LegacyHook]
-function localgov_finders_entity_update(EntityInterface $entity): void {
+function finders_entity_update(EntityInterface $entity): void {
   \Drupal::service(EntityHooks::class)->entityUpdate($entity);
 }

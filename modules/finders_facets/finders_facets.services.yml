@@ -1,7 +1,7 @@
 services:
   finders_facets.bundle_config_form_facets:
     class: Drupal\finders_facets\BundleConfigFormFacets
-    decorates: Drupal\localgov_finders\BundleConfigForm
+    decorates: Drupal\finders\BundleConfigForm
     arguments: ['@.inner']
 
   Drupal\finders_facets\Hooks\FindersFacetsHooks:

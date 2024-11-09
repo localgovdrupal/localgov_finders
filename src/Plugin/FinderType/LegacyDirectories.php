@@ -1,9 +1,9 @@
 <?php
 
-namespace Drupal\localgov_finders\Plugin\FinderType;
+namespace Drupal\finders\Plugin\FinderType;
 
 use Drupal\Core\StringTranslation\TranslatableMarkup;
-use Drupal\localgov_finders\Attribute\FinderType;
+use Drupal\finders\Attribute\FinderType;
 
 /**
  * Directories finder type for sites built on Directories 3.x.

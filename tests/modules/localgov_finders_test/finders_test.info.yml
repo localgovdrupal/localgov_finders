@@ -4,5 +4,5 @@ description: 'Provides test fixtures for LocalGov finder.'
 package: Testing
 version: VERSION
 dependencies:
-  - localgov_finders:localgov_finders
+  - finders:finders
   - drupal:entity_test

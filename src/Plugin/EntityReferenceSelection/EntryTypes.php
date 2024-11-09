@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\localgov_finders\Plugin\EntityReferenceSelection;
+namespace Drupal\finders\Plugin\EntityReferenceSelection;
 
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Entity\Attribute\EntityReferenceSelection;
@@ -9,16 +9,16 @@ use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
-use Drupal\localgov_finders\FinderTypeManager;
+use Drupal\finders\FinderTypeManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Selection plugin for finder entry types.
  */
 #[EntityReferenceSelection(
-  id: 'localgov_finders_entry_types',
+  id: 'finders_entry_types',
   label: new TranslatableMarkup("Finder entry types"),
-  group: 'localgov_finders_entry_types',
+  group: 'finders_entry_types',
   weight: 0,
   entity_types: [],
 )]
@@ -34,7 +34,7 @@ class EntryTypes extends SelectionPluginBase implements ContainerFactoryPluginIn
   /**
    * The finder type manager.
    *
-   * @var \Drupal\localgov_finders\FinderTypeManager
+   * @var \Drupal\finders\FinderTypeManager
    */
   protected $finderTypeManager;
 
@@ -54,7 +54,7 @@ class EntryTypes extends SelectionPluginBase implements ContainerFactoryPluginIn
       $plugin_id,
       $plugin_definition,
       $container->get('entity_type.manager'),
-      $container->get('plugin.manager.localgov_finders_finder_type'),
+      $container->get('plugin.manager.finders_finder_type'),
       $container->get('entity.repository'),
     );
   }
@@ -70,7 +70,7 @@ class EntryTypes extends SelectionPluginBase implements ContainerFactoryPluginIn
    *   The plugin implementation definition.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
-   * @param \Drupal\localgov_finders\FinderTypeManager $finder_type_manager
+   * @param \Drupal\finders\FinderTypeManager $finder_type_manager
    *   The finder type manager.
    * @param \Drupal\Core\Entity\EntityRepositoryInterface $entity_repository
    *   The entity repository service.

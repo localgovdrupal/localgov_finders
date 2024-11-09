@@ -2,7 +2,7 @@
 # This is needed because apparently a schema name wildcard can't be used at the
 # start of the schema name, so this must be used in a schema definition for
 # every bundle entity config which uses finders.
-localgov_finders.third_party_settings:
+finders.third_party_settings:
   type: mapping
   label: 'Third party settings'
   mapping:
@@ -13,5 +13,5 @@ localgov_finders.third_party_settings:
       type: string
       label: 'Finder role'
 
-node.type.*.third_party.localgov_finders:
-  type: localgov_finders.third_party_settings
+node.type.*.third_party.finders:
+  type: finders.third_party_settings

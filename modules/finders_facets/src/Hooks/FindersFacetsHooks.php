@@ -5,7 +5,7 @@ namespace Drupal\finders_facets\Hooks;
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
 use Drupal\Core\Hook\Attribute\Hook;
 use Drupal\Core\Routing\RouteMatchInterface;
-use Drupal\localgov_finders\Plugin\FinderType\FinderTypeInterface;
+use Drupal\finders\Plugin\FinderType\FinderTypeInterface;
 
 /**
  * Contains hook implementations for the Finders facets module.

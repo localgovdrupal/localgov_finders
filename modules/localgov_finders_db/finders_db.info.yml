@@ -5,5 +5,5 @@ type: module
 package: LocalGov Drupal
 
 dependencies:
-  - localgov_finders:localgov_finders
+  - finders:finders
   - search_api:search_api_db

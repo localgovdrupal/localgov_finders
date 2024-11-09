@@ -1,11 +1,11 @@
 <?php
 
-namespace Drupal\localgov_finders\Plugin\FinderType;
+namespace Drupal\finders\Plugin\FinderType;
 
 use Drupal\Component\Plugin\PluginBase;
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
 use Drupal\Core\Session\AccountInterface;
-use Drupal\localgov_finders\Field\BundleFieldDefinition;
+use Drupal\finders\Field\BundleFieldDefinition;
 use Drupal\search_api\Datasource\DatasourceInterface;
 use Drupal\search_api\IndexInterface;
 use Drupal\search_api\Item\Field as SearchIndexField;
@@ -77,19 +77,19 @@ abstract class FinderTypeBase extends PluginBase implements FinderTypeInterface,
    *
    * @see self::getChannelTypesFieldDefinition()
    */
-  const string CHANNEL_TYPES_FIELD = 'localgov_finders_channel_types';
+  const string CHANNEL_TYPES_FIELD = 'finders_channel_types';
 
   /**
    * The field name for the channel selection field.
    *
    * @see self::getChannelSelectionFieldDefinition()
    */
-  const string CHANNEL_SELECTION_FIELD = 'localgov_finders_channels';
+  const string CHANNEL_SELECTION_FIELD = 'finders_channels';
 
   /**
    * The field name for the title sort field.
    */
-  const string TITLE_SORT_FIELD = 'localgov_finders_title_sort';
+  const string TITLE_SORT_FIELD = 'finders_title_sort';
 
   /**
    * {@inheritdoc}
@@ -111,7 +111,7 @@ abstract class FinderTypeBase extends PluginBase implements FinderTypeInterface,
     // enabled facets
     // finder view.
 
-    /** @var \Drupal\localgov_finders\Field\BundleFieldDefinition $field_definition */
+    /** @var \Drupal\finders\Field\BundleFieldDefinition $field_definition */
     foreach ($field_definitions as $field_definition) {
       // Set the target bundle on all bundle fields.
       $field_definition->setTargetBundle($bundle->id());
@@ -147,7 +147,7 @@ abstract class FinderTypeBase extends PluginBase implements FinderTypeInterface,
    */
   public function getIndexIds(): array {
     return [
-      'localgov_finders_index_default',
+      'finders_index_default',
     ];
   }
 
@@ -406,10 +406,10 @@ abstract class FinderTypeBase extends PluginBase implements FinderTypeInterface,
    * @param \Drupal\Core\Config\Entity\ConfigEntityInterface $bundle
    *   The bundle entity.
    *
-   * @return \Drupal\localgov_finders\Field\BundleFieldDefinition
+   * @return \Drupal\finders\Field\BundleFieldDefinition
    *   The bundle field definition.
    *
-   * @see \Drupal\localgov_finders\Plugin\EntityReferenceSelection\EntryTypes
+   * @see \Drupal\finders\Plugin\EntityReferenceSelection\EntryTypes
    */
   protected function getChannelTypesFieldDefinition(ConfigEntityInterface $bundle): BundleFieldDefinition {
     $bundle_entity_type = $bundle->getEntityType();
@@ -425,7 +425,7 @@ abstract class FinderTypeBase extends PluginBase implements FinderTypeInterface,
       ->setTranslatable(FALSE)
       ->setCardinality(BundleFieldDefinition::CARDINALITY_UNLIMITED)
       ->setSettings([
-        'handler' => 'localgov_finders_entry_types',
+        'handler' => 'finders_entry_types',
         'target_type' => $bundle_entity_type->id(),
       ])
       ->setDisplayConfigurable('form', TRUE)
@@ -442,7 +442,7 @@ abstract class FinderTypeBase extends PluginBase implements FinderTypeInterface,
    * @param \Drupal\Core\Config\Entity\ConfigEntityInterface $bundle
    *   The bundle entity.
    *
-   * @return \Drupal\localgov_finders\Field\BundleFieldDefinition
+   * @return \Drupal\finders\Field\BundleFieldDefinition
    *   The bundle field definition.
    */
   protected function getChannelSelectionFieldDefinition(ConfigEntityInterface $bundle): BundleFieldDefinition {
@@ -457,7 +457,7 @@ abstract class FinderTypeBase extends PluginBase implements FinderTypeInterface,
       ->setTranslatable(FALSE)
       ->setCardinality(BundleFieldDefinition::CARDINALITY_UNLIMITED)
       ->setSettings([
-        'handler' => 'localgov_finders_channels',
+        'handler' => 'finders_channels',
         'target_type' => $content_entity_type_id,
         'handler_settings' => [
           // We don't use this setting in our selection plugin, but the class it
@@ -484,7 +484,7 @@ abstract class FinderTypeBase extends PluginBase implements FinderTypeInterface,
    * @param \Drupal\Core\Config\Entity\ConfigEntityInterface $bundle
    *   The bundle entity.
    *
-   * @return \Drupal\localgov_finders\Field\BundleFieldDefinition
+   * @return \Drupal\finders\Field\BundleFieldDefinition
    *   The bundle field definition.
    */
   protected function getTitleSortFieldDefinition(ConfigEntityInterface $bundle): BundleFieldDefinition {

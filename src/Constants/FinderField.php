@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\localgov_finders\Constants;
+namespace Drupal\finders\Constants;
 
 /**
  * Finder field name constants.

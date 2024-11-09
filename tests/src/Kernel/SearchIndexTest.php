@@ -1,10 +1,10 @@
 <?php
 
-namespace Drupal\Tests\localgov_finders\Kernel;
+namespace Drupal\Tests\finders\Kernel;
 
 use Drupal\KernelTests\KernelTestBase;
-use Drupal\localgov_finders\Enum\FinderRole;
-use Drupal\localgov_finders\Plugin\FinderType\FinderTypeBase;
+use Drupal\finders\Enum\FinderRole;
+use Drupal\finders\Plugin\FinderType\FinderTypeBase;
 use Drupal\search_api\IndexInterface;
 use Drupal\search_api\Utility\Utility;
 
@@ -13,7 +13,7 @@ use Drupal\search_api\Utility\Utility;
  *
  * WIP! Doesn't work!
  *
- * @group localgov_finders
+ * @group finders
  */
 class SearchIndexTest extends KernelTestBase {
 
@@ -29,10 +29,10 @@ protected $strictConfigSchema = FALSE;
     'user',
     'entity_test',
     'search_api',
-    'localgov_finders',
-    'localgov_finders_test',
+    'finders',
+    'finders_test',
     'search_api_db',
-    'localgov_finders_db',
+    'finders_db',
   ];
 
   /**
@@ -54,7 +54,7 @@ protected $strictConfigSchema = FALSE;
     $this->installEntitySchema('search_api_task');
     $this->installSchema('search_api', ['search_api_item']);
     $this->installConfig('search_api');
-    $this->installConfig(['localgov_finders_db']);
+    $this->installConfig(['finders_db']);
 
     // Do not use a batch for tracking the initial items after creating an
     // index when running the tests via the GUI. Otherwise, it seems Drupal's
@@ -63,7 +63,7 @@ protected $strictConfigSchema = FALSE;
       \Drupal::state()->set('search_api_use_tracking_batch', FALSE);
     }
 
-    $this->installConfig('localgov_finders_test');
+    $this->installConfig('finders_test');
 
     // Create a channel bundle.
     $channel_bundle = $this->entityTypeManager->getStorage('entity_test_bundle')->create([
@@ -71,12 +71,12 @@ protected $strictConfigSchema = FALSE;
       'status' => TRUE,
     ]);
     $channel_bundle->setThirdPartySetting(
-      'localgov_finders',
+      'finders',
       'finder_type',
       'test'
     );
     $channel_bundle->setThirdPartySetting(
-      'localgov_finders',
+      'finders',
       'finder_role',
       'channel'
     );
@@ -89,12 +89,12 @@ protected $strictConfigSchema = FALSE;
     ]);
     $entry_bundle->save();
     $entry_bundle->setThirdPartySetting(
-      'localgov_finders',
+      'finders',
       'finder_type',
       'test'
     );
     $entry_bundle->setThirdPartySetting(
-      'localgov_finders',
+      'finders',
       'finder_role',
       FinderRole::Entries->value,
     );
@@ -118,7 +118,7 @@ protected $strictConfigSchema = FALSE;
     ]);
     $entry->save();
 
-    $index = $this->entityTypeManager->getStorage('search_api_index')->load('localgov_finders_index_default');
+    $index = $this->entityTypeManager->getStorage('search_api_index')->load('finders_index_default');
     $indexed = $index->indexItems();
     $this->assertEquals(1, $indexed);
   }

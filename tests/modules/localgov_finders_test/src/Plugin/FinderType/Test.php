@@ -1,14 +1,14 @@
 <?php
 
-namespace Drupal\localgov_finders_test\Plugin\FinderType;
+namespace Drupal\finders_test\Plugin\FinderType;
 
 use Drupal\Core\Config\Entity\ConfigEntityTypeInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
-use Drupal\localgov_finders\Attribute\FinderType;
-use Drupal\localgov_finders\Constants\FinderField;
-use Drupal\localgov_finders\Field\BundleFieldDefinition;
-use Drupal\localgov_finders\Plugin\FinderType\FinderTypeBase;
+use Drupal\finders\Attribute\FinderType;
+use Drupal\finders\Constants\FinderField;
+use Drupal\finders\Field\BundleFieldDefinition;
+use Drupal\finders\Plugin\FinderType\FinderTypeBase;
 
 /**
  * Finder type for using in tests.

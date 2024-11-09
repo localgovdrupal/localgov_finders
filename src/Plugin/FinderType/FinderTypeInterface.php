@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\localgov_finders\Plugin\FinderType;
+namespace Drupal\finders\Plugin\FinderType;
 
 use Drupal\Component\Plugin\DerivativeInspectionInterface;
 use Drupal\Component\Plugin\PluginInspectionInterface;
@@ -30,7 +30,7 @@ interface FinderTypeInterface extends PluginInspectionInterface, DerivativeInspe
    * @param \Drupal\Core\Config\Entity\ConfigEntityInterface
    *   The channel bundle entity.
    *
-   * @return \Drupal\localgov_finders\Field\BundleFieldDefinition[]
+   * @return \Drupal\finders\Field\BundleFieldDefinition[]
    *   An array of bundle field definitions, keyed by the field name.
    */
   public function getChannelFieldDefinitions(ConfigEntityInterface $bundle): array;
@@ -41,7 +41,7 @@ interface FinderTypeInterface extends PluginInspectionInterface, DerivativeInspe
    * @param \Drupal\Core\Config\Entity\ConfigEntityInterface
    *   The entry bundle entity.
    *
-   * @return \Drupal\localgov_finders\Field\BundleFieldDefinition[]
+   * @return \Drupal\finders\Field\BundleFieldDefinition[]
    *   An array of bundle field definitions, keyed by the field name.
    */
   public function getEntryFieldDefinitions(ConfigEntityInterface $bundle): array;

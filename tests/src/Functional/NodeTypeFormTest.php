@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\localgov_finders\Functional;
+namespace Drupal\Tests\finders\Functional;
 
 use Drupal\node\Entity\NodeType;
 use Drupal\Tests\node\Functional\NodeTestBase;
@@ -32,7 +32,7 @@ class NodeTypeFormTest extends NodeTestBase {
    * @var array
    */
   protected static $modules = [
-    'localgov_finders_test',
+    'finders_test',
   ];
 
   /**
@@ -63,12 +63,12 @@ class NodeTypeFormTest extends NodeTestBase {
 
     $page->fillField('edit-name', 'Finder channel');
     $page->fillField('edit-type', 'finder_channel');
-    $finder_types = $page->findField('localgov_finders[finder_type]');
+    $finder_types = $page->findField('finders[finder_type]');
     $finder_types->find('named', ['radio', 'None']);
     $finder_types->selectOption('test');
     // @todo Should entry show before a channel exists?
     // If so test what happens when selected.
-    $entry_types = $page->findField('localgov_finders[finder_role]');
+    $entry_types = $page->findField('finders[finder_role]');
     $entry_types->find('named', ['radio', 'None']);
     $entry_types->selectOption('channel');
 
@@ -76,14 +76,14 @@ class NodeTypeFormTest extends NodeTestBase {
     $this->drupalGet('admin/structure/types/manage/finder_channel');
 
     $assert->pageTextContains('Finder channel');
-    $finder_types = $page->findField('localgov_finders[finder_type]');
+    $finder_types = $page->findField('finders[finder_type]');
     $this->assertEquals($finder_types->getValue(), 'test');
-    $entry_types = $page->findField('localgov_finders[finder_role]');
+    $entry_types = $page->findField('finders[finder_role]');
     $this->assertEquals($entry_types->getValue(), 'channel');
 
     $channel_type = NodeType::load('finder_channel');
-    $this->assertEquals($channel_type->getThirdPartySetting('localgov_finders', 'finder_type'), 'test');
-    $this->assertEquals($channel_type->getThirdPartySetting('localgov_finders', 'finder_role'), 'channel');
+    $this->assertEquals($channel_type->getThirdPartySetting('finders', 'finder_type'), 'test');
+    $this->assertEquals($channel_type->getThirdPartySetting('finders', 'finder_role'), 'channel');
 
     // Config should be tested in Kernel tests for adding third party setting.
     // But could also check fields here?

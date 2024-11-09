@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\localgov_finders;
+namespace Drupal\finders;
 
 use Drupal\Core\Config\ConfigInstallerInterface;
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
@@ -11,8 +11,8 @@ use Drupal\Core\Extension\ModuleExtensionList;
 use Drupal\Core\Field\FieldDefinitionListenerInterface;
 use Drupal\Core\Field\FieldStorageDefinitionListenerInterface;
 use Drupal\Core\Logger\LoggerChannelFactoryInterface;
-use Drupal\localgov_finders\Enum\FinderRole;
-use Drupal\localgov_finders\Plugin\FinderType\FinderTypeInterface;
+use Drupal\finders\Enum\FinderRole;
+use Drupal\finders\Plugin\FinderType\FinderTypeInterface;
 use Drupal\search_api\IndexInterface;
 use Drupal\search_api\Utility\PluginHelperInterface;
 
@@ -123,15 +123,15 @@ class FinderConfigManager {
    * @param \Drupal\Core\Config\Entity\ConfigEntityInterface $bundle_entity
    *   The bundle entity.
    *
-   * @return \Drupal\localgov_finders\Field\BundleFieldDefinition[]
+   * @return \Drupal\finders\Field\BundleFieldDefinition[]
    *   An array bundle field definitions, for either channel bundles or entry
    *   bundles as appropriate, keyed by the field name. If the given bundle
    *   entity is not configured for finders, an empty array is returned.
    */
   public function getBundleFieldDefinitions(ConfigEntityInterface $bundle_entity): array {
-    $finder_type_manager = \Drupal::service('plugin.manager.localgov_finders_finder_type');
+    $finder_type_manager = \Drupal::service('plugin.manager.finders_finder_type');
     $finder_type = $finder_type_manager->getBundleFinderType($bundle_entity);
-    $finder_role_name = $bundle_entity->getThirdPartySetting('localgov_finders', 'finder_role', '');
+    $finder_role_name = $bundle_entity->getThirdPartySetting('finders', 'finder_role', '');
 
     if (!$finder_type) {
       return [];
@@ -149,14 +149,14 @@ class FinderConfigManager {
    *
    * @param \Drupal\Core\Config\Entity\ConfigEntityInterface $bundle_entity
    *   The bundle entity.
-   * @param \Drupal\localgov_finders\Plugin\FinderType\FinderTypeInterface $finder_type
+   * @param \Drupal\finders\Plugin\FinderType\FinderTypeInterface $finder_type
    *   The finder type plugin.
    */
   public function enableAsChannel(ConfigEntityInterface $bundle_entity, FinderTypeInterface $finder_type): void {
-    $bundle_entity->setThirdPartySetting('localgov_finders', 'finder_type', $finder_type->getPluginId());
-    $bundle_entity->setThirdPartySetting('localgov_finders', 'finder_role', FinderRole::Channel->value);
+    $bundle_entity->setThirdPartySetting('finders', 'finder_type', $finder_type->getPluginId());
+    $bundle_entity->setThirdPartySetting('finders', 'finder_role', FinderRole::Channel->value);
     $bundle_entity->save();
-    // @see Drupal\localgov_finders\Hook\EntityHooks::entityUpdate
+    // @see Drupal\finders\Hook\EntityHooks::entityUpdate
   }
 
   /**
@@ -164,7 +164,7 @@ class FinderConfigManager {
    *
    * @param \Drupal\Core\Config\Entity\ConfigEntityInterface $bundle_entity
    *   The entity bundle entity.
-   * @param \Drupal\localgov_finders\Plugin\FinderType\FinderTypeInterface $finder_type
+   * @param \Drupal\finders\Plugin\FinderType\FinderTypeInterface $finder_type
    *   The finder type plugin.
    */
   public function configureAsChannel(ConfigEntityInterface $bundle_entity, FinderTypeInterface $finder_type): void {
@@ -207,14 +207,14 @@ class FinderConfigManager {
    *
    * @param \Drupal\Core\Config\Entity\ConfigEntityInterface $bundle_entity
    *   The bundle entity.
-   * @param \Drupal\localgov_finders\Plugin\FinderType\FinderTypeInterface $finder_type
+   * @param \Drupal\finders\Plugin\FinderType\FinderTypeInterface $finder_type
    *   The finder type plugin.
    */
   public function enableAsEntry(ConfigEntityInterface $bundle_entity, FinderTypeInterface $finder_type): void {
-    $bundle_entity->setThirdPartySetting('localgov_finders', 'finder_type', $finder_type->getPluginId());
-    $bundle_entity->setThirdPartySetting('localgov_finders', 'finder_role', FinderRole::Entries->value);
+    $bundle_entity->setThirdPartySetting('finders', 'finder_type', $finder_type->getPluginId());
+    $bundle_entity->setThirdPartySetting('finders', 'finder_role', FinderRole::Entries->value);
     $bundle_entity->save();
-    // @see Drupal\localgov_finders\Hook\EntityHooks::entityUpdate
+    // @see Drupal\finders\Hook\EntityHooks::entityUpdate
   }
 
   /**
@@ -222,7 +222,7 @@ class FinderConfigManager {
    *
    * @param \Drupal\Core\Config\Entity\ConfigEntityInterface $bundle_entity
    *   The entity bundle entity.
-   * @param \Drupal\localgov_finders\Plugin\FinderType\FinderTypeInterface $finder_type
+   * @param \Drupal\finders\Plugin\FinderType\FinderTypeInterface $finder_type
    *   The finder type plugin.
    */
   public function configureAsEntry(ConfigEntityInterface $bundle_entity, FinderTypeInterface $finder_type): void {
@@ -282,7 +282,7 @@ class FinderConfigManager {
    *
    * @param string $index_id
    *   The ID of the search index to create.
-   * @param \Drupal\localgov_finders\Plugin\FinderType\FinderTypeInterface $finder_type
+   * @param \Drupal\finders\Plugin\FinderType\FinderTypeInterface $finder_type
    *   The finder type plugin.
    *
    * @return \Drupal\search_api\IndexInterface
@@ -297,9 +297,9 @@ class FinderConfigManager {
     // Fall back to the default index template if the finder type module does
     // not provide a template for the index ID.
     if (!$config_source->exists($config_filename)) {
-      $template_directory = $this->moduleExtensionList->getPath('localgov_finders') . '/config/template';
+      $template_directory = $this->moduleExtensionList->getPath('finders') . '/config/template';
       $config_source = new ConfigFileStorage($template_directory);
-      $config_filename = 'search_api.index.localgov_finders_index_template';
+      $config_filename = 'search_api.index.finders_index_template';
     }
 
     $config_values = $config_source->read($config_filename);
@@ -313,7 +313,7 @@ class FinderConfigManager {
     // Set a default server if one exists.
     $servers = $this->entityTypeManager->getStorage('search_api_server')->loadMultiple();
     foreach ($servers as $server_id => $server) {
-      if ($server->getThirdPartySetting('localgov_finders', 'default_server', NULL)) {
+      if ($server->getThirdPartySetting('finders', 'default_server', NULL)) {
         $search_index->setServer($server);
         $search_index->setStatus(TRUE);
       }

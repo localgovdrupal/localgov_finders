@@ -2,20 +2,20 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\localgov_finders\Kernel;
+namespace Drupal\Tests\finders\Kernel;
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\entity_test\Entity\EntityTestWithBundle;
 use Drupal\entity_test\Entity\EntityTestBundle;
 use Drupal\KernelTests\KernelTestBase;
-use Drupal\localgov_finders\Enum\FinderRole;
-use Drupal\localgov_finders\Plugin\FinderType\FinderTypeBase;
+use Drupal\finders\Enum\FinderRole;
+use Drupal\finders\Plugin\FinderType\FinderTypeBase;
 use Drupal\search_api\Entity\Index;
 
 /**
  * Test description.
  *
- * @group localgov_finders
+ * @group finders
  */
 final class FinderPluginTest extends KernelTestBase {
 
@@ -30,8 +30,8 @@ final class FinderPluginTest extends KernelTestBase {
    * {@inheritdoc}
    */
   protected static $modules = [
-    'localgov_finders',
-    'localgov_finders_test',
+    'finders',
+    'finders_test',
     'search_api',
     'entity_test',
     'user'
@@ -45,7 +45,7 @@ final class FinderPluginTest extends KernelTestBase {
 
     $this->installEntitySchema('search_api_task');
 
-    $this->installConfig('localgov_finders_test');
+    $this->installConfig('finders_test');
     $this->installEntitySchema('entity_test_with_bundle');
 
     $this->entityTypeManager = $this->container->get('entity_type.manager');
@@ -57,7 +57,7 @@ final class FinderPluginTest extends KernelTestBase {
   public function testModuleConfig(): void {
     $channel = EntityTestWithBundle::create([
       'name' => 'test channel',
-      'type' => 'localgov_finders_channel',
+      'type' => 'finders_channel',
     ]);
     $channel->save();
     $this->assertTrue($channel->hasField(FinderTypeBase::CHANNEL_TYPES_FIELD));
@@ -77,12 +77,12 @@ final class FinderPluginTest extends KernelTestBase {
     $this->assertFalse($channel->hasField(FinderTypeBase::CHANNEL_TYPES_FIELD));
 
     $channel_bundle->setThirdPartySetting(
-      'localgov_finders',
+      'finders',
       'finder_type',
       'test'
     );
     $channel_bundle->setThirdPartySetting(
-      'localgov_finders',
+      'finders',
       'finder_role',
       'channel'
     );
@@ -92,7 +92,7 @@ final class FinderPluginTest extends KernelTestBase {
     $this->assertTrue($channel->hasField(FinderTypeBase::CHANNEL_TYPES_FIELD));
 
     // A search index has been created by the creation of the channel bundle.
-    $search_index = Index::load('localgov_finders_index_default');
+    $search_index = Index::load('finders_index_default');
     $this->assertNotEmpty($search_index);
     $this->assertEmpty($search_index->getFields());
 
@@ -109,24 +109,24 @@ final class FinderPluginTest extends KernelTestBase {
 
     // Set up the entry bundles as finder entries.
     $entry_bundle_one->setThirdPartySetting(
-      'localgov_finders',
+      'finders',
       'finder_type',
       'test'
     );
     $entry_bundle_one->setThirdPartySetting(
-      'localgov_finders',
+      'finders',
       'finder_role',
       FinderRole::Entries->value,
     );
     $entry_bundle_one->save();
 
     $entry_bundle_two->setThirdPartySetting(
-      'localgov_finders',
+      'finders',
       'finder_type',
       'test'
     );
     $entry_bundle_two->setThirdPartySetting(
-      'localgov_finders',
+      'finders',
       'finder_role',
       FinderRole::Entries->value,
     );
@@ -138,8 +138,8 @@ final class FinderPluginTest extends KernelTestBase {
     // The entity_test_with_bundle label field is 'name', unlike nodes.
     $this->assertArrayHasKey('name', $fields);
     $this->assertArrayHasKey('rendered_item', $fields);
-    $this->assertArrayHasKey('localgov_finders_title_sort', $fields);
-    $this->assertArrayHasKey('localgov_finders_channels', $fields);
+    $this->assertArrayHasKey('finders_title_sort', $fields);
+    $this->assertArrayHasKey('finders_channels', $fields);
 
     // At present unrestricted which test entity type bundles.
     $channel->{FinderTypeBase::CHANNEL_TYPES_FIELD} = $channels = [

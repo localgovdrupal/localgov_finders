@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Drupal\localgov_finders\Hook;
+namespace Drupal\finders\Hook;
 
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Hook\Attribute\Hook;
-use Drupal\localgov_finders\Enum\FinderRole;
-use Drupal\localgov_finders\FinderConfigManager;
-use Drupal\localgov_finders\FinderTypeManager;
+use Drupal\finders\Enum\FinderRole;
+use Drupal\finders\FinderConfigManager;
+use Drupal\finders\FinderTypeManager;
 
 /**
  * Entity hooks for Finders.
@@ -25,7 +25,7 @@ final class EntityHooks {
   #[Hook('entity_insert')]
   public function entityInsert(EntityInterface $entity): void {
     if ($entity instanceof ConfigEntityInterface && !$entity->isSyncing()) {
-      $finder_type_id = $entity->getThirdPartySetting('localgov_finders', 'finder_type', '');
+      $finder_type_id = $entity->getThirdPartySetting('finders', 'finder_type', '');
       if ($finder_type_id !== '') {
         $this->configureFinder($entity, $finder_type_id);
       }
@@ -35,9 +35,9 @@ final class EntityHooks {
   #[Hook('entity_update')]
   public function entityUpdate(EntityInterface $entity): void {
     if ($entity instanceof ConfigEntityInterface && !$entity->isSyncing()) {
-      $finder_type_id = $entity->getThirdPartySetting('localgov_finders', 'finder_type', '');
+      $finder_type_id = $entity->getThirdPartySetting('finders', 'finder_type', '');
       assert ($entity->original instanceof ConfigEntityInterface);
-      $original_finder_type = $entity->original->getThirdPartySetting('localgov_finders', 'finder_type', '');
+      $original_finder_type = $entity->original->getThirdPartySetting('finders', 'finder_type', '');
       // @todo Support removal, uninstall.
       if ($original_finder_type !== $finder_type_id && $finder_type_id !== '') {
         $this->configureFinder($entity, $finder_type_id);
@@ -55,7 +55,7 @@ final class EntityHooks {
    */
   private function configureFinder(ConfigEntityInterface $bundle_entity, string $finder_type_id): void {
     $finder_type = $this->finderTypeManager->createInstance($finder_type_id);
-    $finder_role_name = $bundle_entity->getThirdPartySetting('localgov_finders', 'finder_role', '');
+    $finder_role_name = $bundle_entity->getThirdPartySetting('finders', 'finder_role', '');
     match ($finder_role_name) {
       FinderRole::Channel->value => $this->finderConfigManager->configureAsChannel(
         $bundle_entity,

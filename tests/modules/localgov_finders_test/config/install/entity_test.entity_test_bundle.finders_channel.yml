@@ -2,9 +2,9 @@ langcode: en
 status: true
 dependencies: {  }
 label: null
-id: localgov_finders_channel
+id: finders_channel
 description: null
 third_party_settings:
-  localgov_finders:
+  finders:
     finder_type: test
     finder_role: channel

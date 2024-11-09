@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\localgov_finders\Enum;
+namespace Drupal\finders\Enum;
 
 /**
  * Values for the finder role.

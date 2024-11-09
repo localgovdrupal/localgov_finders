@@ -4,8 +4,8 @@ namespace Drupal\Tests\finders_events\Kernel;
 
 use Drupal\finders_events\Plugin\FinderType\Events;
 use Drupal\KernelTests\KernelTestBase;
-use Drupal\localgov_finders\Enum\FinderRole;
-use Drupal\localgov_finders\Plugin\FinderType\FinderTypeBase;
+use Drupal\finders\Enum\FinderRole;
+use Drupal\finders\Plugin\FinderType\FinderTypeBase;
 use Drupal\search_api\Entity\Index;
 
 /**
@@ -32,7 +32,7 @@ class EventFinderPluginTest extends KernelTestBase {
     'user',
     'views',
     'node',
-    'localgov_finders',
+    'finders',
     'search_api',
     'viewsreference',
     'date_recur',
@@ -74,12 +74,12 @@ class EventFinderPluginTest extends KernelTestBase {
       'status' => TRUE,
     ]);
     $channel_bundle->setThirdPartySetting(
-      'localgov_finders',
+      'finders',
       'finder_type',
       'events'
     );
     $channel_bundle->setThirdPartySetting(
-      'localgov_finders',
+      'finders',
       'finder_role',
       FinderRole::Channel->value,
     );
@@ -92,12 +92,12 @@ class EventFinderPluginTest extends KernelTestBase {
     ]);
     $entry_bundle->save();
     $entry_bundle->setThirdPartySetting(
-      'localgov_finders',
+      'finders',
       'finder_type',
       'events'
     );
     $entry_bundle->setThirdPartySetting(
-      'localgov_finders',
+      'finders',
       'finder_role',
       FinderRole::Entries->value,
     );
@@ -116,7 +116,7 @@ class EventFinderPluginTest extends KernelTestBase {
     $this->assertArrayHasKey(Events::EVENT_DATE_FIELD, $event_fields);
 
     // A search index has been created by the creation of the channel bundle.
-    $search_index = Index::load('localgov_finders_index_events');
+    $search_index = Index::load('finders_index_events');
     $this->assertNotEmpty($search_index);
 
     $datasources = $search_index->getDatasources();
@@ -129,8 +129,8 @@ class EventFinderPluginTest extends KernelTestBase {
     $fields = $search_index->getFields();
     $this->assertArrayHasKey('title', $fields);
     $this->assertArrayHasKey('rendered_item', $fields);
-    $this->assertArrayHasKey('localgov_finders_title_sort', $fields);
-    $this->assertArrayHasKey('localgov_finders_channels', $fields);
+    $this->assertArrayHasKey('finders_title_sort', $fields);
+    $this->assertArrayHasKey('finders_channels', $fields);
     $this->assertArrayHasKey('finders_events_date_occurrence', $fields);
   }
 

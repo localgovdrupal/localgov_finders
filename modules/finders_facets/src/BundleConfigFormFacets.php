@@ -6,8 +6,8 @@ use Drupal\Core\Config\Entity\ConfigEntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
-use Drupal\localgov_finders\BundleConfigForm;
-use Drupal\localgov_finders\Enum\FinderRole;
+use Drupal\finders\BundleConfigForm;
+use Drupal\finders\Enum\FinderRole;
 
 /**
  * Alters the bundle entity form to add form elements for facets.
@@ -26,7 +26,7 @@ class BundleConfigFormFacets {
   /**
    * Constructor.
    *
-   * @param \Drupal\localgov_finders\BundleConfigForm $inner
+   * @param \Drupal\finders\BundleConfigForm $inner
    *   The decorated form alterer service.
    */
   public function __construct(
@@ -42,8 +42,8 @@ class BundleConfigFormFacets {
 
     $bundle_type = $form_state->getFormObject()->getEntity();
 
-    // Add our form elements into the 'localgov_finders' form group.
-    $form['localgov_finders'] += $this->getFacetsFormElements($bundle_type, $form_state);
+    // Add our form elements into the 'finders' form group.
+    $form['finders'] += $this->getFacetsFormElements($bundle_type, $form_state);
 
     foreach (Element::children($form['actions']) as $action) {
       $form['actions'][$action]['#validate'][] = static::class . '::validate';
@@ -71,7 +71,7 @@ class BundleConfigFormFacets {
       '#default_value' => $bundle_type->getThirdPartySetting('finders_facets', 'facets', FALSE),
       '#states' => [
         'invisible' => [
-          ':input[name="localgov_finders[finder_role]"]' => [
+          ':input[name="finders[finder_role]"]' => [
             '!value' => FinderRole::Channel,
           ],
         ],
@@ -94,7 +94,7 @@ class BundleConfigFormFacets {
     $bundle_type = $form_state->getFormObject()->getEntity();
     assert($bundle_type instanceof ConfigEntityInterface);
 
-    if (empty($form_state->getValue(['localgov_finders', 'facets']))) {
+    if (empty($form_state->getValue(['finders', 'facets']))) {
       $bundle_type->unsetThirdPartySetting(
         'finders_facets',
         'facets',
@@ -104,7 +104,7 @@ class BundleConfigFormFacets {
       $bundle_type->setThirdPartySetting(
         'finders_facets',
         'facets',
-        $form_state->getValue(['localgov_finders', 'facets'])
+        $form_state->getValue(['finders', 'facets'])
       );
       $bundle_type->save();
     }
