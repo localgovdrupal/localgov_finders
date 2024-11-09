@@ -7,3 +7,9 @@ services:
   Drupal\finders_facets\Hooks\FindersFacetsHooks:
     class: Drupal\finders_facets\Hooks\FindersFacetsHooks
     autowire: true
+
+  finders_facets.event_subscriber:
+    class: Drupal\finders_facets\EventSubscriber\FindersFacetsConfigSubscriber
+    arguments: ['@config.storage', '@config.storage.sync']
+    tags:
+      - { name: event_subscriber }

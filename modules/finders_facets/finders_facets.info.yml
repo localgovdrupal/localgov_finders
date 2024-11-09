@@ -1,6 +1,6 @@
 name: Finders facets
 type: module
-description: 'TODO: Description of module'
+description: 'Provides a content managed set of facets for Finders.'
 core_version_requirement: ^10.2
 dependencies:
   - 'facets:facets'

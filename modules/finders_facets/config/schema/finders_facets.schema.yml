@@ -11,3 +11,6 @@ finders_facets.finders_facet_type.*:
     weight:
       type: weight
       label: Weight
+    description:
+      type: text
+      label: 'Description of facet type'
