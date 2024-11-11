@@ -32,9 +32,14 @@ class EventFinderPluginTest extends KernelTestBase {
     'user',
     'views',
     'node',
+    // We need field module for our workaround in
+    // \Drupal\finders_events\Hooks\FindersEventsHooks::viewsData()
+    'field',
     'finders',
     'search_api',
     'viewsreference',
+    'datetime',
+    'datetime_range',
     'date_recur',
     'computed_field',
     'date_recur_search_api',
