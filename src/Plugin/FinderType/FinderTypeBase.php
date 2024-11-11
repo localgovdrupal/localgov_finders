@@ -217,6 +217,8 @@ abstract class FinderTypeBase extends PluginBase implements FinderTypeInterface,
         ];
       }
     }
+
+    // TODO view modes! on the row
   }
 
   /**
