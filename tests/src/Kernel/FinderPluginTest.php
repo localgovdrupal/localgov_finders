@@ -101,6 +101,10 @@ final class FinderPluginTest extends KernelTestBase {
     $this->assertNotEmpty($search_index);
     $this->assertEmpty($search_index->getFields());
 
+    // A view has been created by the creation of the channel bundle.
+    $view = $this->entityTypeManager->getStorage('view')->load('finders_channel_view');
+    $this->assertNotEmpty($view);
+
     $entry_bundle_one = EntityTestBundle::create([
       'id' => 'test_entry_bundle_one',
       'status' => TRUE,
@@ -145,6 +149,10 @@ final class FinderPluginTest extends KernelTestBase {
     $this->assertArrayHasKey('rendered_item', $fields);
     $this->assertArrayHasKey('finders_title_sort', $fields);
     $this->assertArrayHasKey('finders_channels', $fields);
+
+    // The view has been updated by the creation of the entry bundles.
+    $view = $this->reloadEntity($view);
+    $this->assertArrayHasKey('finders_title_sort', $view->getDisplay('default')['display_options']['sorts']);
 
     // At present unrestricted which test entity type bundles.
     $channel->{FinderTypeBase::CHANNEL_TYPES_FIELD} = $channels = [
