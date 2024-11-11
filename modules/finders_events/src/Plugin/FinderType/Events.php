@@ -59,6 +59,15 @@ class Events extends FinderTypeBase {
   /**
    * {@inheritdoc}
    */
+  public function getViewIds(IndexInterface $search_index): array {
+    return [
+      'finders_events_channel_view',
+    ];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getIndexDatasourceId(IndexInterface $index, string $entity_type_id): string {
     // See \Drupal\date_recur_search_api\Plugin\search_api\datasource\DateRecur
     return 'date_recur:' . $entity_type_id . '__' . static::EVENT_DATE_FIELD;
