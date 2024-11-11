@@ -52,7 +52,7 @@ final class FinderPluginTest extends KernelTestBase {
   }
 
   /**
-   * Test callback.
+   * Tests installation of a finder from module install config.
    */
   public function testModuleConfig(): void {
     $channel = EntityTestWithBundle::create([
@@ -63,6 +63,9 @@ final class FinderPluginTest extends KernelTestBase {
     $this->assertTrue($channel->hasField(FinderTypeBase::CHANNEL_TYPES_FIELD));
   }
 
+  /**
+   * Tests setting up a finder type by configuring bundles.
+   */
   public function testUpdateBundle(): void {
     $channel_bundle = EntityTestBundle::create([
       'id' => 'test_channel_bundle',
