@@ -194,10 +194,13 @@ abstract class FinderTypeBase extends PluginBase implements FinderTypeInterface,
    * {@inheritdoc}
    */
   public function alterViewForEntry(ViewEntityInterface $view, IndexInterface $index, ConfigEntityInterface $entry_bundle_entity): void {
+    $entry_entity_type_id = $entry_bundle_entity->getEntityType()->getBundleOf();
+    $entry_bundle_id = $entry_bundle_entity->id();
+
+    $default_display_configuration =& $view->getDisplay('default');
+
     // Only add a title sort on the view if the index has the field.
     if ($index->getField(static::TITLE_SORT_FIELD)) {
-      $default_display_configuration =& $view->getDisplay('default');
-
       // Don't clobber any existing configuration.
       if (!isset($default_display_configuration['display_options']['sorts'][static::TITLE_SORT_FIELD])) {
         $default_display_configuration['display_options']['sorts'][static::TITLE_SORT_FIELD] = [
@@ -218,7 +221,11 @@ abstract class FinderTypeBase extends PluginBase implements FinderTypeInterface,
       }
     }
 
-    // TODO view modes! on the row
+    // Add the entry bundle to the view's row options.
+    if ($default_display_configuration['display_options']['row']['type'] == 'search_api') {
+      // TODO: the view mode and display need creating!
+      // $default_display_configuration['display_options']['row']['type']['options']['view_modes']['entity:' . $entry_entity_type_id][$entry_bundle_id] = 'search_result'
+    }
   }
 
   /**
