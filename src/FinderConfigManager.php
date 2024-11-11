@@ -177,11 +177,16 @@ class FinderConfigManager {
     // Allow modules to alter the channel field definitions.
     \Drupal::moduleHandler()->alter('finders_channel_fields', $channel_field_definitions, $bundle_entity, $finder_type);
 
+    $field_map = $this->entityFieldManager->getFieldMap()[$entity_type_id];
+
     // Register bundle fields on the entity type.
     foreach ($channel_field_definitions as $field_definition) {
       // Notify the field definition listeners. This is what updates core's
       // field map.
-      $this->fieldStorageDefinitionListener->onFieldStorageDefinitionCreate($field_definition);
+      // The field storage may already exist if other entry bundles exist.
+      if (!isset($field_map[$field_definition->getName()])) {
+        $this->fieldStorageDefinitionListener->onFieldStorageDefinitionCreate($field_definition);
+      }
       $this->fieldDefinitionListener->onFieldDefinitionCreate($field_definition);
     }
 
@@ -248,11 +253,16 @@ class FinderConfigManager {
     // Allow modules to alter the entry field definitions.
     \Drupal::moduleHandler()->alter('finders_entry_fields', $entry_field_definitions, $bundle_entity, $finder_type);
 
+    $field_map = $this->entityFieldManager->getFieldMap()[$entity_type_id];
+
     // Register bundle fields on the entity type.
     foreach ($entry_field_definitions as $field_definition) {
       // Notify the field definition listeners. This is what updates core's
       // field map.
-      $this->fieldStorageDefinitionListener->onFieldStorageDefinitionCreate($field_definition);
+      // The field storage may already exist if other entry bundles exist.
+      if (!isset($field_map[$field_definition->getName()])) {
+        $this->fieldStorageDefinitionListener->onFieldStorageDefinitionCreate($field_definition);
+      }
       $this->fieldDefinitionListener->onFieldDefinitionCreate($field_definition);
     }
 
