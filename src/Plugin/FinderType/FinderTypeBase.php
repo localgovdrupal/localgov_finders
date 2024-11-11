@@ -155,7 +155,9 @@ abstract class FinderTypeBase extends PluginBase implements FinderTypeInterface,
    * {@inheritdoc}
    */
   public function getViewIds(IndexInterface $search_index): array {
-    return [];
+    return [
+      'finders_channel_view',
+    ];
   }
 
   /**

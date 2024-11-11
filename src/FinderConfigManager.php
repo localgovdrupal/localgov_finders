@@ -15,6 +15,7 @@ use Drupal\finders\Enum\FinderRole;
 use Drupal\finders\Plugin\FinderType\FinderTypeInterface;
 use Drupal\search_api\IndexInterface;
 use Drupal\search_api\Utility\PluginHelperInterface;
+use Drupal\views\ViewEntityInterface;
 
 /**
  * Manages definition of fields and creation of configuration for Finders.
@@ -184,6 +185,7 @@ class FinderConfigManager {
       $this->fieldDefinitionListener->onFieldDefinitionCreate($field_definition);
     }
 
+    // Set up the indexes for the finder type.
     foreach ($finder_type->getIndexIds() as $index_id) {
       $index = $this->entityTypeManager->getStorage('search_api_index')->load($index_id);
       // Create the Finder's search index if it doesn't already exist.
@@ -199,6 +201,18 @@ class FinderConfigManager {
       \Drupal::moduleHandler()->alter('finders_index', $index, $bundle_entity, $finder_type);
 
       $index->save();
+
+      // Set up a view for the index.
+      foreach ($finder_type->getViewIds($index) as $view_id) {
+        $view = $this->entityTypeManager->getStorage('view')->load($view_id);
+        // Create the view if it doesn't already exist.
+        if (empty($view)) {
+          $view = $this->loadTemplateView($view_id, $finder_type, $index);
+        }
+        // $finder_type->alterViewForChannel($view, $index, $bundle_entity);
+
+        $view->save();
+      }
     }
   }
 
@@ -320,6 +334,63 @@ class FinderConfigManager {
     }
 
     return $search_index;
+  }
+
+  /**
+   * Creates a stub view template from a template YAML config file.
+   *
+   * @param string $view_id
+   *   The ID of the view to create.
+   * @param \Drupal\finders\Plugin\FinderType\FinderTypeInterface $finder_type
+   *   The finder type plugin.
+   * @param \Drupal\search_api\IndexInterface $search_index
+   *   The search index which is the source for the view's data. This has
+   *   already been set up for the finder type.
+   *
+   * @return \Drupal\views\ViewEntityInterface
+   *   The view created from the template configuration. It is the caller's
+   *   responsibility to save this.
+   *
+   * @see config/template/views.view.finder_channel_template.yml
+   */
+  protected function loadTemplateView(string $view_id, FinderTypeInterface $finder_type, IndexInterface $search_index): ViewEntityInterface {
+    $template_directory = $this->moduleExtensionList->getPath($finder_type->getPluginDefinition()['provider']) . '/config/template';
+    $config_source = new ConfigFileStorage($template_directory);
+    $config_filename = 'views.view.' . $view_id;
+
+    // Fall back to the default index template if the finder type module does
+    // not provide a template for the view ID.
+    if (!$config_source->exists($config_filename)) {
+      $template_directory = $this->moduleExtensionList->getPath('finders') . '/config/template';
+      $config_source = new ConfigFileStorage($template_directory);
+      $config_filename = 'views.view.finder_channel_template';
+    }
+
+    $config_values = $config_source->read($config_filename);
+
+    // Set the ID and label of the view.
+    $config_values['id'] = $view_id;
+    $config_values['label'] = $finder_type->getPluginDefinition()['label'];
+
+    // Set the index as a config and cache dependency.
+    $config_values['dependencies']['config'][] = $search_index->id();
+    foreach ($config_values['display'] as &$display_definition) {
+      $display_definition['cache_metadata']['tags'][] = 'config:search_api.index.' . $search_index->id();
+    }
+
+    // Set up the base table.
+    // search_api_views_data() declares a base table for each index.
+    $base_table = 'search_api_index_' . $search_index->id();
+    $config_values['base_table'] = $base_table;
+    foreach (['fields', 'filters', 'sorts', 'arguments'] as $views_plugin_type) {
+      foreach ($config_values['display']['default']['display_options'][$views_plugin_type] as &$definition) {
+        $definition['table'] = $base_table;
+      }
+    }
+
+    $view = $this->entityTypeManager->getStorage('view')->create($config_values);
+
+    return $view;
   }
 
 }

@@ -30,11 +30,13 @@ final class FinderPluginTest extends KernelTestBase {
    * {@inheritdoc}
    */
   protected static $modules = [
+    'system',
+    'views',
     'finders',
     'finders_test',
     'search_api',
     'entity_test',
-    'user'
+    'user',
   ];
 
   /**
