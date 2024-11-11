@@ -2,7 +2,7 @@
     "name": "drupal/finders",
     "description": "Common Finders functionality: display, index, filter.",
     "type": "drupal-module",
-    "homepage": "https://github.com/localgovdrupal/finders",
+    "homepage": "https://www.drupal.org/project/finders",
     "license": "GPL-2.0-or-later",
     "minimum-stability": "dev",
     "require": {
