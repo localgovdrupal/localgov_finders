@@ -202,14 +202,14 @@ class FinderConfigManager {
 
       $index->save();
 
-      // Set up a view for the index.
+      // Configure the view for the index.
       foreach ($finder_type->getViewIds($index) as $view_id) {
         $view = $this->entityTypeManager->getStorage('view')->load($view_id);
         // Create the view if it doesn't already exist.
         if (empty($view)) {
           $view = $this->loadTemplateView($view_id, $finder_type, $index);
         }
-        // $finder_type->alterViewForChannel($view, $index, $bundle_entity);
+        $finder_type->alterViewForChannel($view, $index, $bundle_entity);
 
         $view->save();
       }
@@ -284,6 +284,18 @@ class FinderConfigManager {
       \Drupal::moduleHandler()->alter('finders_index', $index, $bundle_entity, $finder_type);
 
       $index->save();
+
+      // Configure the view for the index.
+      foreach ($finder_type->getViewIds($index) as $view_id) {
+        $view = $this->entityTypeManager->getStorage('view')->load($view_id);
+        // Create the view if it doesn't already exist.
+        if (empty($view)) {
+          $view = $this->loadTemplateView($view_id, $finder_type, $index);
+        }
+        $finder_type->alterViewForEntry($view, $index, $bundle_entity);
+
+        $view->save();
+      }
     }
   }
 

@@ -7,6 +7,7 @@ use Drupal\Component\Plugin\PluginInspectionInterface;
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
 use Drupal\search_api\IndexInterface;
 use Drupal\search_api\Item\Field as SearchIndexField;
+use Drupal\views\ViewEntityInterface;
 
 /**
  * Interface for Finder Type plugins.
@@ -93,6 +94,19 @@ interface FinderTypeInterface extends PluginInspectionInterface, DerivativeInspe
   public function alterSearchIndexForChannel(IndexInterface $index, ConfigEntityInterface $channel_bundle_entity): void;
 
   /**
+   * Alters the view for a search index when a channel bundle is configured.
+   *
+   * @param ViewEntityInterface $view
+   *   The view about to be saved.
+   * @param \Drupal\search_api\IndexInterface $index
+   *   The search index. It has already been updated for the channel bundle and
+   *   has been saved.
+   * @param \Drupal\Core\Config\Entity\ConfigEntityInterface $channel_bundle_entity
+   *   The channel bundle.
+   */
+  public function alterViewForChannel(ViewEntityInterface $view, IndexInterface $index, ConfigEntityInterface $channel_bundle_entity): void;
+
+  /**
    * Alter the Search API index when an entry bundle is configured.
    *
    * @param \Drupal\search_api\IndexInterface $index
@@ -101,5 +115,18 @@ interface FinderTypeInterface extends PluginInspectionInterface, DerivativeInspe
    *   The entry bundle.
    */
   public function alterSearchIndexForEntry(IndexInterface $index, ConfigEntityInterface $entry_bundle_entity): void;
+
+  /**
+   * Alters the view for a search index when an entry bundle is configured.
+   *
+   * @param ViewEntityInterface $view
+   *   The view about to be saved.
+   * @param \Drupal\search_api\IndexInterface $index
+   *   The search index. It has already been updated for the entry bundle and
+   *   has been saved.
+   * @param \Drupal\Core\Config\Entity\ConfigEntityInterface $entry_bundle_entity
+   *   The entry bundle.
+   */
+  public function alterViewForEntry(ViewEntityInterface $view, IndexInterface $index, ConfigEntityInterface $entry_bundle_entity): void;
 
 }

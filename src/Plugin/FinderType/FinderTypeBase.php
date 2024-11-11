@@ -12,6 +12,7 @@ use Drupal\search_api\Item\Field as SearchIndexField;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\search_api\Utility\PluginHelperInterface;
+use Drupal\views\ViewEntityInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -178,9 +179,44 @@ abstract class FinderTypeBase extends PluginBase implements FinderTypeInterface,
   /**
    * {@inheritdoc}
    */
+  public function alterViewForChannel(ViewEntityInterface $view, IndexInterface $index, ConfigEntityInterface $channel_bundle_entity): void {
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function alterSearchIndexForEntry(IndexInterface $index, ConfigEntityInterface $entry_bundle_entity): void {
     $this->addEntryBundleToDatasource($index, $entry_bundle_entity);
     $this->alterIndexFields($index, $entry_bundle_entity);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function alterViewForEntry(ViewEntityInterface $view, IndexInterface $index, ConfigEntityInterface $entry_bundle_entity): void {
+    // Only add a title sort on the view if the index has the field.
+    if ($index->getField(static::TITLE_SORT_FIELD)) {
+      $default_display_options = $view->getDisplay('default');
+
+      // Don't clobber any existing configuration.
+      if (!isset($default_display_options['sorts'][static::TITLE_SORT_FIELD])) {
+        $default_display_options['sorts'][static::TITLE_SORT_FIELD] = [
+          'id' => 'localgov_directory_title_sort',
+          // Table name from search_api_views_data().
+          'table' => 'search_api_index_' . $index->id(),
+          'field' => static::TITLE_SORT_FIELD,
+          'relationship' => 'none',
+          'group_type' => 'group',
+          'admin_label' => '',
+          'order' => 'ASC',
+          'exposed' => FALSE,
+          'expose' => [
+            'label' => '',
+          ],
+          'plugin_id' => 'search_api',
+        ];
+      }
+    }
   }
 
   /**
