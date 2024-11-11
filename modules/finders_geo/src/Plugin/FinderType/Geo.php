@@ -29,14 +29,14 @@ class Geo extends FinderTypeBase {
    *
    * @see self::getListViewFieldDefinition()
    */
-  const LIST_VIEW_FIELD = 'localgov_geo_list_view';
+  const LIST_VIEW_FIELD = 'finders_geo_list_view';
 
   /**
    * The field name for the map view field.
    *
    * @see self::getListViewFieldDefinition()
    */
-  const MAP_VIEW_FIELD = 'localgov_geo_map_view';
+  const MAP_VIEW_FIELD = 'finders_geo_map_view';
 
   /**
    * The field name for the geo location field.

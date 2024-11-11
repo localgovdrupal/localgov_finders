@@ -31,14 +31,14 @@ class Events extends FinderTypeBase {
    *
    * @see self::getListViewFieldDefinition()
    */
-  const LIST_VIEW_FIELD = 'localgov_events_list_view';
+  const LIST_VIEW_FIELD = 'finders_events_list_view';
 
   /**
    * The field name for the calendar view field.
    *
    * @see self::getListViewFieldDefinition()
    */
-  const CALENDAR_VIEW_FIELD = 'localgov_events_cal_view';
+  const CALENDAR_VIEW_FIELD = 'finders_events_cal_view';
 
   /**
    * The field name for the event date field.
