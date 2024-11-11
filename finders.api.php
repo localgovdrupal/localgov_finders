@@ -49,7 +49,7 @@ function hook_finders_index_alter($index, ConfigEntityInterface $bundle_entity, 
 /**
  * Perform alterations on the entry bundle fields before they are created.
  *
- * @param \Drupal\finders\Field\BundleFieldDefinition[] $channel_field_definitions
+ * @param \Drupal\finders\Field\BundleFieldDefinition[] $entry_field_definitions
  *   An array of bundle field definitions to be added to the entry bundle.
  *   These have not yet been declared to the field system.
  * @param \Drupal\Core\Config\Entity\ConfigEntityInterface $bundle_entity
@@ -57,7 +57,7 @@ function hook_finders_index_alter($index, ConfigEntityInterface $bundle_entity, 
  * @param \Drupal\finders\Plugin\FinderType\FinderTypeInterface $finder_type
  *   The finder type used for the bundle entity.
  */
-function hook_finders_entry_fields_alter(array &$channel_field_definitions, ConfigEntityInterface $bundle_entity, FinderTypeInterface $finder_type) {
+function hook_finders_entry_fields_alter(array &$entry_field_definitions, ConfigEntityInterface $bundle_entity, FinderTypeInterface $finder_type) {
   // TODO: write sample code.
 }
 

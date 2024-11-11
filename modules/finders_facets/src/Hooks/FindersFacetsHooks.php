@@ -38,7 +38,7 @@ class FindersFacetsHooks {
    * Implements hook_finders_entry_fields_alter().
    */
   #[Hook('finders_entry_fields_alter')]
-  public function findersEntryFieldsAlter(array &$channel_field_definitions, ConfigEntityInterface $bundle_entity, FinderTypeInterface $finder_type) {
+  public function findersEntryFieldsAlter(array &$entry_field_definitions, ConfigEntityInterface $bundle_entity, FinderTypeInterface $finder_type) {
     // TODO: write sample code.
   }
 

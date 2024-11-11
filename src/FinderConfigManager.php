@@ -232,7 +232,7 @@ class FinderConfigManager {
     $entry_field_definitions = $finder_type->getEntryFieldDefinitions($bundle_entity);
 
     // Allow modules to alter the entry field definitions.
-    \Drupal::moduleHandler()->alter('finders_entry_fields', $channel_field_definitions, $bundle_entity, $finder_type);
+    \Drupal::moduleHandler()->alter('finders_entry_fields', $entry_field_definitions, $bundle_entity, $finder_type);
 
     // Register bundle fields on the entity type.
     foreach ($entry_field_definitions as $field_definition) {
