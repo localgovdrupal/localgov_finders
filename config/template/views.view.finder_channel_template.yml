@@ -25,7 +25,7 @@ display:
         type: none
         options: {  }
       cache:
-        type: none
+        type: search_api_none
         options: {  }
       query:
         type: search_api_query
@@ -274,7 +274,7 @@ display:
     display_options:
       display_extenders: {  }
       cache:
-        type: none
+        type: search_api_none
       defaults:
         cache: false
     cache_metadata:
