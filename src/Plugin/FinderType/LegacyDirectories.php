@@ -4,6 +4,7 @@ namespace Drupal\finders\Plugin\FinderType;
 
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\finders\Attribute\FinderType;
+use Drupal\search_api\IndexInterface;
 
 /**
  * Directories finder type for sites built on Directories 3.x.
@@ -44,7 +45,7 @@ class LegacyDirectories extends FinderTypeBase {
   /**
    * {@inheritdoc}
    */
-  public function getViewIds(): array {
+  public function getViewIds(IndexInterface $search_index): array {
     return ['localgov_directory_channel_view'];
   }
 

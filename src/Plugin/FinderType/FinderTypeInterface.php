@@ -55,12 +55,15 @@ interface FinderTypeInterface extends PluginInspectionInterface, DerivativeInspe
   public function getIndexIds(): array;
 
   /**
-   * Gets the View ID(s) for the finder.
+   * Gets the View ID(s) that relate to a particular search index.
+   *
+   * @param \Drupal\search_api\IndexInterface $index
+   *   The search index that has been set up for the finder.
    *
    * @return string[]
    *   An array of the view machine names.
    */
-  public function getViewIds(): array;
+  public function getViewIds(IndexInterface $search_index): array;
 
   /**
    * Gets the search datasource plugin ID for the given index and entity type.
