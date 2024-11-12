@@ -2,6 +2,7 @@
 
 namespace Drupal\finders_events\Plugin\FinderType;
 
+use Drupal\Component\Serialization\Yaml;
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\date_recur_search_api\Plugin\ComputedField\DateOccurrence;
@@ -10,6 +11,7 @@ use Drupal\finders\Field\BundleFieldDefinition;
 use Drupal\finders\Plugin\FinderType\FinderTypeBase;
 use Drupal\search_api\IndexInterface;
 use Drupal\search_api\Item\Field as SearchIndexField;
+use Drupal\views\ViewEntityInterface;
 
 /**
  * Finder type for events.
@@ -46,6 +48,13 @@ class Events extends FinderTypeBase {
    * @see self::getEventDateFieldDefinition()
    */
   const EVENT_DATE_FIELD = 'finders_events_date';
+
+  /**
+   * The field name of the computed field for date occurrences.
+   *
+   * This is defined by the date_recur_search_api module.
+   */
+  const EVENT_DATE_OCCURRENCE_FIELD = self::EVENT_DATE_FIELD .  '_occurrence';
 
   /**
    * {@inheritdoc}
@@ -133,6 +142,48 @@ class Events extends FinderTypeBase {
       $date_field->setLabel('Date occurrence');
 
       $index->addField($date_field);
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function alterViewForEntry(ViewEntityInterface $view, IndexInterface $index, ConfigEntityInterface $entry_bundle_entity): void {
+    parent::alterViewForEntry($view, $index, $entry_bundle_entity);
+
+    $entry_entity_type_id = $entry_bundle_entity->getEntityType()->getBundleOf();
+    $entry_bundle_id = $entry_bundle_entity->id();
+
+    $default_display_configuration =& $view->getDisplay('default');
+
+    if (
+      $index->getField(static::EVENT_DATE_OCCURRENCE_FIELD)
+      && !isset($default_display_configuration['display_options']['sorts'][static::EVENT_DATE_OCCURRENCE_FIELD])
+    ) {
+
+      // Use Yaml to make it easier to sync config changes back into code.
+      $yaml_template = <<<'EOT'
+        id: EVENT_DATE_OCCURRENCE_FIELD
+        field: EVENT_DATE_OCCURRENCE_FIELD
+        relationship: none
+        group_type: group
+        admin_label: ''
+        order: ASC
+        exposed: false
+        expose:
+          label: ''
+        plugin_id: search_api
+        EOT;
+
+      $date_sort = Yaml::decode($yaml_template);
+
+      $date_sort['id'] = static::EVENT_DATE_OCCURRENCE_FIELD;
+      $date_sort['field'] = static::EVENT_DATE_OCCURRENCE_FIELD;
+
+      // Table name from search_api_views_data().
+      $date_sort['table'] = 'search_api_index_' . $index->id();
+
+      $default_display_configuration['display_options']['sorts'][static::EVENT_DATE_OCCURRENCE_FIELD] = $date_sort;
     }
   }
 

@@ -137,6 +137,14 @@ class EventFinderPluginTest extends KernelTestBase {
     $this->assertArrayHasKey('finders_title_sort', $fields);
     $this->assertArrayHasKey('finders_channels', $fields);
     $this->assertArrayHasKey('finders_events_date_occurrence', $fields);
+
+    // A view has been created by the creation of the channel bundle, using the
+    // ID from the plugin.
+    $view = $this->entityTypeManager->getStorage('view')->load('finders_events_channel_view');
+    $this->assertNotEmpty($view);
+    $this->assertArrayHasKey('finders_title_sort', $view->getDisplay('default')['display_options']['sorts']);
+    $this->assertArrayHasKey('finders_events_date_occurrence', $view->getDisplay('default')['display_options']['sorts']);
+    $this->assertArrayHasKey('finders_channels', $view->getDisplay('default')['display_options']['arguments']);
   }
 
 }
