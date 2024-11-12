@@ -8,6 +8,7 @@ use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FormatterBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Markup;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\finders\FinderTypeManager;
 use Drupal\views\Views;
@@ -154,6 +155,8 @@ class FindersChannelView extends FormatterBase {
 
       return $render;
     }
+
+    return [];
   }
 
   /**
@@ -161,6 +164,7 @@ class FindersChannelView extends FormatterBase {
    *
    * @see ::getViewEmbed()
    */
+  #[TrustedCallback]
   public static function removeExposedFilter(Markup $markup, array $render) {
     // Sure there must be a better way in the pre_render to stop it adding the
     // form, while accepting the parameters. But this does the same later.
