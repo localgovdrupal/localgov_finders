@@ -88,15 +88,13 @@ class Events extends FinderTypeBase {
   public function getChannelFieldDefinitions(ConfigEntityInterface $bundle): array {
     $field_definitions = parent::getChannelFieldDefinitions($bundle);
 
-    // Remove the basic field definition.
-    // TODO! BETTER DX!
-    unset($field_definitions[static::VIEW_FIELD]);
+    if ($list_view_field = $this->getListViewFieldDefinition($bundle)) {
+      $field_definitions[$list_view_field->getName()] = $list_view_field;
+    }
 
-    $list_view_field = $this->getListViewFieldDefinition($bundle);
-    $field_definitions[$list_view_field->getName()] = $list_view_field;
-
-    $calendar_view_field = $this->getCalendarViewFieldDefinition($bundle);
-    $field_definitions[$calendar_view_field->getName()] = $calendar_view_field;
+    if ($calendar_view_field = $this->getCalendarViewFieldDefinition($bundle)) {
+      $field_definitions[$calendar_view_field->getName()] = $calendar_view_field;
+    }
 
     return $field_definitions;
   }
@@ -184,6 +182,10 @@ class Events extends FinderTypeBase {
     }
   }
 
+  protected function getViewFieldDefinition(ConfigEntityInterface $bundle): ?BundleFieldDefinition {
+    return NULL;
+  }
+
   /**
    * Gets the definition for the list view selection field.
    *
@@ -193,10 +195,10 @@ class Events extends FinderTypeBase {
    * @param \Drupal\Core\Config\Entity\ConfigEntityInterface $bundle
    *   The bundle entity.
    *
-   * @return \Drupal\finders\Field\BundleFieldDefinition
-   *   The bundle field definition.
+   * @return \Drupal\finders\Field\BundleFieldDefinition|null
+   *   The bundle field definition, or NULL if no field should be defined.
    */
-  protected function getListViewFieldDefinition(ConfigEntityInterface $bundle): BundleFieldDefinition {
+  protected function getListViewFieldDefinition(ConfigEntityInterface $bundle): ?BundleFieldDefinition {
     $bundle_entity_type = $bundle->getEntityType();
     $content_entity_type_id = $bundle_entity_type->getBundleOf();
 
@@ -237,10 +239,10 @@ class Events extends FinderTypeBase {
    * @param \Drupal\Core\Config\Entity\ConfigEntityInterface $bundle
    *   The bundle entity.
    *
-   * @return \Drupal\finders\Field\BundleFieldDefinition
-   *   The bundle field definition.
+   * @return \Drupal\finders\Field\BundleFieldDefinition|null
+   *   The bundle field definition, or NULL if no field should be defined.
    */
-  protected function getCalendarViewFieldDefinition(ConfigEntityInterface $bundle): BundleFieldDefinition {
+  protected function getCalendarViewFieldDefinition(ConfigEntityInterface $bundle): ?BundleFieldDefinition {
     $bundle_entity_type = $bundle->getEntityType();
     $content_entity_type_id = $bundle_entity_type->getBundleOf();
 
@@ -278,10 +280,10 @@ class Events extends FinderTypeBase {
    * @param \Drupal\Core\Config\Entity\ConfigEntityInterface $bundle
    *   The bundle entity.
    *
-   * @return \Drupal\finders\Field\BundleFieldDefinition
-   *   The bundle field definition.
+   * @return \Drupal\finders\Field\BundleFieldDefinition|null
+   *   The bundle field definition, or NULL if no field should be defined.
    */
-  protected function getEventDateFieldDefinition(ConfigEntityInterface $bundle): BundleFieldDefinition {
+  protected function getEventDateFieldDefinition(ConfigEntityInterface $bundle): ?BundleFieldDefinition {
     $bundle_entity_type = $bundle->getEntityType();
     $content_entity_type_id = $bundle_entity_type->getBundleOf();
 

@@ -93,10 +93,10 @@ class Geo extends FinderTypeBase {
    * @param \Drupal\Core\Config\Entity\ConfigEntityInterface $bundle
    *   The bundle entity.
    *
-   * @return \Drupal\finders\Field\BundleFieldDefinition
-   *   The bundle field definition.
+   * @return \Drupal\finders\Field\BundleFieldDefinition|null
+   *   The bundle field definition, or NULL if no field should be defined.
    */
-  protected function getListViewFieldDefinition(ConfigEntityInterface $bundle): BundleFieldDefinition {
+  protected function getListViewFieldDefinition(ConfigEntityInterface $bundle): ?BundleFieldDefinition {
     $bundle_entity_type = $bundle->getEntityType();
     $content_entity_type_id = $bundle_entity_type->getBundleOf();
 
@@ -133,10 +133,10 @@ class Geo extends FinderTypeBase {
    * @param \Drupal\Core\Config\Entity\ConfigEntityInterface $bundle
    *   The bundle entity.
    *
-   * @return \Drupal\finders\Field\BundleFieldDefinition
-   *   The bundle field definition.
+   * @return \Drupal\finders\Field\BundleFieldDefinition|null
+   *   The bundle field definition, or NULL if no field should be defined.
    */
-  protected function getMapViewFieldDefinition(ConfigEntityInterface $bundle): BundleFieldDefinition {
+  protected function getMapViewFieldDefinition(ConfigEntityInterface $bundle): ?BundleFieldDefinition {
     $bundle_entity_type = $bundle->getEntityType();
     $content_entity_type_id = $bundle_entity_type->getBundleOf();
 

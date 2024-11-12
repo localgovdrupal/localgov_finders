@@ -110,11 +110,13 @@ abstract class FinderTypeBase extends PluginBase implements FinderTypeInterface,
   public function getChannelFieldDefinitions(ConfigEntityInterface $bundle): array {
     $field_definitions = [];
 
-    $channel_types_field_definition = $this->getChannelTypesFieldDefinition($bundle);
-    $field_definitions[$channel_types_field_definition->getName()] = $channel_types_field_definition;
+    if ($channel_types_field_definition = $this->getChannelTypesFieldDefinition($bundle)) {
+      $field_definitions[$channel_types_field_definition->getName()] = $channel_types_field_definition;
+    }
 
-    $view_field_definition = $this->getViewFieldDefinition($bundle);
-    $field_definitions[$view_field_definition->getName()] = $view_field_definition;
+    if ($view_field_definition = $this->getViewFieldDefinition($bundle)) {
+      $field_definitions[$view_field_definition->getName()] = $view_field_definition;
+    }
 
     return $field_definitions;
   }
@@ -125,11 +127,13 @@ abstract class FinderTypeBase extends PluginBase implements FinderTypeInterface,
   public function getEntryFieldDefinitions(ConfigEntityInterface $bundle): array {
     $field_definitions = [];
 
-    $channels_selection_field_definition = $this->getChannelSelectionFieldDefinition($bundle);
-    $field_definitions[$channels_selection_field_definition->getName()] = $channels_selection_field_definition;
+    if ($channels_selection_field_definition = $this->getChannelSelectionFieldDefinition($bundle)) {
+      $field_definitions[$channels_selection_field_definition->getName()] = $channels_selection_field_definition;
+    }
 
-    $title_sort_field = $this->getTitleSortFieldDefinition($bundle);
-    $field_definitions[$title_sort_field->getName()] = $title_sort_field;
+    if ($title_sort_field = $this->getTitleSortFieldDefinition($bundle)) {
+      $field_definitions[$title_sort_field->getName()] = $title_sort_field;
+    }
 
     // TODO: further fields:
 
@@ -467,12 +471,12 @@ abstract class FinderTypeBase extends PluginBase implements FinderTypeInterface,
    * @param \Drupal\Core\Config\Entity\ConfigEntityInterface $bundle
    *   The bundle entity.
    *
-   * @return \Drupal\finders\Field\BundleFieldDefinition
-   *   The bundle field definition.
+   * @return \Drupal\finders\Field\BundleFieldDefinition|null
+   *   The bundle field definition, or NULL if no field should be defined.
    *
    * @see \Drupal\finders\Plugin\EntityReferenceSelection\EntryTypes
    */
-  protected function getChannelTypesFieldDefinition(ConfigEntityInterface $bundle): BundleFieldDefinition {
+  protected function getChannelTypesFieldDefinition(ConfigEntityInterface $bundle): ?BundleFieldDefinition {
     $bundle_entity_type = $bundle->getEntityType();
     // TODO: remove this assumption! channels and entries might not be the
     // same entity type!
@@ -504,10 +508,10 @@ abstract class FinderTypeBase extends PluginBase implements FinderTypeInterface,
    * @param \Drupal\Core\Config\Entity\ConfigEntityInterface $bundle
    *   The bundle entity.
    *
-   * @return \Drupal\finders\Field\BundleFieldDefinition
-   *   The bundle field definition.
+   * @return \Drupal\finders\Field\BundleFieldDefinition|null
+   *   The bundle field definition, or NULL if no field should be defined.
    */
-  protected function getViewFieldDefinition(ConfigEntityInterface $bundle): BundleFieldDefinition {
+  protected function getViewFieldDefinition(ConfigEntityInterface $bundle): ?BundleFieldDefinition {
     $bundle_entity_type = $bundle->getEntityType();
     $content_entity_type_id = $bundle_entity_type->getBundleOf();
 
@@ -547,10 +551,10 @@ abstract class FinderTypeBase extends PluginBase implements FinderTypeInterface,
    * @param \Drupal\Core\Config\Entity\ConfigEntityInterface $bundle
    *   The bundle entity.
    *
-   * @return \Drupal\finders\Field\BundleFieldDefinition
-   *   The bundle field definition.
+   * @return \Drupal\finders\Field\BundleFieldDefinition|null
+   *   The bundle field definition, or NULL if no field should be defined.
    */
-  protected function getChannelSelectionFieldDefinition(ConfigEntityInterface $bundle): BundleFieldDefinition {
+  protected function getChannelSelectionFieldDefinition(ConfigEntityInterface $bundle): ?BundleFieldDefinition {
     $bundle_entity_type = $bundle->getEntityType();
     $content_entity_type_id = $bundle_entity_type->getBundleOf();
 
@@ -589,10 +593,10 @@ abstract class FinderTypeBase extends PluginBase implements FinderTypeInterface,
    * @param \Drupal\Core\Config\Entity\ConfigEntityInterface $bundle
    *   The bundle entity.
    *
-   * @return \Drupal\finders\Field\BundleFieldDefinition
-   *   The bundle field definition.
+   * @return \Drupal\finders\Field\BundleFieldDefinition|null
+   *   The bundle field definition, or NULL if no field should be defined.
    */
-  protected function getTitleSortFieldDefinition(ConfigEntityInterface $bundle): BundleFieldDefinition {
+  protected function getTitleSortFieldDefinition(ConfigEntityInterface $bundle): ?BundleFieldDefinition {
     $bundle_entity_type = $bundle->getEntityType();
     $content_entity_type_id = $bundle_entity_type->getBundleOf();
 
