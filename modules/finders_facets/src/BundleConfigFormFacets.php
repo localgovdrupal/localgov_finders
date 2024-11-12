@@ -17,13 +17,6 @@ class BundleConfigFormFacets {
   use StringTranslationTrait;
 
   /**
-   * Whether JSON:API's read-only mode is enabled.
-   *
-   * @var bool
-   */
-  protected $readOnlyModeIsEnabled;
-
-  /**
    * Constructor.
    *
    * @param \Drupal\finders\BundleConfigForm $inner
