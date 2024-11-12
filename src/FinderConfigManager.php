@@ -157,10 +157,10 @@ class FinderConfigManager {
    *   An array of bundle field definitions.
    */
   protected function getChannelFieldDefinitions(ConfigEntityInterface $bundle_entity, FinderTypeInterface $finder_type): array {
-    $field_definitions = $finder_type->getChannelFieldDefinitions($bundle_entity);
+    $channel_field_definitions = $finder_type->getChannelFieldDefinitions($bundle_entity);
 
     /** @var \Drupal\finders\Field\BundleFieldDefinition $field_definition */
-    foreach ($field_definitions as $field_definition) {
+    foreach ($channel_field_definitions as $field_definition) {
       // Set the target bundle on all bundle fields.
       $field_definition->setTargetBundle($bundle_entity->id());
     }
@@ -168,7 +168,7 @@ class FinderConfigManager {
     // Allow modules to alter the channel field definitions.
     \Drupal::moduleHandler()->alter('finders_channel_fields', $channel_field_definitions, $bundle_entity, $finder_type);
 
-    return $field_definitions;
+    return $channel_field_definitions;
   }
 
   /**
@@ -183,10 +183,10 @@ class FinderConfigManager {
    *   An array of bundle field definitions.
    */
   protected function getEntryFieldDefinitions(ConfigEntityInterface $bundle_entity, FinderTypeInterface $finder_type): array {
-    $field_definitions = $finder_type->getEntryFieldDefinitions($bundle_entity);
+    $entry_field_definitions = $finder_type->getEntryFieldDefinitions($bundle_entity);
 
     /** @var \Drupal\finders\Field\BundleFieldDefinition $field_definition */
-    foreach ($field_definitions as $field_definition) {
+    foreach ($entry_field_definitions as $field_definition) {
       // Set the target bundle on all bundle fields.
       $field_definition->setTargetBundle($bundle_entity->id());
     }
@@ -194,7 +194,7 @@ class FinderConfigManager {
     // Allow modules to alter the entry field definitions.
     \Drupal::moduleHandler()->alter('finders_entry_fields', $entry_field_definitions, $bundle_entity, $finder_type);
 
-    return $field_definitions;
+    return $entry_field_definitions;
   }
 
   /**
