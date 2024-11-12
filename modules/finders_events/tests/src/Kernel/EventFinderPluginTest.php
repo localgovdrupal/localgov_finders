@@ -144,6 +144,7 @@ class EventFinderPluginTest extends KernelTestBase {
     $this->assertNotEmpty($view);
     $this->assertArrayHasKey('finders_title_sort', $view->getDisplay('default')['display_options']['sorts']);
     $this->assertArrayHasKey('finders_events_date_occurrence', $view->getDisplay('default')['display_options']['sorts']);
+    $this->assertEquals(['finders_events_date_occurrence', 'search_api_relevance', 'finders_title_sort'], array_keys($view->getDisplay('default')['display_options']['sorts']));
     $this->assertArrayHasKey('finders_channels', $view->getDisplay('default')['display_options']['arguments']);
   }
 

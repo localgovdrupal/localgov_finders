@@ -151,6 +151,8 @@ class Events extends FinderTypeBase {
 
     $default_display_configuration =& $view->getDisplay('default');
 
+    // Add the date occurrence sort, if our index has it, and avoiding to
+    // clobber existing configuration.
     if (
       $index->getField(static::EVENT_DATE_OCCURRENCE_FIELD)
       && !isset($default_display_configuration['display_options']['sorts'][static::EVENT_DATE_OCCURRENCE_FIELD])
@@ -178,10 +180,22 @@ class Events extends FinderTypeBase {
       // Table name from search_api_views_data().
       $date_sort['table'] = 'search_api_index_' . $index->id();
 
+      // Our date sort goes first. Take out any existing ones to put them back
+      // after.
+      $existing_sorts = $default_display_configuration['display_options']['sorts'];
+      $default_display_configuration['display_options']['sorts'] = [];
+
       $default_display_configuration['display_options']['sorts'][static::EVENT_DATE_OCCURRENCE_FIELD] = $date_sort;
+
+      foreach ($existing_sorts as $key => $sort) {
+        $default_display_configuration['display_options']['sorts'][$key] = $sort;
+      }
     }
   }
 
+  /**
+   * {@inheritdoc}
+   */
   protected function getViewFieldDefinition(ConfigEntityInterface $bundle): ?BundleFieldDefinition {
     return NULL;
   }
