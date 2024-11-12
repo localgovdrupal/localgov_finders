@@ -110,10 +110,13 @@ class FindersFacetTest extends KernelTestBase {
     );
     $entry_bundle->save();
 
-    // The channel bundle has the facet field on it.
+    // The channel bundle has the facet types field on it.
     $channel_fields = $this->entityFieldManager->getFieldDefinitions('entity_test_with_bundle', 'test_channel_bundle');
     $this->assertArrayHasKey('finders_facets_enable', $channel_fields);
 
+    // The entry bundle has the facet selection field on it.
+    $channel_fields = $this->entityFieldManager->getFieldDefinitions('entity_test_with_bundle', 'test_entry_bundle_one');
+    $this->assertArrayHasKey('finders_facets_select', $channel_fields);
 
   }
 
