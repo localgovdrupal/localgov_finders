@@ -28,22 +28,28 @@ interface FinderTypeInterface extends PluginInspectionInterface, DerivativeInspe
   /**
    * Gets the bundle field definitions for a finder channel bundle.
    *
+   * This should only be called from the matching method on the config manager.
+   *
    * @param \Drupal\Core\Config\Entity\ConfigEntityInterface
    *   The channel bundle entity.
    *
    * @return \Drupal\finders\Field\BundleFieldDefinition[]
-   *   An array of bundle field definitions, keyed by the field name.
+   *   An array of bundle field definitions, keyed by the field name. These may
+   *   omit the target bundle as a convenience.
    */
   public function getChannelFieldDefinitions(ConfigEntityInterface $bundle): array;
 
   /**
    * Gets the bundle field definitions for a finder entry bundle.
    *
+   * This should only be called from the matching method on the config manager.
+   *
    * @param \Drupal\Core\Config\Entity\ConfigEntityInterface
    *   The entry bundle entity.
    *
    * @return \Drupal\finders\Field\BundleFieldDefinition[]
-   *   An array of bundle field definitions, keyed by the field name.
+   *   An array of bundle field definitions, keyed by the field name. These may
+   *   omit the target bundle as a convenience.
    */
   public function getEntryFieldDefinitions(ConfigEntityInterface $bundle): array;
 

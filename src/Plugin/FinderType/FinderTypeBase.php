@@ -116,12 +116,6 @@ abstract class FinderTypeBase extends PluginBase implements FinderTypeInterface,
     $view_field_definition = $this->getViewFieldDefinition($bundle);
     $field_definitions[$view_field_definition->getName()] = $view_field_definition;
 
-    /** @var \Drupal\finders\Field\BundleFieldDefinition $field_definition */
-    foreach ($field_definitions as $field_definition) {
-      // Set the target bundle on all bundle fields.
-      $field_definition->setTargetBundle($bundle->id());
-    }
-
     return $field_definitions;
   }
 
@@ -138,11 +132,6 @@ abstract class FinderTypeBase extends PluginBase implements FinderTypeInterface,
     $field_definitions[$title_sort_field->getName()] = $title_sort_field;
 
     // TODO: further fields:
-
-    foreach ($field_definitions as $field_definition) {
-      // Set the target bundle on all bundle fields.
-      $field_definition->setTargetBundle($bundle->id());
-    }
 
     return $field_definitions;
   }

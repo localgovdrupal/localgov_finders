@@ -61,11 +61,9 @@ class Geo extends FinderTypeBase {
     $field_definitions = parent::getChannelFieldDefinitions($bundle);
 
     $list_view_field = $this->getListViewFieldDefinition($bundle);
-    $list_view_field->setTargetBundle($bundle->id());
     $field_definitions[$list_view_field->getName()] = $list_view_field;
 
     $map_view_field = $this->getMapViewFieldDefinition($bundle);
-    $map_view_field->setTargetBundle($bundle->id());
     $field_definitions[$map_view_field->getName()] = $map_view_field;
 
     return $field_definitions;

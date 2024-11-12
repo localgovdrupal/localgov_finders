@@ -93,11 +93,9 @@ class Events extends FinderTypeBase {
     unset($field_definitions[static::VIEW_FIELD]);
 
     $list_view_field = $this->getListViewFieldDefinition($bundle);
-    $list_view_field->setTargetBundle($bundle->id());
     $field_definitions[$list_view_field->getName()] = $list_view_field;
 
     $calendar_view_field = $this->getCalendarViewFieldDefinition($bundle);
-    $calendar_view_field->setTargetBundle($bundle->id());
     $field_definitions[$calendar_view_field->getName()] = $calendar_view_field;
 
     return $field_definitions;
@@ -110,7 +108,6 @@ class Events extends FinderTypeBase {
     $field_definitions = parent::getEntryFieldDefinitions($bundle);
 
     $event_date_field = $this->getEventDateFieldDefinition($bundle);
-    $event_date_field->setTargetBundle($bundle->id());
     $field_definitions[$event_date_field->getName()] = $event_date_field;
 
     return $field_definitions;
