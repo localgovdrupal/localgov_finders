@@ -37,6 +37,13 @@ class FindersFacetTest extends KernelTestBase {
    */
   protected $entityTypeManager;
 
+  /**
+   * The entity field manager.
+   *
+   * @var \Drupal\Core\Entity\EntityFieldManagerInterface
+   */
+  protected $entityFieldManager;
+
   // Disable config checking -- the schema for Finders third-party settings on
   // the entity_test_with_bundle entity type is in the test module and we don't
   // want what it installs.
@@ -56,6 +63,7 @@ class FindersFacetTest extends KernelTestBase {
     $this->installEntitySchema('entity_test_with_bundle');
 
     $this->entityTypeManager = $this->container->get('entity_type.manager');
+    $this->entityFieldManager = $this->container->get('entity_field.manager');
   }
 
   /**
@@ -101,6 +109,12 @@ class FindersFacetTest extends KernelTestBase {
       FinderRole::Entries->value,
     );
     $entry_bundle->save();
+
+    // The channel bundle has the facet field on it.
+    $channel_fields = $this->entityFieldManager->getFieldDefinitions('entity_test_with_bundle', 'test_channel_bundle');
+    $this->assertArrayHasKey('finders_facets_enable', $channel_fields);
+
+
   }
 
 }
