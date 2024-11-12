@@ -25,7 +25,8 @@ use Drupal\finders\Plugin\FinderType\FinderTypeInterface;
  *   The finder type used for the bundle entity.
  */
 function hook_finders_channel_fields_alter(array &$channel_field_definitions, ConfigEntityInterface $bundle_entity, FinderTypeInterface $finder_type) {
-  // TODO: write sample code.
+  // Change the label of the finder channel types field.
+  $channel_field_definitions[$finder_type::CHANNEL_TYPES_FIELD]->setLabel(t('Enabled items'));
 }
 
 /**
@@ -33,6 +34,9 @@ function hook_finders_channel_fields_alter(array &$channel_field_definitions, Co
  *
  * This hook is called a bundle entity is being configured as either a channel
  * or an entry bundle.
+ *
+ * This hook is invoked after the finder type plugin's
+ * alterSearchIndexForChannel() or alterSearchIndexForEntry() has been called.
  *
  * @param $index
  *   The search index. It has not yet been saved, and will be saved by the
@@ -43,7 +47,8 @@ function hook_finders_channel_fields_alter(array &$channel_field_definitions, Co
  *   The finder type used for the bundle entity.
  */
 function hook_finders_index_alter($index, ConfigEntityInterface $bundle_entity, FinderTypeInterface $finder_type) {
-  // TODO: write sample code.
+  // Change the boost on the index title field.
+  $index->getField('title')->setBoost(10.0);
 }
 
 /**
@@ -58,7 +63,8 @@ function hook_finders_index_alter($index, ConfigEntityInterface $bundle_entity, 
  *   The finder type used for the bundle entity.
  */
 function hook_finders_entry_fields_alter(array &$entry_field_definitions, ConfigEntityInterface $bundle_entity, FinderTypeInterface $finder_type) {
-  // TODO: write sample code.
+  // Change the label of the finder channel selection field.
+  $entry_field_definitions[$finder_type::CHANNEL_SELECTION_FIELD]->setLabel(t('Directories'));
 }
 
 /**
