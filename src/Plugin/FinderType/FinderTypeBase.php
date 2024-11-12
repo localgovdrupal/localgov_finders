@@ -199,6 +199,28 @@ abstract class FinderTypeBase extends PluginBase implements FinderTypeInterface,
 
     $default_display_configuration =& $view->getDisplay('default');
 
+    // Copy the channel field argument if the template argument is still
+    // present; do not clobber any existing configuration. This has to be done
+    // when altering for the entry, as that's when the search index receives the
+    // field.
+    if (
+      $index->getField(static::CHANNEL_SELECTION_FIELD)
+      && !isset($default_display_configuration['display_options']['arguments'][static::CHANNEL_SELECTION_FIELD])
+      && isset($default_display_configuration['display_options']['arguments']['CHANNEL_SELECTION_FIELD'])
+    ) {
+      // The channel field argument is present in the template with a token ID.
+      // Copy that and remove it from the view.
+      $channel_field_argument_template = $default_display_configuration['display_options']['arguments']['CHANNEL_SELECTION_FIELD'];
+      unset($default_display_configuration['display_options']['arguments']['CHANNEL_SELECTION_FIELD']);
+
+      $channel_field_argument_template['id'] = static::CHANNEL_SELECTION_FIELD;
+      $channel_field_argument_template['field'] = static::CHANNEL_SELECTION_FIELD;
+      // No need to change the table, as that has been set already by
+      // FinderConfigManager::loadTemplateView().
+
+      $default_display_configuration['display_options']['arguments'][static::CHANNEL_SELECTION_FIELD] = $channel_field_argument_template;
+    }
+
     // Only add a title sort on the view if the index has the field.
     if ($index->getField(static::TITLE_SORT_FIELD)) {
       // Don't clobber any existing configuration.

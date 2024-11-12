@@ -224,11 +224,11 @@ display:
       empty: {  }
       relationships: {  }
       arguments:
-        localgov_directory_channels:
-          id: localgov_directory_channels
+        CHANNEL_SELECTION_FIELD:
+          id: CHANNEL_SELECTION_FIELD
           # SearchAPI index table.
           # table: search_api_index_SEARCH_INDEX_ID
-          field: localgov_directory_channels
+          field: CHANNEL_SELECTION_FIELD
           relationship: none
           group_type: group
           admin_label: ''
