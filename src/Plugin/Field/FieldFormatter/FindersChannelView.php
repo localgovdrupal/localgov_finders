@@ -137,6 +137,8 @@ class FindersChannelView extends FormatterBase {
 
       // Our fields have cardinality 1. We don't support multi-valued fields
       // because YAGNI.
+      // @todo: Use a lazy builder. See the viewsreference module's formatters
+      // for an example.
       $render = [
         '#type' => 'view',
         '#name' => $view_id,
