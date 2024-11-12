@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\finders_facets\Hooks;
+namespace Drupal\finders_facets\Hook;
 
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
 use Drupal\Core\Hook\Attribute\Hook;

@@ -7,7 +7,7 @@
 
 use Drupal\Core\Hook\LegacyHook;
 use Drupal\Core\Routing\RouteMatchInterface;
-use Drupal\finders_facets\Hooks\FindersFacetsHooks;
+use Drupal\finders_facets\Hook\FindersFacetsHooks;
 
 /**
  * Legacy hook implementation.

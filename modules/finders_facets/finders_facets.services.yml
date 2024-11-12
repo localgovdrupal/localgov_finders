@@ -4,8 +4,8 @@ services:
     decorates: Drupal\finders\BundleConfigForm
     arguments: ['@.inner']
 
-  Drupal\finders_facets\Hooks\FindersFacetsHooks:
-    class: Drupal\finders_facets\Hooks\FindersFacetsHooks
+  Drupal\finders_facets\Hook\FindersFacetsHooks:
+    class: Drupal\finders_facets\Hook\FindersFacetsHooks
     autowire: true
 
   finders_facets.event_subscriber:
