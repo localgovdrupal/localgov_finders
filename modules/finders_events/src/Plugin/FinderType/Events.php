@@ -173,6 +173,10 @@ class Events extends FinderTypeBase {
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayOptions('form', [
         'type' => 'viewsreference_select',
+      ])
+      ->setDisplayConfigurable('view', TRUE)
+      ->setDisplayOptions('view', [
+        'type' => 'finders_channel_view',
       ]);
   }
 
@@ -213,6 +217,10 @@ class Events extends FinderTypeBase {
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayOptions('form', [
         'type' => 'viewsreference_select',
+      ])
+      ->setDisplayConfigurable('view', TRUE)
+      ->setDisplayOptions('view', [
+        'type' => 'finders_channel_view',
       ]);
   }
 
