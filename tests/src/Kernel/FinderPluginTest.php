@@ -32,6 +32,7 @@ final class FinderPluginTest extends KernelTestBase {
   protected static $modules = [
     'system',
     'views',
+    'viewsreference',
     'finders',
     'finders_test',
     'search_api',
