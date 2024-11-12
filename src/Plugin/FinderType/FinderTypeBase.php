@@ -81,6 +81,11 @@ abstract class FinderTypeBase extends PluginBase implements FinderTypeInterface,
   const string CHANNEL_TYPES_FIELD = 'finders_channel_types';
 
   /**
+   * The field name for the channel view field.
+   */
+  const string VIEW_FIELD = 'finders_view';
+
+  /**
    * The field name for the channel selection field.
    *
    * @see self::getChannelSelectionFieldDefinition()
@@ -108,9 +113,8 @@ abstract class FinderTypeBase extends PluginBase implements FinderTypeInterface,
     $channel_types_field_definition = $this->getChannelTypesFieldDefinition($bundle);
     $field_definitions[$channel_types_field_definition->getName()] = $channel_types_field_definition;
 
-    // TODO: further fields:
-    // enabled facets
-    // finder view.
+    $view_field_definition = $this->getViewFieldDefinition($bundle);
+    $field_definitions[$view_field_definition->getName()] = $view_field_definition;
 
     /** @var \Drupal\finders\Field\BundleFieldDefinition $field_definition */
     foreach ($field_definitions as $field_definition) {
@@ -499,6 +503,50 @@ abstract class FinderTypeBase extends PluginBase implements FinderTypeInterface,
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayOptions('form', [
         'type' => 'options_buttons',
+      ]);
+  }
+
+  /**
+   * Gets the definition for the view selection field.
+   *
+   * This field on channels allows selecting the view to show a listing of
+   * entries.
+   *
+   * @param \Drupal\Core\Config\Entity\ConfigEntityInterface $bundle
+   *   The bundle entity.
+   *
+   * @return \Drupal\finders\Field\BundleFieldDefinition
+   *   The bundle field definition.
+   */
+  protected function getViewFieldDefinition(ConfigEntityInterface $bundle): BundleFieldDefinition {
+    $bundle_entity_type = $bundle->getEntityType();
+    $content_entity_type_id = $bundle_entity_type->getBundleOf();
+
+    return BundleFieldDefinition::create('viewsreference')
+      ->setName(static::VIEW_FIELD)
+      ->setTargetEntityTypeId($content_entity_type_id)
+      ->setLabel(t('Event list view'))
+      ->setRequired(FALSE)
+      ->setTranslatable(FALSE)
+      ->setCardinality(1)
+      ->setSettings([
+        'target_type' => 'view',
+        'handler' => 'finders_channel_views',
+        'handler_settings' => [
+          'target_bundles' => NULL,
+          'auto_create' => FALSE,
+        ],
+        'plugin_types' => [
+          'embed' => 'embed',
+        ],
+      ])
+      ->setDisplayConfigurable('form', TRUE)
+      ->setDisplayOptions('form', [
+        'type' => 'viewsreference_select',
+      ])
+      ->setDisplayConfigurable('display', TRUE)
+      ->setDisplayOptions('display', [
+        'type' => 'finders_channel_view',
       ]);
   }
 

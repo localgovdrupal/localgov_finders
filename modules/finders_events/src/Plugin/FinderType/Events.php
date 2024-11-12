@@ -79,6 +79,10 @@ class Events extends FinderTypeBase {
   public function getChannelFieldDefinitions(ConfigEntityInterface $bundle): array {
     $field_definitions = parent::getChannelFieldDefinitions($bundle);
 
+    // Remove the basic field definition.
+    // TODO! BETTER DX!
+    unset($field_definitions[static::VIEW_FIELD]);
+
     $list_view_field = $this->getListViewFieldDefinition($bundle);
     $list_view_field->setTargetBundle($bundle->id());
     $field_definitions[$list_view_field->getName()] = $list_view_field;
