@@ -1,3 +1,10 @@
+# Template channel view.
+# This template is loaded and changed by Finder type plugins. Some elements are
+# present but commented out, and some have placeholder tokens which the plugin
+# will replace. This makes future updates to this file from config easier to
+# manage.
+# @see \Drupal\finders\Plugin\FinderType\FinderTypeBase::alterViewForChannel
+# @see \Drupal\finders\Plugin\FinderType\FinderTypeBase::alterViewForEntry
 langcode: en
 status: true
 dependencies:
@@ -73,7 +80,7 @@ display:
         options:
           view_modes:
             'entity:node': {  }
-              # localgov_directory_page: search_result
+              # BUNDLE: search_result
       fields:
         localgov_directory_facets_select:
           # SearchAPI index table.
@@ -207,10 +214,9 @@ display:
           expose:
             label: ''
           plugin_id: search_api
-        # localgov_directory_title_sort:
-        #   id: localgov_directory_title_sort
-        #   table: search_api_index_localgov_directories_index_default
-        #   field: localgov_directory_title_sort
+        #   id: TITLE_SORT_FIELD
+        #   table: search_api_index_SEARCH_INDEX_ID
+        #   field: TITLE_SORT_FIELD
         #   relationship: none
         #   group_type: group
         #   admin_label: ''
