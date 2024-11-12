@@ -130,17 +130,25 @@ class FinderConfigManager {
    *   entity is not configured for finders, an empty array is returned.
    */
   public function getBundleFieldDefinitions(ConfigEntityInterface $bundle_entity): array {
-    $finder_type_manager = \Drupal::service('plugin.manager.finders_finder_type');
-    $finder_type = $finder_type_manager->getBundleFinderType($bundle_entity);
-    $finder_role_name = $bundle_entity->getThirdPartySetting('finders', 'finder_role', '');
+    // does this bundle participate ina finder and which type?
+    if (!($finder = $this->entityTypeManager->getStorage('finder')->getFinderForBundleEntity($bundle_entity))) {
+      return [];
+    }
+
+    $finder_type = $finder->getPlugin();
+    $finder_role = $finder->getFinderRoleForBundle($bundle_entity);
+
+    // $finder_type_manager = \Drupal::service('plugin.manager.finders_finder_type');
+    // $finder_type = $finder_type_manager->getBundleFinderType($bundle_entity);
+    // $finder_role_name = $bundle_entity->getThirdPartySetting('finders', 'finder_role', '');
 
     if (!$finder_type) {
       return [];
     }
     else {
-      return match ($finder_role_name) {
-        FinderRole::Channel->value => $this->getChannelFieldDefinitions($bundle_entity, $finder_type),
-        FinderRole::Entries->value => $this->getEntryFieldDefinitions($bundle_entity, $finder_type),
+      return match ($finder_role) {
+        FinderRole::Channel => $this->getChannelFieldDefinitions($bundle_entity, $finder_type),
+        FinderRole::Entries => $this->getEntryFieldDefinitions($bundle_entity, $finder_type),
       };
     }
   }

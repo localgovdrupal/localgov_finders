@@ -54,6 +54,7 @@ final class EntityHooks {
    *   The finder type plugin ID.
    */
   private function configureFinder(ConfigEntityInterface $bundle_entity, string $finder_type_id): void {
+    return;
     $finder_type = $this->finderTypeManager->createInstance($finder_type_id);
     $finder_role_name = $bundle_entity->getThirdPartySetting('finders', 'finder_role', '');
     match ($finder_role_name) {
