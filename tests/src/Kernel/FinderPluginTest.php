@@ -153,6 +153,7 @@ final class FinderPluginTest extends KernelTestBase {
     // The view has been updated by the creation of the entry bundles.
     $view = $this->reloadEntity($view);
     $this->assertArrayHasKey('finders_title_sort', $view->getDisplay('default')['display_options']['sorts']);
+    $this->assertArrayHasKey('finders_channels', $view->getDisplay('default')['display_options']['arguments']);
 
     // At present unrestricted which test entity type bundles.
     $channel->{FinderTypeBase::CHANNEL_TYPES_FIELD} = $channels = [
