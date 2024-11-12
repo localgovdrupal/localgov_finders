@@ -165,6 +165,9 @@ class FinderConfigManager {
       $field_definition->setTargetBundle($bundle_entity->id());
     }
 
+    // Allow modules to alter the channel field definitions.
+    \Drupal::moduleHandler()->alter('finders_channel_fields', $channel_field_definitions, $bundle_entity, $finder_type);
+
     return $field_definitions;
   }
 
@@ -187,6 +190,9 @@ class FinderConfigManager {
       // Set the target bundle on all bundle fields.
       $field_definition->setTargetBundle($bundle_entity->id());
     }
+
+    // Allow modules to alter the entry field definitions.
+    \Drupal::moduleHandler()->alter('finders_entry_fields', $entry_field_definitions, $bundle_entity, $finder_type);
 
     return $field_definitions;
   }
@@ -219,9 +225,6 @@ class FinderConfigManager {
     $bundle_id = $bundle_entity->id();
 
     $channel_field_definitions = $this->getChannelFieldDefinitions($bundle_entity, $finder_type);
-
-    // Allow modules to alter the channel field definitions.
-    \Drupal::moduleHandler()->alter('finders_channel_fields', $channel_field_definitions, $bundle_entity, $finder_type);
 
     $field_map = $this->entityFieldManager->getFieldMap()[$entity_type_id];
 
@@ -295,9 +298,6 @@ class FinderConfigManager {
     $bundle_id = $bundle_entity->id();
 
     $entry_field_definitions = $this->getEntryFieldDefinitions($bundle_entity, $finder_type);
-
-    // Allow modules to alter the entry field definitions.
-    \Drupal::moduleHandler()->alter('finders_entry_fields', $entry_field_definitions, $bundle_entity, $finder_type);
 
     $field_map = $this->entityFieldManager->getFieldMap()[$entity_type_id];
 
