@@ -544,8 +544,8 @@ abstract class FinderTypeBase extends PluginBase implements FinderTypeInterface,
       ->setDisplayOptions('form', [
         'type' => 'viewsreference_select',
       ])
-      ->setDisplayConfigurable('display', TRUE)
-      ->setDisplayOptions('display', [
+      ->setDisplayConfigurable('view', TRUE)
+      ->setDisplayOptions('view', [
         'type' => 'finders_channel_view',
       ]);
   }
