@@ -11,11 +11,6 @@ use Drupal\search_api\IndexInterface;
 
 /**
  * Finder type for geo.
- *
- * Provides calendars and listings.
- *
- * Geo entries use the date_recur SearchAPI datasource, which adds an index
- * item for each occurrence of a recurring date rather than for each node.
  */
 #[FinderType(
   id: "geo",
