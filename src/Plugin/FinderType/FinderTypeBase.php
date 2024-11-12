@@ -135,8 +135,6 @@ abstract class FinderTypeBase extends PluginBase implements FinderTypeInterface,
       $field_definitions[$title_sort_field->getName()] = $title_sort_field;
     }
 
-    // TODO: further fields:
-
     return $field_definitions;
   }
 
