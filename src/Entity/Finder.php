@@ -127,6 +127,16 @@ class Finder extends ConfigEntityBase implements FinderInterface {
     return $this->pluginCollection;
   }
 
+  /**
+   * Gets the finder role a bundle entity is used as in this finder, if any.
+   *
+   * @param \Drupal\Core\Config\Entity\ConfigEntityInterface $bundle_entity
+   *   A bundle entity.
+   *
+   * @return \Drupal\finders\Enum\FinderRole|null
+   *   The finder role that the given bundle entity is used as in this finder,
+   *   or NULL if the given bundle entity is not used in this finder.
+   */
   public function getFinderRoleForBundle(ConfigEntityInterface $bundle_entity): ?FinderRole {
     $entity_type_id = $bundle_entity->getEntityType()->getBundleOf();
 
