@@ -11,6 +11,16 @@ use Drupal\finders\Entity\FinderInterface;
  */
 class FinderStorage extends ConfigEntityStorage {
 
+  /**
+   * Gets the finder entity for a given bundle entity, if one exists.
+   *
+   * @param \Drupal\Core\Config\Entity\ConfigEntityInterface $bundle_entity
+   *   A bundle entity.
+   *
+   * @return \Drupal\finders\Entity\FinderInterface|null
+   *   The finder entity which uses the given bundle entity as either channels
+   *   or entries, or NULL if the given bundle entity is not used in a finder.
+   */
   public function getFinderForBundleEntity(ConfigEntityInterface $bundle_entity): ?FinderInterface {
     $entity_type_id = $bundle_entity->getEntityType()->getBundleOf();
 
