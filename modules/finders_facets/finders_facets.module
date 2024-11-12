@@ -25,7 +25,7 @@ function finders_facets_help($route_name, RouteMatchInterface $route_match) {
  * @todo Remove this method when support for Drupal core < 11.1 is dropped.
  */
 #[LegacyHook]
-function finders_facets_finders_channel_fields_alter($channel_field_definitions, $bundle_entity, $finder_type) {
+function finders_facets_finders_channel_fields_alter(&$channel_field_definitions, $bundle_entity, $finder_type) {
   \Drupal::service(FindersFacetsHooks::class)->findersChannelFieldsAlter($channel_field_definitions, $bundle_entity, $finder_type);
 }
 
@@ -35,6 +35,6 @@ function finders_facets_finders_channel_fields_alter($channel_field_definitions,
  * @todo Remove this method when support for Drupal core < 11.1 is dropped.
  */
 #[LegacyHook]
-function finders_facets_finders_entry_fields_alter($channel_field_definitions, $bundle_entity, $finder_type) {
+function finders_facets_finders_entry_fields_alter(&$channel_field_definitions, $bundle_entity, $finder_type) {
   \Drupal::service(FindersFacetsHooks::class)->findersEntryFieldsAlter($channel_field_definitions, $bundle_entity, $finder_type);
 }
