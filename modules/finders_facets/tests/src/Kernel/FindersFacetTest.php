@@ -70,45 +70,52 @@ class FindersFacetTest extends KernelTestBase {
    * Tests a finder with facets.
    */
   public function testFinderWithFacets() {
-    // Create a channel bundle.
+    // Create bundles that will be channels and entries.
     $channel_bundle = $this->entityTypeManager->getStorage('entity_test_bundle')->create([
       'id' => 'test_channel_bundle',
       'status' => TRUE,
     ]);
-    $channel_bundle->setThirdPartySetting(
-      'finders',
-      'finder_type',
-      'test'
-    );
-    $channel_bundle->setThirdPartySetting(
-      'finders',
-      'finder_role',
-      FinderRole::Channel->value,
-    );
-    $channel_bundle->setThirdPartySetting(
+    $channel_bundle->save();
+
+    $entry_bundle_one = $this->entityTypeManager->getStorage('entity_test_bundle')->create([
+      'id' => 'test_entry_bundle_one',
+      'status' => TRUE,
+    ]);
+    $entry_bundle_one->save();
+    $entry_bundle_two = $this->entityTypeManager->getStorage('entity_test_bundle')->create([
+      'id' => 'test_entry_bundle_two',
+      'status' => TRUE,
+    ]);
+    $entry_bundle_two->save();
+
+    // Create a channel entity.
+    $channel = $this->entityTypeManager->getStorage('entity_test_with_bundle')->create([
+      'name' => 'test channel',
+      'type' => 'test_channel_bundle',
+    ]);
+    $channel->save();
+
+    $finder = $this->entityTypeManager->getStorage('finder')->create([
+      'id' => 'test',
+      'label' => 'Test',
+      'type' => 'test',
+      'channels' => [
+        'entity_test_with_bundle' => [
+          'test_channel_bundle',
+        ],
+      ],
+      'entries' => [
+        'entity_test_with_bundle' => [
+          'test_entry_bundle_one',
+        ],
+      ],
+    ]);
+    $finder->setThirdPartySetting(
       'finders_facets',
       'facets',
       TRUE
     );
-    $channel_bundle->save();
-
-    // Create an entry bundle.
-    $entry_bundle = $this->entityTypeManager->getStorage('entity_test_bundle')->create([
-      'id' => 'test_entry_bundle_one',
-      'status' => TRUE,
-    ]);
-    $entry_bundle->save();
-    $entry_bundle->setThirdPartySetting(
-      'finders',
-      'finder_type',
-      'test'
-    );
-    $entry_bundle->setThirdPartySetting(
-      'finders',
-      'finder_role',
-      FinderRole::Entries->value,
-    );
-    $entry_bundle->save();
+    $finder->save();
 
     // The channel bundle has the facet types field on it.
     $channel_fields = $this->entityFieldManager->getFieldDefinitions('entity_test_with_bundle', 'test_channel_bundle');
@@ -117,7 +124,6 @@ class FindersFacetTest extends KernelTestBase {
     // The entry bundle has the facet selection field on it.
     $channel_fields = $this->entityFieldManager->getFieldDefinitions('entity_test_with_bundle', 'test_entry_bundle_one');
     $this->assertArrayHasKey('finders_facets_select', $channel_fields);
-
   }
 
 }
