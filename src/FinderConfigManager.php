@@ -11,6 +11,7 @@ use Drupal\Core\Extension\ModuleExtensionList;
 use Drupal\Core\Field\FieldDefinitionListenerInterface;
 use Drupal\Core\Field\FieldStorageDefinitionListenerInterface;
 use Drupal\Core\Logger\LoggerChannelFactoryInterface;
+use Drupal\finders\Entity\FinderInterface;
 use Drupal\finders\Enum\FinderRole;
 use Drupal\finders\Plugin\FinderType\FinderTypeInterface;
 use Drupal\search_api\IndexInterface;
@@ -147,8 +148,8 @@ class FinderConfigManager {
     }
     else {
       return match ($finder_role) {
-        FinderRole::Channel => $this->getChannelFieldDefinitions($bundle_entity, $finder_type),
-        FinderRole::Entries => $this->getEntryFieldDefinitions($bundle_entity, $finder_type),
+        FinderRole::Channel => $this->getChannelFieldDefinitions($bundle_entity, $finder),
+        FinderRole::Entries => $this->getEntryFieldDefinitions($bundle_entity, $finder),
       };
     }
   }
@@ -164,8 +165,9 @@ class FinderConfigManager {
    * @return array
    *   An array of bundle field definitions.
    */
-  protected function getChannelFieldDefinitions(ConfigEntityInterface $bundle_entity, FinderTypeInterface $finder_type): array {
-    $channel_field_definitions = $finder_type->getChannelFieldDefinitions($bundle_entity);
+  protected function getChannelFieldDefinitions(ConfigEntityInterface $bundle_entity, FinderInterface $finder): array {
+    $finder_type = $finder->getFinderTypePlugin();
+    $channel_field_definitions = $finder_type->getChannelFieldDefinitions($bundle_entity, $finder);
 
     // Allow modules to alter the channel field definitions.
     \Drupal::moduleHandler()->alter('finders_channel_fields', $channel_field_definitions, $bundle_entity, $finder_type);
@@ -190,8 +192,9 @@ class FinderConfigManager {
    * @return array
    *   An array of bundle field definitions.
    */
-  protected function getEntryFieldDefinitions(ConfigEntityInterface $bundle_entity, FinderTypeInterface $finder_type): array {
-    $entry_field_definitions = $finder_type->getEntryFieldDefinitions($bundle_entity);
+  protected function getEntryFieldDefinitions(ConfigEntityInterface $bundle_entity, FinderInterface $finder): array {
+    $finder_type = $finder->getFinderTypePlugin();
+    $entry_field_definitions = $finder_type->getEntryFieldDefinitions($bundle_entity, $finder);
 
     // Allow modules to alter the entry field definitions.
     \Drupal::moduleHandler()->alter('finders_entry_fields', $entry_field_definitions, $bundle_entity, $finder_type);
@@ -228,11 +231,12 @@ class FinderConfigManager {
    * @param \Drupal\finders\Plugin\FinderType\FinderTypeInterface $finder_type
    *   The finder type plugin.
    */
-  public function configureAsChannel(ConfigEntityInterface $bundle_entity, FinderTypeInterface $finder_type): void {
+  public function configureAsChannel(ConfigEntityInterface $bundle_entity, FinderInterface $finder): void {
+    $finder_type = $finder->getFinderTypePlugin();
     $entity_type_id = $bundle_entity->getEntityType()->getBundleOf();
     $bundle_id = $bundle_entity->id();
 
-    $channel_field_definitions = $this->getChannelFieldDefinitions($bundle_entity, $finder_type);
+    $channel_field_definitions = $this->getChannelFieldDefinitions($bundle_entity, $finder);
 
     $field_map = $this->entityFieldManager->getFieldMap()[$entity_type_id];
 
@@ -301,11 +305,12 @@ class FinderConfigManager {
    * @param \Drupal\finders\Plugin\FinderType\FinderTypeInterface $finder_type
    *   The finder type plugin.
    */
-  public function configureAsEntry(ConfigEntityInterface $bundle_entity, FinderTypeInterface $finder_type): void {
+  public function configureAsEntry(ConfigEntityInterface $bundle_entity, FinderInterface $finder): void {
+    $finder_type = $finder->getFinderTypePlugin();
     $entity_type_id = $bundle_entity->getEntityType()->getBundleOf();
     $bundle_id = $bundle_entity->id();
 
-    $entry_field_definitions = $this->getEntryFieldDefinitions($bundle_entity, $finder_type);
+    $entry_field_definitions = $this->getEntryFieldDefinitions($bundle_entity, $finder);
 
     $field_map = $this->entityFieldManager->getFieldMap()[$entity_type_id];
 

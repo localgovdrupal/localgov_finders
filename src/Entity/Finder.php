@@ -210,12 +210,13 @@ class Finder extends ConfigEntityBase implements FinderInterface {
 
     $finder_type = $this->getFinderTypePlugin();
 
+    // Configure the channel and entry bundles for this finder.
     $finder_config_manager = \Drupal::service('finders.finder_config_manager');
     foreach ($this->getChannelBundles() as $channel_bundle) {
-      $finder_config_manager->configureAsChannel($channel_bundle, $finder_type);
+      $finder_config_manager->configureAsChannel($channel_bundle, $this);
     }
     foreach ($this->getEntryBundles() as $entry_bundle) {
-      $finder_config_manager->configureAsEntry($entry_bundle, $finder_type);
+      $finder_config_manager->configureAsEntry($entry_bundle, $this);
     }
   }
 
