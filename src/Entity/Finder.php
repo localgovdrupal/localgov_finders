@@ -7,6 +7,7 @@ use Drupal\Core\Config\Entity\ConfigEntityInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Plugin\DefaultSingleLazyPluginCollection;
 use Drupal\finders\Enum\FinderRole;
+use Drupal\finders\Plugin\FinderType\FinderTypeInterface;
 
 /**
  * Provides the Finder entity.
@@ -106,7 +107,7 @@ class Finder extends ConfigEntityBase implements FinderInterface {
   /**
    * {@inheritdoc}
    */
-  public function getFinderTypePlugin() {
+  public function getFinderTypePlugin(): FinderTypeInterface {
     return $this->getPluginCollection()->get($this->type);
   }
 
