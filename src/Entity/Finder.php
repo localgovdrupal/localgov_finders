@@ -38,6 +38,7 @@ use Drupal\finders\Plugin\FinderType\FinderTypeInterface;
  *     "id" = "id",
  *     "label" = "label",
  *   },
+ *   config_prefix = "finder",
  *   config_export = {
  *     "id",
  *     "label",
