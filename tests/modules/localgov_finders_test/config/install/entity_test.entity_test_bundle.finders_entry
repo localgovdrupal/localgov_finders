@@ -1,0 +1,10 @@
+langcode: en
+status: true
+dependencies: {  }
+label: null
+id: finders_entry
+description: null
+third_party_settings:
+  finders:
+    finder_type: test
+    finder_role: channel

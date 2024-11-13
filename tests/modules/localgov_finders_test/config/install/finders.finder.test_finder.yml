@@ -1,0 +1,15 @@
+langcode: en
+id: test_finder
+label: Test Finder
+status: true
+dependencies:
+  config:
+    - entity_test.entity_test_bundle.finders_channel
+    - entity_test.entity_test_bundle.finders_entry
+type: test
+channels:
+  entity_test_with_bundle:
+    - finders_channel
+entries:
+  entity_test_with_bundle:
+    - finders_entry

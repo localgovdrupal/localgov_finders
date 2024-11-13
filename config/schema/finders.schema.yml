@@ -1,3 +1,24 @@
+finders.finder.*:
+  type: config_entity
+  label: Finder
+  mapping:
+    id:
+      type: text
+      label: Machine name
+    label:
+      type: label
+      label: Name
+    type:
+      type: text
+      label: Finder type
+    channels:
+      # @todo Figure this out.
+      type: ignore
+      label: Finder channels
+    entries:
+      type: ignore
+      label: Finder entries
+
 # Schema for Finders third party settings on bundle entities.
 # This is needed because apparently a schema name wildcard can't be used at the
 # start of the schema name, so this must be used in a schema definition for
