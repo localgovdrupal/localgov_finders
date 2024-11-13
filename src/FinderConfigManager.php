@@ -259,7 +259,7 @@ class FinderConfigManager {
       // Allow modules to alter the index.
       // This is a separate alter hook so that the bundle fields exist for
       // implementations of this hook to check.
-      \Drupal::moduleHandler()->alter('finders_index', $index, $bundle_entity, $finder);
+      \Drupal::moduleHandler()->alter('finders_index', $index, $finder);
 
       $index->save();
 
@@ -271,6 +271,8 @@ class FinderConfigManager {
           $view = $this->loadTemplateView($view_id, $finder_type, $index);
         }
         $finder_type->alterView($view, $index, $finder);
+
+        \Drupal::moduleHandler()->alter('finders_view', $view, $index, $finder);
 
         $view->save();
       }

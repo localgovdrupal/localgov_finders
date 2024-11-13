@@ -7,7 +7,8 @@
 
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
 use Drupal\finders\Entity\FinderInterface;
-use Drupal\finders\Plugin\FinderType\FinderTypeInterface;
+use Drupal\search_api\IndexInterface;
+use Drupal\views\ViewEntityInterface;
 
 /**
  * @addtogroup hooks
@@ -34,23 +35,37 @@ function hook_finders_channel_fields_alter(array &$channel_field_definitions, Co
 /**
  * Perform alterations on a finder search index when it is being updated.
  *
- * This hook is called a bundle entity is being configured as either a channel
- * or an entry bundle.
+ * This hook is invoked after the finder type plugin's alterSearch() has been
+ * called.
  *
- * This hook is invoked after the finder type plugin's
- * alterSearchIndexForChannel() or alterSearchIndexForEntry() has been called.
- *
- * @param $index
+ * @param \Drupal\search_api\IndexInterface $index
  *   The search index. It has not yet been saved, and will be saved by the
  *   invoker of this hook.
- * @param \Drupal\Core\Config\Entity\ConfigEntityInterface $bundle_entity
- *   The bundle entity that is being configured as either a channel or an entry.
+ * @param \Drupal\finders\Entity\FinderInterface $finder
+ *   The finder entity.
+ */
+function hook_finders_index_alter(IndexInterface $index, FinderInterface $finder): void {
+  // Change the boost on the index title field.
+  $index->getField('title')->setBoost(10.0);
+}
+
+/**
+ * Perform alterations on a finder view index when it is being updated.
+ *
+ * This hook is invoked after the finder type plugin's alterView() has been
+ * called.
+ *
+ * @param \Drupal\views\ViewEntityInterface $view
+ *   The view. It has not yet been saved, and will be saved by the invoker of
+ *   this hook.
+ * @param $index
+ *   The search index. It has already been updated with configuration for the
+ *   finder.
  * @param \Drupal\finders\Plugin\FinderType\FinderTypeInterface $finder_type
  *   The finder type used for the bundle entity.
  */
-function hook_finders_index_alter($index, ConfigEntityInterface $bundle_entity, FinderInterface $finder) {
-  // Change the boost on the index title field.
-  $index->getField('title')->setBoost(10.0);
+function hook_finders_view_alter(ViewEntityInterface $view, IndexInterface $index, FinderInterface $finder): void {
+  // TODO: write sample code.
 }
 
 /**
