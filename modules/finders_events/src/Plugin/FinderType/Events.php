@@ -115,12 +115,10 @@ class Events extends FinderTypeBase {
   /**
    * {@inheritdoc}
    */
-  protected function alterIndexFields(IndexInterface $index, ConfigEntityInterface $entry_bundle_entity): void {
-    parent::alterIndexFields($index, $entry_bundle_entity);
+  protected function alterIndexFields(IndexInterface $index, FinderInterface $finder): void {
+    parent::alterIndexFields($index, $finder);
 
-    // Get the entity type ID of the entry entities that the entry bundle entity
-    // defines.
-    $entry_entity_type_id = $entry_bundle_entity->getEntityType()->getBundleOf();
+    $entry_entity_type_id = $finder->getEntryEntityTypeId();
 
     $datasource_id = $this->getIndexDatasourceId($index, $entry_entity_type_id);
     $datasource = $index->getDatasource($datasource_id);
@@ -144,11 +142,8 @@ class Events extends FinderTypeBase {
   /**
    * {@inheritdoc}
    */
-  public function alterViewForEntry(ViewEntityInterface $view, IndexInterface $index, ConfigEntityInterface $entry_bundle_entity): void {
-    parent::alterViewForEntry($view, $index, $entry_bundle_entity);
-
-    $entry_entity_type_id = $entry_bundle_entity->getEntityType()->getBundleOf();
-    $entry_bundle_id = $entry_bundle_entity->id();
+  public function alterView(ViewEntityInterface $view, IndexInterface $index, FinderInterface $finder): void {
+    parent::alterView($view, $index, $finder);
 
     $default_display_configuration =& $view->getDisplay('default');
 

@@ -78,16 +78,6 @@ class EventFinderPluginTest extends KernelTestBase {
       'type' => 'test_channel_bundle',
       'status' => TRUE,
     ]);
-    $channel_bundle->setThirdPartySetting(
-      'finders',
-      'finder_type',
-      'events'
-    );
-    $channel_bundle->setThirdPartySetting(
-      'finders',
-      'finder_role',
-      FinderRole::Channel->value,
-    );
     $channel_bundle->save();
 
     // Create an entry bundle.
@@ -96,17 +86,24 @@ class EventFinderPluginTest extends KernelTestBase {
       'status' => TRUE,
     ]);
     $entry_bundle->save();
-    $entry_bundle->setThirdPartySetting(
-      'finders',
-      'finder_type',
-      'events'
-    );
-    $entry_bundle->setThirdPartySetting(
-      'finders',
-      'finder_role',
-      FinderRole::Entries->value,
-    );
     $entry_bundle->save();
+
+    $finder = $this->entityTypeManager->getStorage('finder')->create([
+      'id' => 'test',
+      'label' => 'Test',
+      'type' => 'events',
+      'channels' => [
+        'node' => [
+          'test_channel_bundle',
+        ],
+      ],
+      'entries' => [
+        'node' => [
+          'test_entry_bundle_one',
+        ],
+      ],
+    ]);
+    $finder->save();
 
     // The channel and entry bundles have finder fields defined on them.
     $entity_field_manager = \Drupal::service('entity_field.manager');
