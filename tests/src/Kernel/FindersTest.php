@@ -89,6 +89,7 @@ class FindersTest extends KernelTestBase {
       'type' => 'test_channel_bundle',
     ]);
     $channel->save();
+    // The channel does not have the finder field on it yet.
     $this->assertFalse($channel->hasField(FinderTypeBase::CHANNEL_TYPES_FIELD));
 
     $finder = $this->entityTypeManager->getStorage('finder')->create([
@@ -112,6 +113,25 @@ class FindersTest extends KernelTestBase {
 
     $channel = $this->reloadEntity($channel);
     $this->assertTrue($channel->hasField(FinderTypeBase::CHANNEL_TYPES_FIELD));
+
+    // A search index has been created by the creation of the channel bundle.
+    $search_index = $this->entityTypeManager->getStorage('search_api_index')->load('finders_index_default');
+    $this->assertNotEmpty($search_index);
+    $fields = $search_index->getFields();
+    // The entity_test_with_bundle label field is 'name', unlike nodes.
+    $this->assertArrayHasKey('name', $fields);
+    $this->assertArrayHasKey('rendered_item', $fields);
+    $this->assertArrayHasKey('finders_title_sort', $fields);
+    $this->assertArrayHasKey('finders_channels', $fields);
+
+    // A view has been created by the creation of the channel bundle.
+    $view = $this->entityTypeManager->getStorage('view')->load('finders_channel_view');
+    $this->assertNotEmpty($view);
+
+    // The view has been updated by the creation of the entry bundles.
+    $view = $this->reloadEntity($view);
+    $this->assertArrayHasKey('finders_title_sort', $view->getDisplay('default')['display_options']['sorts']);
+    $this->assertArrayHasKey('finders_channels', $view->getDisplay('default')['display_options']['arguments']);
   }
 
   /**
