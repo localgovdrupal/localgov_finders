@@ -26,10 +26,13 @@ class FinderStorage extends ConfigEntityStorage {
 
     // @todo Consider caching a lookup of bundle names => finder types.
     foreach ($this->loadMultiple() as $finder) {
-      if (in_array($bundle_entity->id(), $finder->get('channels')[$entity_type_id])) {
+      $channels = $finder->get('channels');
+      if (isset($channels[$entity_type_id]) && in_array($bundle_entity->id(), $channels[$entity_type_id])) {
         return $finder;
       }
-      if (in_array($bundle_entity->id(), $finder->get('entries')[$entity_type_id])) {
+
+      $entries = $finder->get('entries');
+      if (isset($entries[$entity_type_id]) && in_array($bundle_entity->id(), $entries[$entity_type_id])) {
         return $finder;
       }
     }
