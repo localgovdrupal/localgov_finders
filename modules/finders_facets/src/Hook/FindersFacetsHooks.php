@@ -7,6 +7,8 @@ use Drupal\Core\Hook\Attribute\Hook;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\finders\Entity\FinderInterface;
 use Drupal\finders\Field\BundleFieldDefinition;
+use Drupal\search_api\IndexInterface;
+use Drupal\views\ViewEntityInterface;
 
 /**
  * Contains hook implementations for the Finders facets module.
@@ -94,6 +96,20 @@ class FindersFacetsHooks {
       ->setDisplayOptions('form', [
         'type' => 'options_buttons',
       ]);
+  }
+
+  /**
+   * Implements hook_finders_index_alter().
+   */
+  #[Hook('finders_index_alter')]
+  public function findersIndexAlter(IndexInterface $index, FinderInterface $finder): void {
+  }
+
+  /**
+   * Implements hook_finders_view_alter().
+   */
+  #[Hook('finders_view_alter')]
+  public function findersViewAlter(ViewEntityInterface $view, IndexInterface $index, FinderInterface $finder): void {
   }
 
   /**

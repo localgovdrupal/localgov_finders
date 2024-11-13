@@ -7,7 +7,10 @@
 
 use Drupal\Core\Hook\LegacyHook;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\finders\Entity\FinderInterface;
 use Drupal\finders_facets\Hook\FindersFacetsHooks;
+use Drupal\search_api\IndexInterface;
+use Drupal\views\ViewEntityInterface;
 
 /**
  * Legacy hook implementation.
@@ -37,4 +40,24 @@ function finders_facets_finders_channel_fields_alter(&$channel_field_definitions
 #[LegacyHook]
 function finders_facets_finders_entry_fields_alter(&$channel_field_definitions, $bundle_entity, $finder) {
   \Drupal::service(FindersFacetsHooks::class)->findersEntryFieldsAlter($channel_field_definitions, $bundle_entity, $finder);
+}
+
+/**
+ * Legacy hook implementation.
+ *
+ * @todo Remove this method when support for Drupal core < 11.1 is dropped.
+ */
+#[LegacyHook]
+function finders_facets_finders_index_alter(IndexInterface $index, FinderInterface $finder): void {
+  \Drupal::service(FindersFacetsHooks::class)->findersIndexAlter($index, $finder);
+}
+
+/**
+ * Legacy hook implementation.
+ *
+ * @todo Remove this method when support for Drupal core < 11.1 is dropped.
+ */
+#[LegacyHook]
+function finders_facets_finders_view_alter(ViewEntityInterface $view, IndexInterface $index, FinderInterface $finder): void {
+  \Drupal::service(FindersFacetsHooks::class)->findersViewAlter($view, $index, $finder);
 }
