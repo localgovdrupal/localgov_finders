@@ -1,9 +1,4 @@
 services:
-  finders_facets.bundle_config_form_facets:
-    class: Drupal\finders_facets\BundleConfigFormFacets
-    decorates: Drupal\finders\BundleConfigForm
-    arguments: ['@.inner']
-
   Drupal\finders_facets\Hook\FindersFacetsHooks:
     class: Drupal\finders_facets\Hook\FindersFacetsHooks
     autowire: true

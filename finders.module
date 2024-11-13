@@ -6,12 +6,7 @@
  */
 
 use Drupal\Core\Entity\ContentEntityTypeInterface;
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
-use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Hook\Attribute\LegacyHook;
-use Drupal\finders\BundleConfigForm;
-use Drupal\finders\Hook\EntityHooks;
 
 /**
  * Implements hook_entity_bundle_field_info().
@@ -89,21 +84,4 @@ function finders_entity_field_storage_info(EntityTypeInterface $entity_type) {
   }
 
   return $fields;
-}
-
-/**
- * Implements hook_form_BASE_FORM_ID_alter(): node_type_form.
- */
-function finders_form_node_type_form_alter(&$form, FormStateInterface $form_state, $form_id) {
-  \Drupal::service(BundleConfigForm::class)->alterBundleForm($form, $form_state);
-}
-
-#[LegacyHook]
-function finders_entity_insert(EntityInterface $entity): void {
-  \Drupal::service(EntityHooks::class)->entityInsert($entity);
-}
-
-#[LegacyHook]
-function finders_entity_update(EntityInterface $entity): void {
-  \Drupal::service(EntityHooks::class)->entityUpdate($entity);
 }

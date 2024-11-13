@@ -209,21 +209,6 @@ class FinderConfigManager {
   }
 
   /**
-   * Sets configuration on a bundle entity as finder channels.
-   *
-   * @param \Drupal\Core\Config\Entity\ConfigEntityInterface $bundle_entity
-   *   The bundle entity.
-   * @param \Drupal\finders\Plugin\FinderType\FinderTypeInterface $finder_type
-   *   The finder type plugin.
-   */
-  public function enableAsChannel(ConfigEntityInterface $bundle_entity, FinderTypeInterface $finder_type): void {
-    $bundle_entity->setThirdPartySetting('finders', 'finder_type', $finder_type->getPluginId());
-    $bundle_entity->setThirdPartySetting('finders', 'finder_role', FinderRole::Channel->value);
-    $bundle_entity->save();
-    // @see Drupal\finders\Hook\EntityHooks::entityUpdate
-  }
-
-  /**
    * Set up a finder's config.
    *
    * It is essential that this method and everything it calls be idempotent, as
@@ -307,21 +292,6 @@ class FinderConfigManager {
         $this->fieldDefinitionListener->onFieldDefinitionCreate($field_definition);
       }
     }
-  }
-
-  /**
-   * Add settings for bundle as finder entry.
-   *
-   * @param \Drupal\Core\Config\Entity\ConfigEntityInterface $bundle_entity
-   *   The bundle entity.
-   * @param \Drupal\finders\Plugin\FinderType\FinderTypeInterface $finder_type
-   *   The finder type plugin.
-   */
-  public function enableAsEntry(ConfigEntityInterface $bundle_entity, FinderTypeInterface $finder_type): void {
-    $bundle_entity->setThirdPartySetting('finders', 'finder_type', $finder_type->getPluginId());
-    $bundle_entity->setThirdPartySetting('finders', 'finder_role', FinderRole::Entries->value);
-    $bundle_entity->save();
-    // @see Drupal\finders\Hook\EntityHooks::entityUpdate
   }
 
   /**
