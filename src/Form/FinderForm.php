@@ -94,6 +94,14 @@ class FinderForm extends EntityForm {
       '#description' => $this->t("The bundles of the entities that will act as channels in this finder configuration."),
       '#required' => TRUE,
     ];
+    $channels = $this->entity->get('channels');
+    if (!empty($channels)) {
+      $form['channels']['#default_value'] = [
+        'entity_type_id' => array_key_first($channels),
+        'bundles' => $channels[array_key_first($channels)],
+      ];
+    }
+
 
     $form['entries'] = [
       '#type' => 'finders_entity_bundles',
@@ -101,6 +109,15 @@ class FinderForm extends EntityForm {
       '#description' => $this->t("The bundles of the entities that will act as entries in this finder configuration."),
       '#required' => TRUE,
     ];
+    $entries = $this->entity->get('entries');
+    if (!empty($entries)) {
+      $form['entries']['#default_value'] = [
+        'entity_type_id' => array_key_first($entries),
+        'bundles' => $entries[array_key_first($entries)],
+      ];
+    }
+
+    // TODO: disable existing channels and entry bundles.
 
     return $form;
   }
