@@ -3,6 +3,7 @@
 namespace Drupal\finders\Form;
 
 use Drupal\Core\Entity\EntityForm;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\finders\FinderTypeManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -78,6 +79,7 @@ class FinderForm extends EntityForm {
       '#type' => 'radios',
       '#title' => $this->t("Finder type"),
       '#options' => $options,
+      '#required' => TRUE,
       '#empty_value' => '',
       '#default_value' => $this->entity->get('type'),
     ];
@@ -90,12 +92,14 @@ class FinderForm extends EntityForm {
       '#type' => 'finders_entity_bundles',
       '#title' => $this->t('Channel bundles'),
       '#description' => $this->t("The bundles of the entities that will act as channels in this finder configuration."),
+      '#required' => TRUE,
     ];
 
     $form['entries'] = [
       '#type' => 'finders_entity_bundles',
       '#title' => $this->t('Entry bundles'),
       '#description' => $this->t("The bundles of the entities that will act as entries in this finder configuration."),
+      '#required' => TRUE,
     ];
 
     return $form;
@@ -105,6 +109,7 @@ class FinderForm extends EntityForm {
    * {@inheritdoc}
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
+    // TODO: Validation at the config schema level.
     parent::validateForm($form, $form_state);
   }
 
@@ -113,6 +118,24 @@ class FinderForm extends EntityForm {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     parent::submitForm($form, $form_state);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function copyFormValuesToEntity(EntityInterface $entity, array $form, FormStateInterface $form_state) {
+    parent::copyFormValuesToEntity($entity, $form, $form_state);
+
+    foreach (['channels', 'entries'] as $role) {
+      // @todo Figure out how to get rid of the 'container' nesting.
+      $role_form_value = $form_state->getValue($role)['container'];
+
+      if (isset($role_form_value['bundles'])) {
+        $entity->set($role, [
+          $role_form_value['entity_type_id'] => array_values(array_filter($role_form_value['bundles'])),
+        ]);
+      }
+    }
   }
 
   /**
