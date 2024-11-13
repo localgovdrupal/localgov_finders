@@ -86,6 +86,18 @@ class FinderForm extends EntityForm {
       $form['type'][$finder_type_id]['#description'] = $definition['description'];
     }
 
+    $form['channels'] = [
+      '#type' => 'finders_entity_bundles',
+      '#title' => $this->t('Channel bundles'),
+      '#description' => $this->t("The bundles of the entities that will act as channels in this finder configuration."),
+    ];
+
+    $form['entries'] = [
+      '#type' => 'finders_entity_bundles',
+      '#title' => $this->t('Entry bundles'),
+      '#description' => $this->t("The bundles of the entities that will act as entries in this finder configuration."),
+    ];
+
     return $form;
   }
 

@@ -116,6 +116,13 @@ class Finder extends ConfigEntityBase implements FinderInterface {
    * {@inheritdoc}
    */
   public function getPluginCollections() {
+    // The core pattern for plugin collections fails when an entity's form has
+    // AJAX, because the entity can get initialised without a plugin ID.
+    // @todo Investigate whether there is a better way to handle this pathway.
+    if (empty($this->type)) {
+      return [];
+    }
+
     return [
       // Finder type plugins don't have any settings, so this key is immaterial.
       'settings' => $this->getPluginCollection(),
