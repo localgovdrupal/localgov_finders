@@ -224,7 +224,7 @@ class FinderConfigManager {
   }
 
   /**
-   * Sets up a bundle as finder channels.
+   * Set up a finder's config.
    *
    * It is essential that this method and everything it calls be idempotent, as
    * it is called every time a finder entity is updated. This is because
@@ -232,13 +232,60 @@ class FinderConfigManager {
    * configuration. Therefore, any configuration changes must check they have
    * not previously been done.
    *
+   * @param \Drupal\finders\Entity\FinderInterface $finder
+   *   The finder entity.
+   */
+  public function ensureFinderConfig(FinderInterface $finder): void {
+    $finder_type = $finder->getFinderTypePlugin();
+
+    // Set up the bundle fields on channel and entry bundles.
+    foreach ($finder->getChannelBundles() as $channel_bundle) {
+      $this->configureAsChannel($channel_bundle, $finder);
+    }
+    foreach ($finder->getEntryBundles() as $entry_bundle) {
+      $this->configureAsEntry($entry_bundle, $finder);
+    }
+
+    // Set up the indexes for the finder type.
+    foreach ($finder_type->getIndexIds() as $index_id) {
+      $index = $this->entityTypeManager->getStorage('search_api_index')->load($index_id);
+      // Create the Finder's search index if it doesn't already exist.
+      if (empty($index)) {
+        $index = $this->loadTemplateIndex($index_id, $finder_type);
+      }
+      assert($index instanceof IndexInterface);
+      $finder_type->alterSearchIndex($index, $finder);
+
+      // Allow modules to alter the channel field definitions.
+      // This is a separate alter hook so that the bundle fields exist for
+      // implementations of this hook to check.
+      // \Drupal::moduleHandler()->alter('finders_index', $index, $bundle_entity, $finder_type);
+
+      $index->save();
+
+      // Configure the view for the index.
+      foreach ($finder_type->getViewIds($index) as $view_id) {
+        $view = $this->entityTypeManager->getStorage('view')->load($view_id);
+        // Create the view if it doesn't already exist.
+        if (empty($view)) {
+          $view = $this->loadTemplateView($view_id, $finder_type, $index);
+        }
+        $finder_type->alterView($view, $index, $finder);
+
+        $view->save();
+      }
+    }
+  }
+
+  /**
+   * Sets up a bundle as finder channels.
+   *
    * @param \Drupal\Core\Config\Entity\ConfigEntityInterface $bundle_entity
    *   The entity bundle entity.
    * @param \Drupal\finders\Plugin\FinderType\FinderTypeInterface $finder_type
    *   The finder type plugin.
    */
-  public function configureAsChannel(ConfigEntityInterface $bundle_entity, FinderInterface $finder): void {
-    $finder_type = $finder->getFinderTypePlugin();
+  protected function configureAsChannel(ConfigEntityInterface $bundle_entity, FinderInterface $finder): void {
     $entity_type_id = $bundle_entity->getEntityType()->getBundleOf();
     $bundle_id = $bundle_entity->id();
 
@@ -256,36 +303,6 @@ class FinderConfigManager {
       }
       if (!isset($field_map[$field_definition->getName()]['bundles'][$bundle_id])) {
         $this->fieldDefinitionListener->onFieldDefinitionCreate($field_definition);
-      }
-    }
-
-    // Set up the indexes for the finder type.
-    foreach ($finder_type->getIndexIds() as $index_id) {
-      $index = $this->entityTypeManager->getStorage('search_api_index')->load($index_id);
-      // Create the Finder's search index if it doesn't already exist.
-      if (empty($index)) {
-        $index = $this->loadTemplateIndex($index_id, $finder_type);
-      }
-      assert($index instanceof IndexInterface);
-      $finder_type->alterSearchIndexForChannel($index, $bundle_entity);
-
-      // Allow modules to alter the channel field definitions.
-      // This is a separate alter hook so that the bundle fields exist for
-      // implementations of this hook to check.
-      \Drupal::moduleHandler()->alter('finders_index', $index, $bundle_entity, $finder_type);
-
-      $index->save();
-
-      // Configure the view for the index.
-      foreach ($finder_type->getViewIds($index) as $view_id) {
-        $view = $this->entityTypeManager->getStorage('view')->load($view_id);
-        // Create the view if it doesn't already exist.
-        if (empty($view)) {
-          $view = $this->loadTemplateView($view_id, $finder_type, $index);
-        }
-        $finder_type->alterViewForChannel($view, $index, $bundle_entity);
-
-        $view->save();
       }
     }
   }
@@ -308,19 +325,12 @@ class FinderConfigManager {
   /**
    * Sets up a bundle as finder entries.
    *
-   * It is essential that this method and everything it calls be idempotent, as
-   * it is called every time a finder entity is updated. This is because
-   * third-party extensions and alter hooks may want to add further
-   * configuration. Therefore, any configuration changes must check they have
-   * not previously been done.
-   *
    * @param \Drupal\Core\Config\Entity\ConfigEntityInterface $bundle_entity
    *   The entity bundle entity.
    * @param \Drupal\finders\Plugin\FinderType\FinderTypeInterface $finder_type
    *   The finder type plugin.
    */
-  public function configureAsEntry(ConfigEntityInterface $bundle_entity, FinderInterface $finder): void {
-    $finder_type = $finder->getFinderTypePlugin();
+  protected function configureAsEntry(ConfigEntityInterface $bundle_entity, FinderInterface $finder): void {
     $entity_type_id = $bundle_entity->getEntityType()->getBundleOf();
     $bundle_id = $bundle_entity->id();
 
@@ -348,40 +358,6 @@ class FinderConfigManager {
 
     // TODO:
     // Create config.
-
-    // Update search indexes.
-    // @todo Maybe it only makes sense to be able to create a entry type once
-    //   there is a channel type? Make config depend on each other?
-    //   Equally the you can't remove the channel type till the entry types are
-    //   gone.
-    // Facets is also an extension (and seperate plugin probably), that could
-    // should depend on the existence of the channel.
-    foreach ($finder_type->getIndexIds() as $index_id) {
-      $index = $this->entityTypeManager->getStorage('search_api_index')->load($index_id);
-      // Create the Finder's search index if it doesn't already exist.
-      if (empty($index)) {
-        $index = $this->loadTemplateIndex($index_id, $finder_type);
-      }
-      assert($index instanceof IndexInterface);
-
-      $finder_type->alterSearchIndexForEntry($index, $bundle_entity);
-
-      \Drupal::moduleHandler()->alter('finders_index', $index, $bundle_entity, $finder_type);
-
-      $index->save();
-
-      // Configure the view for the index.
-      foreach ($finder_type->getViewIds($index) as $view_id) {
-        $view = $this->entityTypeManager->getStorage('view')->load($view_id);
-        // Create the view if it doesn't already exist.
-        if (empty($view)) {
-          $view = $this->loadTemplateView($view_id, $finder_type, $index);
-        }
-        $finder_type->alterViewForEntry($view, $index, $bundle_entity);
-
-        $view->save();
-      }
-    }
   }
 
   /**

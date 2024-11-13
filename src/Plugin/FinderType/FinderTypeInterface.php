@@ -89,7 +89,7 @@ interface FinderTypeInterface extends PluginInspectionInterface, DerivativeInspe
   public function getIndexDatasourceId(IndexInterface $index, string $entity_type_id): string;
 
   /**
-   * Alter the Search API index when a channel bundle is configured.
+   * Alter the Search API index when a finder is configured.
    *
    * After it is configured, for anything unusual we've not thought of.
    *
@@ -98,10 +98,10 @@ interface FinderTypeInterface extends PluginInspectionInterface, DerivativeInspe
    * @param \Drupal\Core\Config\Entity\ConfigEntityInterface $channel_bundle_entity
    *   The channel bundle.
    */
-  public function alterSearchIndexForChannel(IndexInterface $index, ConfigEntityInterface $channel_bundle_entity): void;
+  public function alterSearchIndex(IndexInterface $index, FinderInterface $finder): void;
 
   /**
-   * Alters the view for a search index when a channel bundle is configured.
+   * Alters the view for a search index when a finder is configured.
    *
    * @param ViewEntityInterface $view
    *   The view about to be saved.
@@ -111,29 +111,6 @@ interface FinderTypeInterface extends PluginInspectionInterface, DerivativeInspe
    * @param \Drupal\Core\Config\Entity\ConfigEntityInterface $channel_bundle_entity
    *   The channel bundle.
    */
-  public function alterViewForChannel(ViewEntityInterface $view, IndexInterface $index, ConfigEntityInterface $channel_bundle_entity): void;
-
-  /**
-   * Alter the Search API index when an entry bundle is configured.
-   *
-   * @param \Drupal\search_api\IndexInterface $index
-   *   The updated index about to be saved.
-   * @param \Drupal\Core\Config\Entity\ConfigEntityInterface $entry_bundle_entity
-   *   The entry bundle.
-   */
-  public function alterSearchIndexForEntry(IndexInterface $index, ConfigEntityInterface $entry_bundle_entity): void;
-
-  /**
-   * Alters the view for a search index when an entry bundle is configured.
-   *
-   * @param ViewEntityInterface $view
-   *   The view about to be saved.
-   * @param \Drupal\search_api\IndexInterface $index
-   *   The search index. It has already been updated for the entry bundle and
-   *   has been saved.
-   * @param \Drupal\Core\Config\Entity\ConfigEntityInterface $entry_bundle_entity
-   *   The entry bundle.
-   */
-  public function alterViewForEntry(ViewEntityInterface $view, IndexInterface $index, ConfigEntityInterface $entry_bundle_entity): void;
+  public function alterView(ViewEntityInterface $view, IndexInterface $index, FinderInterface $finder): void;
 
 }

@@ -160,6 +160,20 @@ class Finder extends ConfigEntityBase implements FinderInterface {
   /**
    * {@inheritdoc}
    */
+  public function getChannelEntityTypeId(): string {
+    return reset(...[array_keys($this->channels)]);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getEntryEntityTypeId(): string {
+    return reset(...[array_keys($this->entries)]);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getChannelBundles(): array {
     $entity_type_manager = \Drupal::service('entity_type.manager');
 
@@ -200,16 +214,9 @@ class Finder extends ConfigEntityBase implements FinderInterface {
 
     // TODO validation! at the config schema level -- bundle can only be in one finder!
 
-    $finder_type = $this->getFinderTypePlugin();
-
     // Configure the channel and entry bundles for this finder.
     $finder_config_manager = \Drupal::service('finders.finder_config_manager');
-    foreach ($this->getChannelBundles() as $channel_bundle) {
-      $finder_config_manager->configureAsChannel($channel_bundle, $this);
-    }
-    foreach ($this->getEntryBundles() as $entry_bundle) {
-      $finder_config_manager->configureAsEntry($entry_bundle, $this);
-    }
+    $finder_config_manager->ensureFinderConfig($this);
   }
 
 }

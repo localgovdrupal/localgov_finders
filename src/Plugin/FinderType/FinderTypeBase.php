@@ -167,31 +167,20 @@ abstract class FinderTypeBase extends PluginBase implements FinderTypeInterface,
   /**
    * {@inheritdoc}
    */
-  public function alterSearchIndexForChannel(IndexInterface $index, ConfigEntityInterface $channel_bundle_entity): void {
-    // Additional configuration to the default template could be done here.
-    // Or use a preconfigured template in /config/template/search_api.index.[index_name].yml
+  public function alterSearchIndex(IndexInterface $index, FinderInterface $finder): void {
+    // Ensure the index datasource is set up.
+    $this->getIndexDatasource($index, $finder);
+
+    $this->addEntryBundlesToDatasource($index, $finder);
+    $this->alterIndexFields($index, $finder);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function alterViewForChannel(ViewEntityInterface $view, IndexInterface $index, ConfigEntityInterface $channel_bundle_entity): void {
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function alterSearchIndexForEntry(IndexInterface $index, ConfigEntityInterface $entry_bundle_entity): void {
-    $this->addEntryBundleToDatasource($index, $entry_bundle_entity);
-    $this->alterIndexFields($index, $entry_bundle_entity);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function alterViewForEntry(ViewEntityInterface $view, IndexInterface $index, ConfigEntityInterface $entry_bundle_entity): void {
-    $entry_entity_type_id = $entry_bundle_entity->getEntityType()->getBundleOf();
-    $entry_bundle_id = $entry_bundle_entity->id();
+  public function alterView(ViewEntityInterface $view, IndexInterface $index, FinderInterface $finder): void {
+    $entry_entity_type_id = $finder->getEntryEntityTypeId();
+    $entry_bundle_entities = $finder->getEntryBundles();
 
     $default_display_configuration =& $view->getDisplay('default');
 
@@ -239,9 +228,14 @@ abstract class FinderTypeBase extends PluginBase implements FinderTypeInterface,
       }
     }
 
+    // Ensure the row settings have all the entry bundles in the view mode
+    // configuration.
+
     // Add the entry bundle to the view's row options.
     if ($default_display_configuration['display_options']['row']['type'] == 'search_api') {
-      $default_display_configuration['display_options']['row']['options']['view_modes']['entity:' . $entry_entity_type_id][$entry_bundle_id] = 'teaser';
+      foreach ($entry_bundle_entities as $entry_bundle) {
+        $default_display_configuration['display_options']['row']['options']['view_modes']['entity:' . $entry_entity_type_id][$entry_bundle->id()] = 'teaser';
+      }
     }
   }
 
@@ -260,20 +254,24 @@ abstract class FinderTypeBase extends PluginBase implements FinderTypeInterface,
    * @throws \Exception
    *   Throws an exception if the bundle can't be added to the index datasource.
    */
-  protected function addEntryBundleToDatasource(IndexInterface $index, ConfigEntityInterface $entry_bundle_entity): void {
-    $entry_entity_type_id = $entry_bundle_entity->getEntityType()->getBundleOf();
-    $entry_bundle_id = $entry_bundle_entity->id();
+  protected function addEntryBundlesToDatasource(IndexInterface $index, FinderInterface $finder): void {
+    $entry_entity_type_id = $finder->getEntryEntityTypeId();
+    $entry_bundle_entities = $finder->getEntryBundles();
 
-    $datasource = $this->indexGetDatasource($index, $entry_entity_type_id);
+    $datasource = $this->getIndexDatasource($index, $finder);
     if (!$datasource) {
       throw new \Exception('Failed to update the directories search index with new bundle');
     }
 
     $configuration = $datasource->getConfiguration();
     $configuration['bundles']['default'] = FALSE;
-    if (!in_array($entry_bundle_id, $configuration['bundles']['selected'])) {
-      $configuration['bundles']['selected'][] = $entry_bundle_id;
+
+    foreach ($entry_bundle_entities as $entry_bundle) {
+      if (!in_array($entry_bundle->id(), $configuration['bundles']['selected'])) {
+        $configuration['bundles']['selected'][] = $entry_bundle->id();
+      }
     }
+
     $datasource->setConfiguration($configuration);
   }
 
@@ -288,18 +286,15 @@ abstract class FinderTypeBase extends PluginBase implements FinderTypeInterface,
    * @param \Drupal\Core\Config\Entity\ConfigEntityInterface $entry_bundle_entity
    *   The bundle entity being added.
    */
-  protected function alterIndexFields(IndexInterface $index, ConfigEntityInterface $entry_bundle_entity): void {
-    // Get the entity type ID of the entry entities that the entry bundle entity
-    // defines.
-    $entry_entity_type_id = $entry_bundle_entity->getEntityType()->getBundleOf();
-    $entry_bundle_id = $entry_bundle_entity->id();
+  protected function alterIndexFields(IndexInterface $index, FinderInterface $finder): void {
+    $entry_entity_type_id = $finder->getEntryEntityTypeId();
 
     $datasource_id = $this->getIndexDatasourceId($index, $entry_entity_type_id);
 
-    $this->ensureIndexLabelField($index, $entry_bundle_entity, $datasource_id);
-    $this->ensureIndexTitleSortField($index, $entry_bundle_entity, $datasource_id);
-    $this->ensureIndexChannelSelectionField($index, $entry_bundle_entity, $datasource_id);
-    $this->alterIndexRenderedItemField($index, $entry_bundle_entity, $datasource_id);
+    $this->ensureIndexLabelField($index, $finder, $datasource_id);
+    $this->ensureIndexTitleSortField($index, $finder, $datasource_id);
+    $this->ensureIndexChannelSelectionField($index, $finder, $datasource_id);
+    $this->alterIndexRenderedItemField($index, $finder, $datasource_id);
   }
 
   /**
@@ -314,8 +309,8 @@ abstract class FinderTypeBase extends PluginBase implements FinderTypeInterface,
    *
    * @see self::alterIndexFields()
    */
-  protected function ensureIndexLabelField(IndexInterface $index, ConfigEntityInterface $entry_bundle_entity, string $datasource_id): void {
-    $entry_entity_type_id = $entry_bundle_entity->getEntityType()->getBundleOf();
+  protected function ensureIndexLabelField(IndexInterface $index, FinderInterface $finder, string $datasource_id): void {
+    $entry_entity_type_id = $finder->getEntryEntityTypeId();
     $label_field_name = $this->entityTypeManager->getDefinition($entry_entity_type_id)->getKey('label');
 
     if (!$index->getField($label_field_name)) {
@@ -342,9 +337,8 @@ abstract class FinderTypeBase extends PluginBase implements FinderTypeInterface,
    *
    * @see self::alterIndexFields()
    */
-  protected function ensureIndexTitleSortField(IndexInterface $index, ConfigEntityInterface $entry_bundle_entity, string $datasource_id): void {
-    $entry_entity_type_id = $entry_bundle_entity->getEntityType()->getBundleOf();
-
+  protected function ensureIndexTitleSortField(IndexInterface $index, FinderInterface $finder, string $datasource_id): void {
+    $entry_entity_type_id = $finder->getEntryEntityTypeId();
     if (!$index->getField(static::TITLE_SORT_FIELD)) {
       $sort_title_field = new SearchIndexField($index, static::TITLE_SORT_FIELD);
       $sort_title_field->setDatasourceId($datasource_id);
@@ -373,9 +367,8 @@ abstract class FinderTypeBase extends PluginBase implements FinderTypeInterface,
    *
    * @see self::alterIndexFields()
    */
-  protected function ensureIndexChannelSelectionField(IndexInterface $index, ConfigEntityInterface $entry_bundle_entity, string $datasource_id): void {
-    $entry_entity_type_id = $entry_bundle_entity->getEntityType()->getBundleOf();
-
+  protected function ensureIndexChannelSelectionField(IndexInterface $index, FinderInterface $finder, string $datasource_id): void {
+    $entry_entity_type_id = $finder->getEntryEntityTypeId();
     if (!$index->getField(static::CHANNEL_SELECTION_FIELD)) {
       $channel_selection_field = new SearchIndexField($index, static::CHANNEL_SELECTION_FIELD);
       $channel_selection_field->setLabel('Directory channels');
@@ -405,8 +398,8 @@ abstract class FinderTypeBase extends PluginBase implements FinderTypeInterface,
    *
    * @see self::alterIndexFields()
    */
-  protected function alterIndexRenderedItemField(IndexInterface $index, ConfigEntityInterface $entry_bundle_entity, string $datasource_id): void {
-    $entry_bundle_id = $entry_bundle_entity->id();
+  protected function alterIndexRenderedItemField(IndexInterface $index, FinderInterface $finder, string $datasource_id): void {
+    $entry_bundle_entities = $finder->getEntryBundles();
 
     $rendered_item_field = $index->getField('rendered_item');
     if (!$rendered_item_field) {
@@ -420,23 +413,29 @@ abstract class FinderTypeBase extends PluginBase implements FinderTypeInterface,
 
       $configuration = $rendered_item_field->getConfiguration();
       $configuration['roles'][AccountInterface::ANONYMOUS_ROLE] = AccountInterface::ANONYMOUS_ROLE;
-      $configuration['view_mode'][$datasource_id][$entry_bundle_id] = 'directory_index';
+
+      foreach ($entry_bundle_entities as $entry_bundle) {
+        $configuration['view_mode'][$datasource_id][$entry_bundle->id()] = 'directory_index';
+      }
+
       $rendered_item_field->setConfiguration($configuration);
 
       $index->addField($rendered_item_field);
     }
     else {
-      // The rendered item field already exists on this index. Add the new entry
-      // bumdle to the field's view mode configuration.
+      // The rendered item field already exists on this index. Ensure it has all
+      // the entry bundles in the view mode configuration.
       $configuration = $rendered_item_field->getConfiguration();
       // TODO make the view mode a plugin constant.
-      $configuration['view_mode'][$datasource_id][$entry_bundle_id] = 'directory_index';
+      foreach ($entry_bundle_entities as $entry_bundle) {
+        $configuration['view_mode'][$datasource_id][$entry_bundle->id()] = 'directory_index';
+      }
       $rendered_item_field->setConfiguration($configuration);
     }
   }
 
   /**
-   * Get index entity datasource or create it if it is not found.
+   * Gets the index entity datasource or create it if it is not found.
    *
    * @param \Drupal\search_api\IndexInterface $index
    *   The index to retrieve the datasource from.
@@ -446,8 +445,9 @@ abstract class FinderTypeBase extends PluginBase implements FinderTypeInterface,
    * @return \Drupal\search_api\Datasource\DatasourceInterface
    *   The datasource.
    */
-  protected function indexGetDatasource(IndexInterface $index, string $entity_type_id): DatasourceInterface {
-    $datasource_id = $this->getIndexDatasourceId($index, $entity_type_id);
+  protected function getIndexDatasource(IndexInterface $index, FinderInterface $finder): DatasourceInterface {
+    $entry_entity_type_id = $finder->getEntryEntityTypeId();
+    $datasource_id = $this->getIndexDatasourceId($index, $entry_entity_type_id);
 
     if ($index->isValidDatasource($datasource_id)) {
       $datasource = $index->getDatasource($datasource_id);
