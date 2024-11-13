@@ -226,6 +226,12 @@ class FinderConfigManager {
   /**
    * Sets up a bundle as finder channels.
    *
+   * It is essential that this method and everything it calls be idempotent, as
+   * it is called every time a finder entity is updated. This is because
+   * third-party extensions and alter hooks may want to add further
+   * configuration. Therefore, any configuration changes must check they have
+   * not previously been done.
+   *
    * @param \Drupal\Core\Config\Entity\ConfigEntityInterface $bundle_entity
    *   The entity bundle entity.
    * @param \Drupal\finders\Plugin\FinderType\FinderTypeInterface $finder_type
@@ -299,6 +305,12 @@ class FinderConfigManager {
 
   /**
    * Sets up a bundle as finder entries.
+   *
+   * It is essential that this method and everything it calls be idempotent, as
+   * it is called every time a finder entity is updated. This is because
+   * third-party extensions and alter hooks may want to add further
+   * configuration. Therefore, any configuration changes must check they have
+   * not previously been done.
    *
    * @param \Drupal\Core\Config\Entity\ConfigEntityInterface $bundle_entity
    *   The entity bundle entity.
