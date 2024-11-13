@@ -254,7 +254,9 @@ class FinderConfigManager {
       if (!isset($field_map[$field_definition->getName()])) {
         $this->fieldStorageDefinitionListener->onFieldStorageDefinitionCreate($field_definition);
       }
-      $this->fieldDefinitionListener->onFieldDefinitionCreate($field_definition);
+      if (!isset($field_map[$field_definition->getName()]['bundles'][$bundle_id])) {
+        $this->fieldDefinitionListener->onFieldDefinitionCreate($field_definition);
+      }
     }
 
     // Set up the indexes for the finder type.
@@ -334,7 +336,9 @@ class FinderConfigManager {
       if (!isset($field_map[$field_definition->getName()])) {
         $this->fieldStorageDefinitionListener->onFieldStorageDefinitionCreate($field_definition);
       }
-      $this->fieldDefinitionListener->onFieldDefinitionCreate($field_definition);
+      if (!isset($field_map[$field_definition->getName()]['bundles'][$bundle_id])) {
+        $this->fieldDefinitionListener->onFieldDefinitionCreate($field_definition);
+      }
     }
 
     // fields:
