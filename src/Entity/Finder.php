@@ -106,7 +106,7 @@ class Finder extends ConfigEntityBase implements FinderInterface {
   /**
    * {@inheritdoc}
    */
-  public function getPlugin() {
+  public function getFinderTypePlugin() {
     return $this->getPluginCollection()->get($this->type);
   }
 
@@ -207,7 +207,7 @@ class Finder extends ConfigEntityBase implements FinderInterface {
 
     // TODO validation! at the config schema level -- bundle can only be in one finder!
 
-    $finder_type = $this->getPlugin();
+    $finder_type = $this->getFinderTypePlugin();
 
     $finder_config_manager = \Drupal::service('finders.finder_config_manager');
     foreach ($this->getChannelBundles() as $channel_bundle) {

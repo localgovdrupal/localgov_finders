@@ -135,7 +135,7 @@ class FinderConfigManager {
       return [];
     }
 
-    $finder_type = $finder->getPlugin();
+    $finder_type = $finder->getFinderTypePlugin();
     $finder_role = $finder->getFinderRoleForBundle($bundle_entity);
 
     // $finder_type_manager = \Drupal::service('plugin.manager.finders_finder_type');
