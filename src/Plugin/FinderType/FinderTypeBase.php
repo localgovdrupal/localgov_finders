@@ -377,7 +377,7 @@ abstract class FinderTypeBase extends PluginBase implements FinderTypeInterface,
       $channel_selection_field->setType('string');
       $channel_selection_field->setDependencies([
         'config' => [
-          'field.storage.node.' . $entry_entity_type_id . '.' . static::CHANNEL_SELECTION_FIELD,
+          'field.storage.' . $entry_entity_type_id . '.' . static::CHANNEL_SELECTION_FIELD,
         ],
       ]);
       $index->addField($channel_selection_field);
