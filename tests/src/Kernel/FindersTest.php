@@ -57,6 +57,8 @@ class FindersTest extends KernelTestBase {
 
     $this->installEntitySchema('entity_test_with_bundle');
 
+    $this->installConfig('finders');
+
     $this->entityTypeManager = $this->container->get('entity_type.manager');
     $this->entityFieldManager = $this->container->get('entity_field.manager');
   }

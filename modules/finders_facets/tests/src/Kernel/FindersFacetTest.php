@@ -59,6 +59,7 @@ class FindersFacetTest extends KernelTestBase {
 
     $this->installEntitySchema('search_api_task');
 
+    $this->installConfig('finders');
     $this->installConfig('finders_test');
     $this->installEntitySchema('entity_test_with_bundle');
 

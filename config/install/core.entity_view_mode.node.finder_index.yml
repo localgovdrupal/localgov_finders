@@ -1,0 +1,9 @@
+langcode: en
+status: false
+dependencies:
+  module:
+    - node
+id: node.finder_index
+label: 'Finder search index'
+targetEntityType: node
+cache: true

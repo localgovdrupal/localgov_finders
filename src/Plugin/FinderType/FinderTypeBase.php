@@ -418,7 +418,7 @@ abstract class FinderTypeBase extends PluginBase implements FinderTypeInterface,
       $configuration['view_mode'][$datasource_id] ??= [];
 
       foreach ($entry_bundle_entities as $entry_bundle) {
-        $configuration['view_mode'][$datasource_id][$entry_bundle->id()] = 'directory_index';
+        $configuration['view_mode'][$datasource_id][$entry_bundle->id()] = 'finder_index';
       }
 
       $rendered_item_field->setConfiguration($configuration);
@@ -431,7 +431,7 @@ abstract class FinderTypeBase extends PluginBase implements FinderTypeInterface,
       $configuration = $rendered_item_field->getConfiguration();
       // TODO make the view mode a plugin constant.
       foreach ($entry_bundle_entities as $entry_bundle) {
-        $configuration['view_mode'][$datasource_id][$entry_bundle->id()] = 'directory_index';
+        $configuration['view_mode'][$datasource_id][$entry_bundle->id()] = 'finder_index';
       }
       $rendered_item_field->setConfiguration($configuration);
     }

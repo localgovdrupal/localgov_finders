@@ -59,6 +59,8 @@ class EventFinderPluginTest extends KernelTestBase {
 
     parent::setUp();
 
+    $this->installConfig('finders');
+
     $this->installEntitySchema('search_api_task');
 
     // We have to use the node entity type in this test rather than

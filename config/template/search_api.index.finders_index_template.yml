@@ -21,8 +21,8 @@ field_settings: {  }
   #       anonymous: anonymous
   #     view_mode:
   #       'entity:node':
-  #         localgov_directories_page: directory_index
-  #         node: directory_index
+  #         localgov_directories_page: finder_index
+  #         node: finder_index
 
   # title:
   #   label: Title

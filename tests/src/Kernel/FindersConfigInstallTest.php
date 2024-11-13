@@ -44,6 +44,7 @@ class FindersConfigInstallTest extends KernelTestBase {
     $this->installEntitySchema('search_api_task');
 
     $this->installEntitySchema('entity_test_with_bundle');
+    $this->installConfig('finders');
     $this->installConfig('finders_test');
 
     $this->entityTypeManager = $this->container->get('entity_type.manager');
