@@ -129,6 +129,13 @@ class FindersFacetTest extends KernelTestBase {
     // The entry bundle has the facet selection field on it.
     $channel_fields = $this->entityFieldManager->getFieldDefinitions('entity_test_with_bundle', 'test_entry_bundle_one');
     $this->assertArrayHasKey('finders_facets_select', $channel_fields);
+
+    $search_index = $this->entityTypeManager->getStorage('search_api_index')->load('finders_index_default');
+    $this->assertNotEmpty($search_index);
+    $fields = $search_index->getFields();
+
+    // The facets field has been added to the search index.
+    $this->assertArrayHasKey('finders_facets_filter', $fields);
   }
 
 }

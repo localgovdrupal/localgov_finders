@@ -8,12 +8,23 @@ use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\finders\Entity\FinderInterface;
 use Drupal\finders\Field\BundleFieldDefinition;
 use Drupal\search_api\IndexInterface;
+use Drupal\search_api\Item\Field as SearchIndexField;
 use Drupal\views\ViewEntityInterface;
 
 /**
  * Contains hook implementations for the Finders facets module.
  */
 class FindersFacetsHooks {
+
+  /**
+   * Name of the field on entry entities for selecting facets.
+   */
+  public const string FACET_SELECTION_FIELD = 'finders_facets_select';
+
+  /**
+   * Name of the search index field for filtering facets.
+   */
+  public const FACET_INDEXING_FIELD = 'finders_facets_filter';
 
   /**
    * Implements hook_help().
@@ -77,8 +88,8 @@ class FindersFacetsHooks {
     }
 
     // Add the selected facets field to a channel bundle.
-    $entry_field_definitions['finders_facets_select'] = BundleFieldDefinition::create('entity_reference')
-      ->setName('finders_facets_select')
+    $entry_field_definitions[static::FACET_SELECTION_FIELD] = BundleFieldDefinition::create('entity_reference')
+      ->setName(static::FACET_SELECTION_FIELD)
       ->setTargetEntityTypeId($content_entity_type_id)
       ->setLabel(t('Facets'))
       ->setRequired(FALSE)
@@ -103,6 +114,25 @@ class FindersFacetsHooks {
    */
   #[Hook('finders_index_alter')]
   public function findersIndexAlter(IndexInterface $index, FinderInterface $finder): void {
+    if ($index->getField(static::FACET_INDEXING_FIELD)) {
+      return;
+    }
+
+    $entry_entity_type_id = $finder->getEntryEntityTypeId();
+    $datasource_id = $finder->getFinderTypePlugin()->getIndexDatasourceId($index, $entry_entity_type_id);
+
+
+    $field = new SearchIndexField($index, static::FACET_INDEXING_FIELD);
+    $field->setLabel('Facets');
+    $field->setDataSourceId($datasource_id);
+    $field->setPropertyPath(static::FACET_SELECTION_FIELD);
+    $field->setType('integer');
+    $field->setDependencies([
+      'config' => [
+        'field.storage.' . $entry_entity_type_id . '.' . static::FACET_SELECTION_FIELD,
+      ],
+    ]);
+    $index->addField($field);
   }
 
   /**
