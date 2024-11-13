@@ -20,13 +20,14 @@ class FindersTest extends KernelTestBase {
    */
   protected static $modules = [
     'system',
+    'user',
     'views',
     'viewsreference',
-    'finders',
-    'finders_test',
     'search_api',
+    'finders',
+    // We use this for its test finder plugin, but we don't install its config.
+    'finders_test',
     'entity_test',
-    'user',
   ];
 
   /**
@@ -54,7 +55,6 @@ class FindersTest extends KernelTestBase {
 
     $this->installEntitySchema('search_api_task');
 
-    $this->installConfig('finders_test');
     $this->installEntitySchema('entity_test_with_bundle');
 
     $this->entityTypeManager = $this->container->get('entity_type.manager');
@@ -62,7 +62,7 @@ class FindersTest extends KernelTestBase {
   }
 
   /**
-   * Tests the TODO.
+   * Tests setting up a finder.
    */
   public function testFinderSetup() {
     // Create bundles that will be channels and entries.
@@ -110,9 +110,13 @@ class FindersTest extends KernelTestBase {
     $finder->save();
 
     $channel_fields = $this->entityFieldManager->getFieldDefinitions('entity_test_with_bundle', 'test_channel_bundle');
+    $this->assertArrayHasKey(FinderTypeBase::CHANNEL_TYPES_FIELD, $channel_fields);
 
     $channel = $this->reloadEntity($channel);
     $this->assertTrue($channel->hasField(FinderTypeBase::CHANNEL_TYPES_FIELD));
+
+    $entry_fields = $this->entityFieldManager->getFieldDefinitions('entity_test_with_bundle', 'test_entry_bundle_one');
+    $this->assertArrayHasKey(FinderTypeBase::CHANNEL_SELECTION_FIELD, $entry_fields);
 
     // A search index has been created by the creation of the channel bundle.
     $search_index = $this->entityTypeManager->getStorage('search_api_index')->load('finders_index_default');
