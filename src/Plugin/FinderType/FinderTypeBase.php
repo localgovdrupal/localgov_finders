@@ -562,6 +562,7 @@ abstract class FinderTypeBase extends PluginBase implements FinderTypeInterface,
   protected function getChannelSelectionFieldDefinition(ConfigEntityInterface $bundle, FinderInterface $finder): ?BundleFieldDefinition {
     $bundle_entity_type = $bundle->getEntityType();
     $content_entity_type_id = $bundle_entity_type->getBundleOf();
+    $content_entity_type = $this->entityTypeManager->getDefinition($content_entity_type_id);
 
     $channel_entity_type_id = $finder->getChannelEntityTypeId();
 
@@ -581,7 +582,7 @@ abstract class FinderTypeBase extends PluginBase implements FinderTypeInterface,
           // filtering which we don't need.
           'target_bundles' => NULL,
           'sort' => [
-            'field' => 'title',
+            'field' => $content_entity_type->getKey('label'),
             'direction' => 'DESC',
           ],
         ],
