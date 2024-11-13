@@ -79,12 +79,18 @@ class Finder extends ConfigEntityBase implements FinderInterface {
   /**
    * The entity bundles which are channels for this finder.
    *
+   * An array whose keys are entity type IDs, and whose values are numeric
+   * arrays of bundle names.
+   *
    * @var array
    */
   protected $channels = [];
 
   /**
    * The entity bundles which are entries for this finder.
+   *
+   * An array whose keys are entity type IDs, and whose values are numeric
+   * arrays of bundle names.
    *
    * @var array
    */
