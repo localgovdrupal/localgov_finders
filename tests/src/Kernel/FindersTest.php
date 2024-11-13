@@ -104,6 +104,7 @@ class FindersTest extends KernelTestBase {
       'entries' => [
         'entity_test_with_bundle' => [
           'test_entry_bundle_one',
+          'test_entry_bundle_two',
         ],
       ],
     ]);
@@ -136,6 +137,24 @@ class FindersTest extends KernelTestBase {
     $view = $this->reloadEntity($view);
     $this->assertArrayHasKey('finders_title_sort', $view->getDisplay('default')['display_options']['sorts']);
     $this->assertArrayHasKey('finders_channels', $view->getDisplay('default')['display_options']['arguments']);
+
+    // At present unrestricted which test entity type bundles.
+    $channel->{FinderTypeBase::CHANNEL_TYPES_FIELD} = $channels = [
+      ['target_id' => 'test_entry_bundle_one'],
+      ['target_id' => 'test_entry_bundle_two'],
+    ];
+    $channel->save();
+
+    $channel = $this->reloadEntity($channel);
+    $this->assertEquals($channels, $channel->get(FinderTypeBase::CHANNEL_TYPES_FIELD)->getValue());
+
+    // Create an entry entity.
+    $entry = $this->entityTypeManager->getStorage('entity_test_with_bundle')->create([
+      'name' => 'test entry',
+      'type' => 'test_entry_bundle_one',
+      FinderTypeBase::CHANNEL_SELECTION_FIELD => $channel->id(),
+    ]);
+    $entry->save();
   }
 
   /**
