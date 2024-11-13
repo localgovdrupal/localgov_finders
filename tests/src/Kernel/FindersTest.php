@@ -70,17 +70,20 @@ class FindersTest extends KernelTestBase {
     // Create bundles that will be channels and entries.
     $channel_bundle = $this->entityTypeManager->getStorage('entity_test_bundle')->create([
       'id' => 'test_channel_bundle',
+      'label' => 'Label',
       'status' => TRUE,
     ]);
     $channel_bundle->save();
 
     $entry_bundle_one = $this->entityTypeManager->getStorage('entity_test_bundle')->create([
       'id' => 'test_entry_bundle_one',
+      'label' => 'Label',
       'status' => TRUE,
     ]);
     $entry_bundle_one->save();
     $entry_bundle_two = $this->entityTypeManager->getStorage('entity_test_bundle')->create([
       'id' => 'test_entry_bundle_two',
+      'label' => 'Label',
       'status' => TRUE,
     ]);
     $entry_bundle_two->save();
