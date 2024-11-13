@@ -192,6 +192,13 @@ class Finder extends ConfigEntityBase implements FinderInterface {
   /**
    * {@inheritdoc}
    */
+  public function getChannelBundleIds(): array {
+    return $this->channels[$this->getChannelEntityTypeId()];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getEntryBundles(): array {
     $entity_type_manager = \Drupal::service('entity_type.manager');
 

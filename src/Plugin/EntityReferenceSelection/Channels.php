@@ -17,6 +17,10 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Selection plugin for finder channels.
+ *
+ * This allows all the channel entities which:
+ *  - are in the same finder as the host entry entity
+ *  - reference the host entity's bundle in their channel types field.
  */
 #[EntityReferenceSelection(
   id: 'finders_channels',
@@ -149,32 +153,31 @@ class Channels extends DefaultSelection {
   protected function buildEntityQuery($match = NULL, $match_operator = 'CONTAINS') {
     $query = parent::buildEntityQuery($match, $match_operator);
 
+    // The field can be instantiated without an entity, in which case we can't
+    // do anything.
+    if (!isset($this->configuration['entity'])) {
+      return $query;
+    }
+
     // Get the entity we are getting field values for.
     $host_entity = $this->configuration['entity'];
 
     $bundle_entity_type_id = $host_entity->getEntityType()->getBundleEntityType();
     $bundle_entity = $this->entityTypeManager->getStorage($bundle_entity_type_id)->load($host_entity->bundle());
-    $finder_type = $this->finderTypeManager->getBundleFinderType($bundle_entity);
-    $channel_bundles = $this->finderTypeManager->getChannelBundles($host_entity->getEntityType(), $finder_type);
+    $finder = $this->entityTypeManager->getStorage('finder')->getFinderForBundleEntity($bundle_entity);
+    $finder_type = $finder->getFinderTypePlugin();
+
+    $channel_bundles = $finder->getChannelBundleIds();
 
     // Limit the query to bundles which are channels of the same finder type.
-    $query->condition('type', array_keys($channel_bundles), 'IN');
+    $query->condition('type', $channel_bundles, 'IN');
 
     // Condition for channel types field, if it is set.
     $channel_types_field_name = $finder_type->getFieldName('CHANNEL_TYPES_FIELD');
     $or = $query->orConditionGroup();
     $or->notExists($channel_types_field_name);
-    if ($this->configuration['entity']) {
-      // The field can be instantiated without an entity.
-      // The entity is not really part of the configuration.
-      // Drupal\Core\Entity\EntityReferenceSelection\SelectionPluginManagerInterface::getSelectionHandler
-      // In practical situations this is used for forms etc. before the
-      // configuration has been made, not when the field is on an entity type.
-      // Really it would be nicer to be able to get to the bundle associated
-      // with the configuration as there has to be one!
-      $bundle = $this->configuration['entity']->bundle();
-      $or->condition($channel_types_field_name, $bundle, 'IN');
-    }
+    $bundle = $this->configuration['entity']->bundle();
+    $or->condition($channel_types_field_name, $bundle, 'IN');
     $query->condition($or);
 
     return $query;

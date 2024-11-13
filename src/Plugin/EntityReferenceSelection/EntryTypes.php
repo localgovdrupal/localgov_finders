@@ -93,19 +93,27 @@ class EntryTypes extends SelectionPluginBase implements ContainerFactoryPluginIn
    * {@inheritdoc}
    */
   public function getReferenceableEntities($match = NULL, $match_operator = 'CONTAINS', $limit = 0) {
+    // The field can be instantiated without an entity, in which case we can't
+    // do anything.
+    if (!isset($this->configuration['entity'])) {
+      return $query;
+    }
+
     // Get the entity we are getting field values for.
     $host_entity = $this->configuration['entity'];
 
     $bundle_entity_type_id = $host_entity->getEntityType()->getBundleEntityType();
     $bundle_entity = $this->entityTypeManager->getStorage($bundle_entity_type_id)->load($host_entity->bundle());
-    $finder_type = $this->finderTypeManager->getBundleFinderType($bundle_entity);
+    $finder = $this->entityTypeManager->getStorage('finder')->getFinderForBundleEntity($bundle_entity);
 
-    $entry_bundles = $this->finderTypeManager->getEntryBundles($host_entity->getEntityType(), $finder_type);
+    if (!$finder) {
+      return [];
+    }
 
+    $entry_bundles = $finder->getEntryBundles();
     $options = [];
-
-    foreach ($entry_bundles as $entity_id => $entity) {
-      $options[$bundle_entity_type_id][$entity_id] = Html::escape($this->entityRepository->getTranslationFromContext($entity)->label());
+    foreach ($entry_bundles as $bundle_entity) {
+      $options[$bundle_entity_type_id][$bundle_entity->id()] = Html::escape($this->entityRepository->getTranslationFromContext($bundle_entity)->label());
     }
 
     return $options;

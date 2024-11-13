@@ -43,6 +43,17 @@ interface FinderInterface extends ConfigEntityInterface, EntityWithPluginCollect
   public function getChannelBundles(): array;
 
   /**
+   * Gets the IDs of the channel bundles.
+   *
+   * Note this assumes that this finder only contains channels of one entity
+   * type.
+   *
+   * @return array
+   *   An array of bundle IDs.
+   */
+  public function getChannelBundleIds(): array;
+
+  /**
    * Gets the entry bundle entities for this finder.
    *
    * @return \Drupal\Core\Config\Entity\ConfigEntityInterface[]

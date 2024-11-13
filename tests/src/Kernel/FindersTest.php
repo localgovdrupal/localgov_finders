@@ -157,6 +157,25 @@ class FindersTest extends KernelTestBase {
       FinderTypeBase::CHANNEL_SELECTION_FIELD => $channel->id(),
     ]);
     $entry->save();
+
+    // The possible values for the channels types field on the channel entity
+    // are the entry bundles for the finder.
+    $this->assertEquals(
+      [
+        'test_entry_bundle_one',
+        'test_entry_bundle_two',
+      ],
+      $channel->{FinderTypeBase::CHANNEL_TYPES_FIELD}->get(0)->getSettableValues()
+    );
+
+    // The possible values for the channels field on the entry entity
+    // are the channels that reference the entry entity's bundle.
+    $this->assertEquals(
+      [
+        $channel->id(),
+      ],
+      $entry->{FinderTypeBase::CHANNEL_SELECTION_FIELD}->get(0)->getSettableValues()
+    );
   }
 
   /**
