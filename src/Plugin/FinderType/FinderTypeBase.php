@@ -111,7 +111,7 @@ abstract class FinderTypeBase extends PluginBase implements FinderTypeInterface,
   public function getChannelFieldDefinitions(ConfigEntityInterface $bundle, FinderInterface $finder): array {
     $field_definitions = [];
 
-    if ($channel_types_field_definition = $this->getChannelTypesFieldDefinition($bundle)) {
+    if ($channel_types_field_definition = $this->getChannelTypesFieldDefinition($bundle, $finder)) {
       $field_definitions[$channel_types_field_definition->getName()] = $channel_types_field_definition;
     }
 
@@ -128,7 +128,7 @@ abstract class FinderTypeBase extends PluginBase implements FinderTypeInterface,
   public function getEntryFieldDefinitions(ConfigEntityInterface $bundle, FinderInterface $finder): array {
     $field_definitions = [];
 
-    if ($channels_selection_field_definition = $this->getChannelSelectionFieldDefinition($bundle)) {
+    if ($channels_selection_field_definition = $this->getChannelSelectionFieldDefinition($bundle, $finder)) {
       $field_definitions[$channels_selection_field_definition->getName()] = $channels_selection_field_definition;
     }
 
@@ -478,11 +478,12 @@ abstract class FinderTypeBase extends PluginBase implements FinderTypeInterface,
    *
    * @see \Drupal\finders\Plugin\EntityReferenceSelection\EntryTypes
    */
-  protected function getChannelTypesFieldDefinition(ConfigEntityInterface $bundle): ?BundleFieldDefinition {
+  protected function getChannelTypesFieldDefinition(ConfigEntityInterface $bundle, FinderInterface $finder): ?BundleFieldDefinition {
     $bundle_entity_type = $bundle->getEntityType();
-    // TODO: remove this assumption! channels and entries might not be the
-    // same entity type!
     $content_entity_type_id = $bundle_entity_type->getBundleOf();
+
+    $entry_entity_type_id = $finder->getEntryEntityTypeId();
+    $entry_entity_type = $this->entityTypeManager->getDefinition($entry_entity_type_id);
 
     return BundleFieldDefinition::create('entity_reference')
       ->setName(static::CHANNEL_TYPES_FIELD)
@@ -493,7 +494,9 @@ abstract class FinderTypeBase extends PluginBase implements FinderTypeInterface,
       ->setCardinality(BundleFieldDefinition::CARDINALITY_UNLIMITED)
       ->setSettings([
         'handler' => 'finders_entry_types',
-        'target_type' => $bundle_entity_type->id(),
+        // This field points to bundle entities of the entry entity type, e.g.
+        // if the entries are nodes, it points to node types.
+        'target_type' => $entry_entity_type->getBundleEntityType(),
       ])
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayOptions('form', [
@@ -556,9 +559,11 @@ abstract class FinderTypeBase extends PluginBase implements FinderTypeInterface,
    * @return \Drupal\finders\Field\BundleFieldDefinition|null
    *   The bundle field definition, or NULL if no field should be defined.
    */
-  protected function getChannelSelectionFieldDefinition(ConfigEntityInterface $bundle): ?BundleFieldDefinition {
+  protected function getChannelSelectionFieldDefinition(ConfigEntityInterface $bundle, FinderInterface $finder): ?BundleFieldDefinition {
     $bundle_entity_type = $bundle->getEntityType();
     $content_entity_type_id = $bundle_entity_type->getBundleOf();
+
+    $channel_entity_type_id = $finder->getChannelEntityTypeId();
 
     return BundleFieldDefinition::create('entity_reference')
       ->setName(static::CHANNEL_SELECTION_FIELD)
@@ -569,7 +574,7 @@ abstract class FinderTypeBase extends PluginBase implements FinderTypeInterface,
       ->setCardinality(BundleFieldDefinition::CARDINALITY_UNLIMITED)
       ->setSettings([
         'handler' => 'finders_channels',
-        'target_type' => $content_entity_type_id,
+        'target_type' => $channel_entity_type_id,
         'handler_settings' => [
           // We don't use this setting in our selection plugin, but the class it
           // inherits from does. Setting this to NULL means it skips its bundle
