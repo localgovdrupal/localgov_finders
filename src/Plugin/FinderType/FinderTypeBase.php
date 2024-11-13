@@ -414,6 +414,9 @@ abstract class FinderTypeBase extends PluginBase implements FinderTypeInterface,
       $configuration = $rendered_item_field->getConfiguration();
       $configuration['roles'][AccountInterface::ANONYMOUS_ROLE] = AccountInterface::ANONYMOUS_ROLE;
 
+      // Ensure at least an empty array.
+      $configuration['view_mode'][$datasource_id] ??= [];
+
       foreach ($entry_bundle_entities as $entry_bundle) {
         $configuration['view_mode'][$datasource_id][$entry_bundle->id()] = 'directory_index';
       }
