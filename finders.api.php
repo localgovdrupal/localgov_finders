@@ -23,8 +23,8 @@ use Drupal\views\ViewEntityInterface;
  *   These have not yet been declared to the field system.
  * @param \Drupal\Core\Config\Entity\ConfigEntityInterface $bundle_entity
  *   The bundle entity that is being configured as a channel.
- * @param \Drupal\finders\Plugin\FinderType\FinderTypeInterface $finder_type
- *   The finder type used for the bundle entity.
+ * @param \Drupal\finders\Entity\FinderInterface $finder
+ *   The finder entity.
  */
 function hook_finders_channel_fields_alter(array &$channel_field_definitions, ConfigEntityInterface $bundle_entity, FinderInterface $finder) {
   // Change the label of the finder channel types field.
@@ -61,8 +61,8 @@ function hook_finders_index_alter(IndexInterface $index, FinderInterface $finder
  * @param $index
  *   The search index. It has already been updated with configuration for the
  *   finder.
- * @param \Drupal\finders\Plugin\FinderType\FinderTypeInterface $finder_type
- *   The finder type used for the bundle entity.
+ * @param \Drupal\finders\Entity\FinderInterface $finder
+ *   The finder entity.
  */
 function hook_finders_view_alter(ViewEntityInterface $view, IndexInterface $index, FinderInterface $finder): void {
   // TODO: write sample code.
@@ -76,8 +76,8 @@ function hook_finders_view_alter(ViewEntityInterface $view, IndexInterface $inde
  *   These have not yet been declared to the field system.
  * @param \Drupal\Core\Config\Entity\ConfigEntityInterface $bundle_entity
  *   The bundle entity that is being configured as an entry.
- * @param \Drupal\finders\Plugin\FinderType\FinderTypeInterface $finder_type
- *   The finder type used for the bundle entity.
+ * @param \Drupal\finders\Entity\FinderInterface $finder
+ *   The finder entity.
  */
 function hook_finders_entry_fields_alter(array &$entry_field_definitions, ConfigEntityInterface $bundle_entity, FinderInterface $finder) {
   // Change the label of the finder channel selection field.

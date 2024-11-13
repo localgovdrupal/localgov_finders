@@ -159,8 +159,8 @@ class FinderConfigManager {
    *
    * @param \Drupal\Core\Config\Entity\ConfigEntityInterface $bundle_entity
    *   The bundle entity.
-   * @param \Drupal\finders\Plugin\FinderType\FinderTypeInterface $finder_type
-   *   The finder type for this bundle.
+   * @param \Drupal\finders\Entity\FinderInterface $finder
+   *   The finder entity.
    *
    * @return array
    *   An array of bundle field definitions.
@@ -186,8 +186,8 @@ class FinderConfigManager {
    *
    * @param \Drupal\Core\Config\Entity\ConfigEntityInterface $bundle_entity
    *   The bundle entity.
-   * @param \Drupal\finders\Plugin\FinderType\FinderTypeInterface $finder_type
-   *   The finder type for this bundle.
+   * @param \Drupal\finders\Entity\FinderInterface $finder
+   *   The finder entity.
    *
    * @return array
    *   An array of bundle field definitions.
@@ -284,8 +284,8 @@ class FinderConfigManager {
    *
    * @param \Drupal\Core\Config\Entity\ConfigEntityInterface $bundle_entity
    *   The entity bundle entity.
-   * @param \Drupal\finders\Plugin\FinderType\FinderTypeInterface $finder_type
-   *   The finder type plugin.
+   * @param \Drupal\finders\Entity\FinderInterface $finder
+   *   The finder entity.
    */
   protected function configureAsChannel(ConfigEntityInterface $bundle_entity, FinderInterface $finder): void {
     $entity_type_id = $bundle_entity->getEntityType()->getBundleOf();
@@ -329,8 +329,8 @@ class FinderConfigManager {
    *
    * @param \Drupal\Core\Config\Entity\ConfigEntityInterface $bundle_entity
    *   The entity bundle entity.
-   * @param \Drupal\finders\Plugin\FinderType\FinderTypeInterface $finder_type
-   *   The finder type plugin.
+   * @param \Drupal\finders\Entity\FinderInterface $finder
+   *   The finder entity.
    */
   protected function configureAsEntry(ConfigEntityInterface $bundle_entity, FinderInterface $finder): void {
     $entity_type_id = $bundle_entity->getEntityType()->getBundleOf();
