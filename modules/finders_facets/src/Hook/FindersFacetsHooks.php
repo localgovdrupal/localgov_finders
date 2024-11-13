@@ -5,8 +5,8 @@ namespace Drupal\finders_facets\Hook;
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
 use Drupal\Core\Hook\Attribute\Hook;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\finders\Entity\FinderInterface;
 use Drupal\finders\Field\BundleFieldDefinition;
-use Drupal\finders\Plugin\FinderType\FinderTypeInterface;
 
 /**
  * Contains hook implementations for the Finders facets module.
@@ -31,7 +31,7 @@ class FindersFacetsHooks {
    * Implements hook_finders_channel_fields_alter().
    */
   #[Hook('finders_channel_fields_alter')]
-  public function findersChannelFieldsAlter(array &$channel_field_definitions, ConfigEntityInterface $bundle_entity, FinderTypeInterface $finder_type) {
+  public function findersChannelFieldsAlter(array &$channel_field_definitions, ConfigEntityInterface $bundle_entity, FinderInterface $finder) {
     $bundle_entity_type = $bundle_entity->getEntityType();
     $content_entity_type_id = $bundle_entity_type->getBundleOf();
 
@@ -66,7 +66,7 @@ class FindersFacetsHooks {
    * Implements hook_finders_entry_fields_alter().
    */
   #[Hook('finders_entry_fields_alter')]
-  public function findersEntryFieldsAlter(array &$entry_field_definitions, ConfigEntityInterface $bundle_entity, FinderTypeInterface $finder_type) {
+  public function findersEntryFieldsAlter(array &$entry_field_definitions, ConfigEntityInterface $bundle_entity, FinderInterface $finder) {
     $bundle_entity_type = $bundle_entity->getEntityType();
     // ARGH! This won't work if channels and entries are different entity types!
     $content_entity_type_id = $bundle_entity_type->getBundleOf();

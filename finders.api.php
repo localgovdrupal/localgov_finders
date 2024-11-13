@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
+use Drupal\finders\Entity\FinderInterface;
 use Drupal\finders\Plugin\FinderType\FinderTypeInterface;
 
 /**
@@ -24,9 +25,10 @@ use Drupal\finders\Plugin\FinderType\FinderTypeInterface;
  * @param \Drupal\finders\Plugin\FinderType\FinderTypeInterface $finder_type
  *   The finder type used for the bundle entity.
  */
-function hook_finders_channel_fields_alter(array &$channel_field_definitions, ConfigEntityInterface $bundle_entity, FinderTypeInterface $finder_type) {
+function hook_finders_channel_fields_alter(array &$channel_field_definitions, ConfigEntityInterface $bundle_entity, FinderInterface $finder) {
   // Change the label of the finder channel types field.
-  $channel_field_definitions[$finder_type::CHANNEL_TYPES_FIELD]->setLabel(t('Enabled items'));
+  $finder_type_plugin = $finder->getFinderTypePlugin();
+  $channel_field_definitions[$finder_type_plugin::CHANNEL_TYPES_FIELD]->setLabel(t('Enabled items'));
 }
 
 /**
@@ -62,9 +64,10 @@ function hook_finders_index_alter($index, ConfigEntityInterface $bundle_entity, 
  * @param \Drupal\finders\Plugin\FinderType\FinderTypeInterface $finder_type
  *   The finder type used for the bundle entity.
  */
-function hook_finders_entry_fields_alter(array &$entry_field_definitions, ConfigEntityInterface $bundle_entity, FinderTypeInterface $finder_type) {
+function hook_finders_entry_fields_alter(array &$entry_field_definitions, ConfigEntityInterface $bundle_entity, FinderInterface $finder) {
   // Change the label of the finder channel selection field.
-  $entry_field_definitions[$finder_type::CHANNEL_SELECTION_FIELD]->setLabel(t('Directories'));
+  $finder_type_plugin = $finder->getFinderTypePlugin();
+  $entry_field_definitions[$finder_type_plugin::CHANNEL_SELECTION_FIELD]->setLabel(t('Directories'));
 }
 
 /**

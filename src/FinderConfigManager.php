@@ -170,7 +170,7 @@ class FinderConfigManager {
     $channel_field_definitions = $finder_type->getChannelFieldDefinitions($bundle_entity, $finder);
 
     // Allow modules to alter the channel field definitions.
-    \Drupal::moduleHandler()->alter('finders_channel_fields', $channel_field_definitions, $bundle_entity, $finder_type);
+    \Drupal::moduleHandler()->alter('finders_channel_fields', $channel_field_definitions, $bundle_entity, $finder);
 
     /** @var \Drupal\finders\Field\BundleFieldDefinition $field_definition */
     foreach ($channel_field_definitions as $field_definition) {
@@ -197,7 +197,7 @@ class FinderConfigManager {
     $entry_field_definitions = $finder_type->getEntryFieldDefinitions($bundle_entity, $finder);
 
     // Allow modules to alter the entry field definitions.
-    \Drupal::moduleHandler()->alter('finders_entry_fields', $entry_field_definitions, $bundle_entity, $finder_type);
+    \Drupal::moduleHandler()->alter('finders_entry_fields', $entry_field_definitions, $bundle_entity, $finder);
 
     /** @var \Drupal\finders\Field\BundleFieldDefinition $field_definition */
     foreach ($entry_field_definitions as $field_definition) {
