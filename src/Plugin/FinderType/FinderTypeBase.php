@@ -11,6 +11,7 @@ use Drupal\search_api\IndexInterface;
 use Drupal\search_api\Item\Field as SearchIndexField;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\finders\Entity\FinderInterface;
 use Drupal\search_api\Utility\PluginHelperInterface;
 use Drupal\views\ViewEntityInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -107,7 +108,7 @@ abstract class FinderTypeBase extends PluginBase implements FinderTypeInterface,
   /**
    * {@inheritdoc}
    */
-  public function getChannelFieldDefinitions(ConfigEntityInterface $bundle): array {
+  public function getChannelFieldDefinitions(ConfigEntityInterface $bundle, FinderInterface $finder): array {
     $field_definitions = [];
 
     if ($channel_types_field_definition = $this->getChannelTypesFieldDefinition($bundle)) {
@@ -124,7 +125,7 @@ abstract class FinderTypeBase extends PluginBase implements FinderTypeInterface,
   /**
    * {@inheritdoc}
    */
-  public function getEntryFieldDefinitions(ConfigEntityInterface $bundle): array {
+  public function getEntryFieldDefinitions(ConfigEntityInterface $bundle, FinderInterface $finder): array {
     $field_definitions = [];
 
     if ($channels_selection_field_definition = $this->getChannelSelectionFieldDefinition($bundle)) {

@@ -5,6 +5,7 @@ namespace Drupal\finders_geo\Plugin\FinderType;
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\finders\Attribute\FinderType;
+use Drupal\finders\Entity\FinderInterface;
 use Drupal\finders\Field\BundleFieldDefinition;
 use Drupal\finders\Plugin\FinderType\FinderTypeBase;
 use Drupal\search_api\IndexInterface;
@@ -52,8 +53,8 @@ class Geo extends FinderTypeBase {
   /**
    * {@inheritdoc}
    */
-  public function getChannelFieldDefinitions(ConfigEntityInterface $bundle): array {
-    $field_definitions = parent::getChannelFieldDefinitions($bundle);
+  public function getChannelFieldDefinitions(ConfigEntityInterface $bundle, FinderInterface $finder): array {
+    $field_definitions = parent::getChannelFieldDefinitions($bundle, $finder);
 
     $list_view_field = $this->getListViewFieldDefinition($bundle);
     $field_definitions[$list_view_field->getName()] = $list_view_field;

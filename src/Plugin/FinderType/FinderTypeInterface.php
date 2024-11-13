@@ -5,6 +5,7 @@ namespace Drupal\finders\Plugin\FinderType;
 use Drupal\Component\Plugin\DerivativeInspectionInterface;
 use Drupal\Component\Plugin\PluginInspectionInterface;
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
+use Drupal\finders\Entity\FinderInterface;
 use Drupal\search_api\IndexInterface;
 use Drupal\search_api\Item\Field as SearchIndexField;
 use Drupal\views\ViewEntityInterface;
@@ -37,7 +38,7 @@ interface FinderTypeInterface extends PluginInspectionInterface, DerivativeInspe
    *   An array of bundle field definitions, keyed by the field name. These may
    *   omit the target bundle as a convenience.
    */
-  public function getChannelFieldDefinitions(ConfigEntityInterface $bundle): array;
+  public function getChannelFieldDefinitions(ConfigEntityInterface $bundle, FinderInterface $finder): array;
 
   /**
    * Gets the bundle field definitions for a finder entry bundle.
@@ -51,7 +52,7 @@ interface FinderTypeInterface extends PluginInspectionInterface, DerivativeInspe
    *   An array of bundle field definitions, keyed by the field name. These may
    *   omit the target bundle as a convenience.
    */
-  public function getEntryFieldDefinitions(ConfigEntityInterface $bundle): array;
+  public function getEntryFieldDefinitions(ConfigEntityInterface $bundle, FinderInterface $finder): array;
 
   /**
    * Gets the Search API Index ID(s) for the finder.
