@@ -110,6 +110,10 @@ class FindersFacetTest extends KernelTestBase {
         ],
       ],
     ]);
+    // Save the finder now, so we test that updating an existing finder to have
+    // facets works properly.
+    $finder->save();
+
     $finder->setThirdPartySetting(
       'finders_facets',
       'facets',
