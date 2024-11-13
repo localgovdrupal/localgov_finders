@@ -1,0 +1,4 @@
+entity.finder.edit_form:
+  title: Edit
+  route_name: entity.finder.edit_form
+  base_route: entity.finder.edit_form

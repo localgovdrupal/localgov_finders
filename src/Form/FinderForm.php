@@ -4,11 +4,41 @@ namespace Drupal\finders\Form;
 
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\finders\FinderTypeManager;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides the default form handler for the Finder entity.
  */
 class FinderForm extends EntityForm {
+
+  /**
+   * The finder type manager.
+   *
+   * @var \Drupal\finders\FinderTypeManager
+   */
+  protected $finderTypeManager;
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('plugin.manager.finders_finder_type'),
+    );
+  }
+
+  /**
+   * Creates a FinderFormDummy instance.
+   *
+   * @param \Drupal\finders\FinderTypeManager $finder_type_manager
+   *   The finder type manager.
+   */
+  public function __construct(
+    FinderTypeManager $finder_type_manager,
+  ) {
+    $this->finderTypeManager = $finder_type_manager;
+  }
 
   /**
    * {@inheritdoc}
@@ -34,6 +64,27 @@ class FinderForm extends EntityForm {
         'source' => ['label'],
       ],
     ];
+
+    $finder_type_definitions = $this->finderTypeManager->getDefinitions();
+
+    // @todo Remove empty options when
+    // https://www.drupal.org/project/drupal/issues/3194345 is fixed in core.
+    $options = [
+      '' => $this->t('None'),
+    ];
+    $options += array_map(fn($definition) => $definition['label'], $finder_type_definitions);
+
+    $form['type'] = [
+      '#type' => 'radios',
+      '#title' => $this->t("Finder type"),
+      '#options' => $options,
+      '#empty_value' => '',
+      '#default_value' => $this->entity->get('type'),
+    ];
+
+    foreach ($finder_type_definitions as $finder_type_id => $definition) {
+      $form['type'][$finder_type_id]['#description'] = $definition['description'];
+    }
 
     return $form;
   }

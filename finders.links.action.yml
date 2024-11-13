@@ -1,0 +1,6 @@
+entity.finder.add:
+  title: Add Finder
+  route_name: entity.finder.add_form
+  weight: 15
+  appears_on:
+    - entity.finder.collection

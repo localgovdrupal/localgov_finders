@@ -1,0 +1,5 @@
+entity.finder.collection:
+  title: Finders
+  description: Create and manage fields, forms, and display settings for Finders.
+  route_name: entity.finder.collection
+  parent: system.admin_structure
