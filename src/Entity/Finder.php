@@ -158,11 +158,7 @@ class Finder extends ConfigEntityBase implements FinderInterface {
   }
 
   /**
-   * Gets the channel bundle entities for this finder.
-   *
-   * @return \Drupal\Core\Config\Entity\ConfigEntityInterface[]
-   *   A numeric array of bundle entities which are used as channels by this
-   *   finder.
+   * {@inheritdoc}
    */
   public function getChannelBundles(): array {
     $entity_type_manager = \Drupal::service('entity_type.manager');
@@ -179,11 +175,7 @@ class Finder extends ConfigEntityBase implements FinderInterface {
   }
 
   /**
-   * Gets the entry bundle entities for this finder.
-   *
-   * @return \Drupal\Core\Config\Entity\ConfigEntityInterface[]
-   *   A numeric array of bundle entities which are used as entries by this
-   *   finder.
+   * {@inheritdoc}
    */
   public function getEntryBundles(): array {
     $entity_type_manager = \Drupal::service('entity_type.manager');
