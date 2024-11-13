@@ -48,7 +48,7 @@ function hook_finders_channel_fields_alter(array &$channel_field_definitions, Co
  * @param \Drupal\finders\Plugin\FinderType\FinderTypeInterface $finder_type
  *   The finder type used for the bundle entity.
  */
-function hook_finders_index_alter($index, ConfigEntityInterface $bundle_entity, FinderTypeInterface $finder_type) {
+function hook_finders_index_alter($index, ConfigEntityInterface $bundle_entity, FinderInterface $finder) {
   // Change the boost on the index title field.
   $index->getField('title')->setBoost(10.0);
 }

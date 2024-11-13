@@ -256,10 +256,10 @@ class FinderConfigManager {
       assert($index instanceof IndexInterface);
       $finder_type->alterSearchIndex($index, $finder);
 
-      // Allow modules to alter the channel field definitions.
+      // Allow modules to alter the index.
       // This is a separate alter hook so that the bundle fields exist for
       // implementations of this hook to check.
-      // \Drupal::moduleHandler()->alter('finders_index', $index, $bundle_entity, $finder_type);
+      \Drupal::moduleHandler()->alter('finders_index', $index, $bundle_entity, $finder);
 
       $index->save();
 
