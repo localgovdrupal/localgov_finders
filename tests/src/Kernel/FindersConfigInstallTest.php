@@ -43,8 +43,8 @@ class FindersConfigInstallTest extends KernelTestBase {
 
     $this->installEntitySchema('search_api_task');
 
-    $this->installConfig('finders_test');
     $this->installEntitySchema('entity_test_with_bundle');
+    $this->installConfig('finders_test');
 
     $this->entityTypeManager = $this->container->get('entity_type.manager');
   }
@@ -59,6 +59,14 @@ class FindersConfigInstallTest extends KernelTestBase {
     ]);
     $channel->save();
     $this->assertTrue($channel->hasField(FinderTypeBase::CHANNEL_TYPES_FIELD));
+
+    $entry = $this->entityTypeManager->getStorage('entity_test_with_bundle')->create([
+      'name' => 'test entry',
+      'type' => 'finders_entry',
+    ]);
+    $entry->save();
+    $this->assertTrue($entry->hasField(FinderTypeBase::CHANNEL_SELECTION_FIELD));
+    $this->assertTrue($entry->hasField(FinderTypeBase::TITLE_SORT_FIELD));
   }
 
 }
