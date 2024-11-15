@@ -97,22 +97,8 @@ class EntityBundles extends FormElementBase implements ContainerFactoryPluginInt
     $entity_type_id_parents = $element['#parents'];
     $entity_type_id_parents[] = 'entity_type_id';
 
-    if ($selected_entity_type_id = $form_state->getValue([...$element['#parents'], 'entity_type_id'])) {
-      // A value set in the form by the user prior to an AJAX submission takes
-      // precedence.
-    }
-    elseif ($selected_entity_type_id = $form_state->getValue([...$element['#parents'], 'container', 'entity_type_id'])) {
-      // On a non-JS 'Choose' button submission, the valueCallback has not
-      // (yet?) run, and so our value is still inside the container. WTF.
-    }
-    elseif (isset($element['#default_value']['entity_type_id'])) {
-      // A default value in the form build.
-      $selected_entity_type_id = $element['#default_value']['entity_type_id'];
-    }
-    else {
-      // If we still don't have anything, use an empty value.
-      $selected_entity_type_id = '';
-    }
+    $default_entity_type_id = $element['#default_value']['entity_type_id'] ?? '';
+    $selected_entity_type_id = $form_state->getValue([...$element['#parents'], 'container', 'entity_type_id']) ?? $default_entity_type_id;
 
     $entity_type_options = [];
     foreach ($entity_type_manager->getDefinitions() as $entity_type_id => $entity_type) {
