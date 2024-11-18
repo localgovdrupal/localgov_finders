@@ -40,6 +40,7 @@ class EventFinderPluginTest extends KernelTestBase {
     'viewsreference',
     'datetime',
     'datetime_range',
+    'calendar_view',
     'date_recur',
     'computed_field',
     'date_recur_search_api',
@@ -139,7 +140,7 @@ class EventFinderPluginTest extends KernelTestBase {
 
     // A view has been created by the creation of the channel bundle, using the
     // ID from the plugin.
-    $view = $this->entityTypeManager->getStorage('view')->load('finders_events_channel_view');
+    $view = $this->entityTypeManager->getStorage('view')->load('finders_events_channel_list');
     $this->assertNotEmpty($view);
     $this->assertArrayHasKey('finders_title_sort', $view->getDisplay('default')['display_options']['sorts']);
     $this->assertArrayHasKey('finders_events_date_occurrence', $view->getDisplay('default')['display_options']['sorts']);
