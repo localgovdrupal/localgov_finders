@@ -99,11 +99,13 @@ class FinderForm extends EntityForm {
       $form['type'][$finder_type_id]['#description'] = $definition['description'];
     }
 
+    // These are required, but using #required will fail with disabling the
+    // existing items. This should instead be enforced at the config validation
+    // level.
     $form['channels'] = [
       '#type' => 'finders_entity_bundles',
       '#title' => $this->t('Channel bundles'),
       '#description' => $this->t("The bundles of the entities that will act as channels in this finder configuration."),
-      '#required' => TRUE,
     ];
     $channels = $this->entity->get('channels');
     if (!empty($channels)) {
@@ -117,7 +119,6 @@ class FinderForm extends EntityForm {
       '#type' => 'finders_entity_bundles',
       '#title' => $this->t('Entry bundles'),
       '#description' => $this->t("The bundles of the entities that will act as entries in this finder configuration."),
-      '#required' => TRUE,
     ];
     $entries = $this->entity->get('entries');
     if (!empty($entries)) {
