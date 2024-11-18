@@ -89,7 +89,8 @@ class ChannelViews extends SelectionPluginBase implements ContainerFactoryPlugin
     $host_entity_bundle_entity_type_id = $host_entity->getEntityType()->getBundleEntityType();
     $host_entity_bundle_entity = $this->entityTypeManager->getStorage($host_entity_bundle_entity_type_id)->load($host_entity->bundle());
 
-    $finder_type_plugin = $this->finderTypeManager->getBundleFinderType($host_entity_bundle_entity);
+    $finder_for_bundle = $this->entityTypeManager->getStorage('finder')->getFinderForBundleEntity($host_entity_bundle_entity);
+    $finder_type_plugin = $finder_for_bundle->getFinderTypePlugin();
 
     if (empty($finder_type_plugin)) {
       \Drupal::messenger()->addError('This entity selection plugin must be used on fields which are on a finder channel bundle.');
