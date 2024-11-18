@@ -131,6 +131,12 @@ class EntityBundles extends FormElementBase implements ContainerFactoryPluginInt
       ],
     ];
 
+    // Lock the entity type if it is set already -- finders do not yet support
+    // removal of channel or entry types.
+    if ($default_entity_type_id) {
+      $element['container']['entity_type_id']['#disabled'] = TRUE;
+    }
+
     // Non-JS support: button to choose the entity type.
     $array_parents = array_merge($element['#array_parents'], ['container', 'entity_type_id']);
     $element['container']['choose_entity_type_id'] = [
@@ -165,6 +171,13 @@ class EntityBundles extends FormElementBase implements ContainerFactoryPluginInt
         '#default_value' => $element['#default_value']['bundles'] ?? NULL,
         '#required' => $element['#required'],
       ];
+
+      // Lock the bundles that are already set.
+      if ($default_entity_type_id) {
+        foreach ($element['container']['bundles']['#default_value'] as $bundle) {
+          $element['container']['bundles'][$bundle]['#disabled'] = TRUE;
+        }
+      }
 
       if (empty($bundle_options)) {
         $element['container']['bundles']['#description'] = t('No bundles on the @entity-type entity type. Please select another.', [
