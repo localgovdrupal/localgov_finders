@@ -9,4 +9,5 @@ dependencies:
   - date_recur_modular:date_recur_modular
   - search_api:search_api
   - date_recur_search_api:date_recur_search_api
+  - calendar_view:calendar_view
   - finders:finders
