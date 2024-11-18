@@ -146,46 +146,50 @@ class Events extends FinderTypeBase {
   public function alterView(ViewEntityInterface $view, IndexInterface $index, FinderInterface $finder): void {
     parent::alterView($view, $index, $finder);
 
-    $default_display_configuration =& $view->getDisplay('default');
+    // Alter the list view. The calendar view is provided from a config
+    // template.
+    if ($view->id() == 'finders_events_channel_list') {
+      $default_display_configuration =& $view->getDisplay('default');
 
-    // Add the date occurrence sort, if our index has it, and avoiding to
-    // clobber existing configuration.
-    if (
-      $index->getField(static::EVENT_DATE_OCCURRENCE_FIELD)
-      && !isset($default_display_configuration['display_options']['sorts'][static::EVENT_DATE_OCCURRENCE_FIELD])
-    ) {
+      // Add the date occurrence sort, if our index has it, and avoiding to
+      // clobber existing configuration.
+      if (
+        $index->getField(static::EVENT_DATE_OCCURRENCE_FIELD)
+        && !isset($default_display_configuration['display_options']['sorts'][static::EVENT_DATE_OCCURRENCE_FIELD])
+      ) {
 
-      // Use Yaml to make it easier to sync config changes back into code.
-      $yaml_template = <<<'EOT'
-        id: EVENT_DATE_OCCURRENCE_FIELD
-        field: EVENT_DATE_OCCURRENCE_FIELD
-        relationship: none
-        group_type: group
-        admin_label: ''
-        order: ASC
-        exposed: false
-        expose:
-          label: ''
-        plugin_id: search_api
-        EOT;
+        // Use Yaml to make it easier to sync config changes back into code.
+        $yaml_template = <<<'EOT'
+          id: EVENT_DATE_OCCURRENCE_FIELD
+          field: EVENT_DATE_OCCURRENCE_FIELD
+          relationship: none
+          group_type: group
+          admin_label: ''
+          order: ASC
+          exposed: false
+          expose:
+            label: ''
+          plugin_id: search_api
+          EOT;
 
-      $date_sort = Yaml::decode($yaml_template);
+        $date_sort = Yaml::decode($yaml_template);
 
-      $date_sort['id'] = static::EVENT_DATE_OCCURRENCE_FIELD;
-      $date_sort['field'] = static::EVENT_DATE_OCCURRENCE_FIELD;
+        $date_sort['id'] = static::EVENT_DATE_OCCURRENCE_FIELD;
+        $date_sort['field'] = static::EVENT_DATE_OCCURRENCE_FIELD;
 
-      // Table name from search_api_views_data().
-      $date_sort['table'] = 'search_api_index_' . $index->id();
+        // Table name from search_api_views_data().
+        $date_sort['table'] = 'search_api_index_' . $index->id();
 
-      // Our date sort goes first. Take out any existing ones to put them back
-      // after.
-      $existing_sorts = $default_display_configuration['display_options']['sorts'];
-      $default_display_configuration['display_options']['sorts'] = [];
+        // Our date sort goes first. Take out any existing ones to put them back
+        // after.
+        $existing_sorts = $default_display_configuration['display_options']['sorts'];
+        $default_display_configuration['display_options']['sorts'] = [];
 
-      $default_display_configuration['display_options']['sorts'][static::EVENT_DATE_OCCURRENCE_FIELD] = $date_sort;
+        $default_display_configuration['display_options']['sorts'][static::EVENT_DATE_OCCURRENCE_FIELD] = $date_sort;
 
-      foreach ($existing_sorts as $key => $sort) {
-        $default_display_configuration['display_options']['sorts'][$key] = $sort;
+        foreach ($existing_sorts as $key => $sort) {
+          $default_display_configuration['display_options']['sorts'][$key] = $sort;
+        }
       }
     }
   }
