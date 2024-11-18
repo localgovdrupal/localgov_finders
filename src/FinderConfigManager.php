@@ -403,19 +403,22 @@ class FinderConfigManager {
     $config_source = new ConfigFileStorage($template_directory);
     $config_filename = 'views.view.' . $view_id;
 
-    // Fall back to the default index template if the finder type module does
-    // not provide a template for the view ID.
-    if (!$config_source->exists($config_filename)) {
+    if ($config_source->exists($config_filename)) {
+      $config_values = $config_source->read($config_filename);
+    }
+    else {
+      // Fall back to the default index template if the finder type module does
+      // not provide a template for the view ID.
       $template_directory = $this->moduleExtensionList->getPath('finders') . '/config/template';
       $config_source = new ConfigFileStorage($template_directory);
       $config_filename = 'views.view.finder_channel_template';
+
+      $config_values = $config_source->read($config_filename);
+
+      // Set the ID and label of the view.
+      $config_values['id'] = $view_id;
+      $config_values['label'] = $finder_type->getPluginDefinition()['label'];
     }
-
-    $config_values = $config_source->read($config_filename);
-
-    // Set the ID and label of the view.
-    $config_values['id'] = $view_id;
-    $config_values['label'] = $finder_type->getPluginDefinition()['label'];
 
     // Set the index as a config and cache dependency.
     $config_values['dependencies']['config'][] = $search_index->id();
