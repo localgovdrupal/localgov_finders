@@ -23,17 +23,17 @@ class LegacyDirectories extends FinderTypeBase {
   /**
    * {@inheritdoc}
    */
-  const string CHANNEL_TYPES_FIELD = 'localgov_directory_channel_types';
+  const CHANNEL_TYPES_FIELD = 'localgov_directory_channel_types';
 
   /**
    * {@inheritdoc}
    */
-  const string CHANNEL_SELECTION_FIELD = 'localgov_directory_channels';
+  const CHANNEL_SELECTION_FIELD = 'localgov_directory_channels';
 
   /**
    * {@inheritdoc}
    */
-  const string TITLE_SORT_FIELD = 'localgov_directory_title_sort';
+  const TITLE_SORT_FIELD = 'localgov_directory_title_sort';
 
   /**
    * {@inheritdoc}

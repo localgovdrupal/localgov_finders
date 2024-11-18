@@ -79,24 +79,24 @@ abstract class FinderTypeBase extends PluginBase implements FinderTypeInterface,
    *
    * @see self::getChannelTypesFieldDefinition()
    */
-  const string CHANNEL_TYPES_FIELD = 'finders_channel_types';
+  const CHANNEL_TYPES_FIELD = 'finders_channel_types';
 
   /**
    * The field name for the channel view field.
    */
-  const string VIEW_FIELD = 'finders_view';
+  const VIEW_FIELD = 'finders_view';
 
   /**
    * The field name for the channel selection field.
    *
    * @see self::getChannelSelectionFieldDefinition()
    */
-  const string CHANNEL_SELECTION_FIELD = 'finders_channels';
+  const CHANNEL_SELECTION_FIELD = 'finders_channels';
 
   /**
    * The field name for the title sort field.
    */
-  const string TITLE_SORT_FIELD = 'finders_title_sort';
+  const TITLE_SORT_FIELD = 'finders_title_sort';
 
   /**
    * {@inheritdoc}

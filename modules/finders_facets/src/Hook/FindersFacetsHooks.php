@@ -19,7 +19,7 @@ class FindersFacetsHooks {
   /**
    * Name of the field on entry entities for selecting facets.
    */
-  public const string FACET_SELECTION_FIELD = 'finders_facets_select';
+  public const FACET_SELECTION_FIELD = 'finders_facets_select';
 
   /**
    * Name of the search index field for filtering facets.
