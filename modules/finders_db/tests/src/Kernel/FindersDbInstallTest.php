@@ -23,7 +23,9 @@ class FindersDbInstallTest extends KernelTestBase {
   protected static $modules = [
     'system',
     'user',
-    'node',
+    'views',
+    'viewsreference',
+    'entity_test',
     'search_api',
     'search_api_db',
     'finders',
@@ -53,9 +55,10 @@ class FindersDbInstallTest extends KernelTestBase {
     parent::setUp();
 
     $this->installEntitySchema('search_api_task');
+    $this->installConfig('search_api');
 
     $this->installConfig('finders_test');
-    $this->installEntitySchema('node');
+    $this->installEntitySchema('entity_test_with_bundle');
 
     $this->entityTypeManager = $this->container->get('entity_type.manager');
     $this->moduleInstaller = $this->container->get('module_installer');
@@ -65,21 +68,51 @@ class FindersDbInstallTest extends KernelTestBase {
    * Tests installing the finders_db module.
    */
   public function testInstall() {
-    $channel_bundle = $this->entityTypeManager->getStorage('node_type')->create([
-      'type' => 'test_channel_bundle',
+    // Create bundles that will be channels and entries.
+    $channel_bundle = $this->entityTypeManager->getStorage('entity_test_bundle')->create([
+      'id' => 'test_channel_bundle',
+      'label' => 'Label',
       'status' => TRUE,
     ]);
-    $channel_bundle->setThirdPartySetting(
-      'finders',
-      'finder_type',
-      'test'
-    );
-    $channel_bundle->setThirdPartySetting(
-      'finders',
-      'finder_role',
-      'channel'
-    );
     $channel_bundle->save();
+
+    $entry_bundle_one = $this->entityTypeManager->getStorage('entity_test_bundle')->create([
+      'id' => 'test_entry_bundle_one',
+      'label' => 'Label',
+      'status' => TRUE,
+    ]);
+    $entry_bundle_one->save();
+    $entry_bundle_two = $this->entityTypeManager->getStorage('entity_test_bundle')->create([
+      'id' => 'test_entry_bundle_two',
+      'label' => 'Label',
+      'status' => TRUE,
+    ]);
+    $entry_bundle_two->save();
+
+    // Create a channel entity.
+    $channel = $this->entityTypeManager->getStorage('entity_test_with_bundle')->create([
+      'name' => 'test channel',
+      'type' => 'test_channel_bundle',
+    ]);
+    $channel->save();
+
+    $finder = $this->entityTypeManager->getStorage('finder')->create([
+      'id' => 'test',
+      'label' => 'Test',
+      'type' => 'test',
+      'channels' => [
+        'entity_test_with_bundle' => [
+          'test_channel_bundle',
+        ],
+      ],
+      'entries' => [
+        'entity_test_with_bundle' => [
+          'test_entry_bundle_one',
+          'test_entry_bundle_two',
+        ],
+      ],
+    ]);
+    $finder->save();
 
     // A search index has been created by the creation of the channel bundle.
     $search_index = Index::load('finders_index_default');
