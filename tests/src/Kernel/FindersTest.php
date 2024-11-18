@@ -143,6 +143,10 @@ class FindersTest extends KernelTestBase {
     $this->assertArrayHasKey('finders_title_sort', $view->getDisplay('default')['display_options']['sorts']);
     $this->assertArrayHasKey('finders_channels', $view->getDisplay('default')['display_options']['arguments']);
 
+    // Check API functions on the finder type manager.
+    $finder_type_manager = $this->container->get('plugin.manager.finders_finder_type');
+    $this->assertArrayHasKey('test', $finder_type_manager->getActiveFinderTypes());
+
     // At present unrestricted which test entity type bundles.
     $channel->{FinderTypeBase::CHANNEL_TYPES_FIELD} = $channels = [
       ['target_id' => 'test_entry_bundle_one'],

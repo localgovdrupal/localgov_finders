@@ -52,26 +52,6 @@ class FinderTypeManager extends DefaultPluginManager {
   }
 
   /**
-   * Gets the finder type plugin for an entity bundle entity.
-   *
-   * @param \Drupal\Core\Config\Entity\ConfigEntityInterface $bundle
-   *   The bundle entity.
-   *
-   * @return \Drupal\finders\Plugin\FinderType\FinderTypeInterface
-   *   A finder type plugin if the bundle entity has one set, or NULL otherwise.
-   */
-  public function getBundleFinderType(ConfigEntityInterface $bundle): ?FinderTypeInterface {
-    $finder_type_id = $bundle->getThirdPartySetting('finders', 'finder_type', '');
-
-    if ($finder_type_id) {
-      return $this->createInstance($finder_type_id);
-    }
-    else {
-      return NULL;
-    }
-  }
-
-  /**
    * Gets the bundle entities which are entries for the given finder type.
    *
    * For example, for the node entity type and the directories finder type, this
@@ -134,18 +114,14 @@ class FinderTypeManager extends DefaultPluginManager {
   /**
    * Gets all the active finder type plugins for a content entity type.
    *
-   * @param \Drupal\Core\Entity\EntityTypeInterface $content_entity_type
-   *   The content entity type to get finder plugins for.
-   *
    * @return \Drupal\finders\Plugin\FinderType\FinderTypeInterface[]
    *   An array of finder type plugins, keyed by the plugin ID.
    */
-  public function getActiveFinderTypes(EntityTypeInterface $content_entity_type): array {
+  public function getActiveFinderTypes(): array {
     $entity_type_manager = \Drupal::service('entity_type.manager');
-    $bundle_entity_type_id = $content_entity_type->getBundleEntityType();
-    $bundle_entities = $entity_type_manager->getStorage($bundle_entity_type_id)->loadMultiple();
+    $finder_entities = $entity_type_manager->getStorage('finder')->loadMultiple();
 
-    $finder_type_plugins = array_map($this->getBundleFinderType(...), $bundle_entities);
+    $finder_type_plugins = array_map(fn ($finder) => $finder->getFinderTypePlugin(), $finder_entities);
     $finder_type_plugins = array_filter($finder_type_plugins);
 
     $finder_type_plugins_keyed = [];

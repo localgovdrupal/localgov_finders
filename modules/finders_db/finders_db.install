@@ -18,9 +18,7 @@ function finders_db_install($is_syncing) {
 
   $server = $entity_type_manager->getStorage('search_api_server')->load('finders_default');
 
-  // Only work on node finder types (for now? Performance issues?)
-  $node_entity_type = $entity_type_manager->getDefinition('node');
-  $active_finder_types = $finder_type_manager->getActiveFinderTypes($node_entity_type);
+  $active_finder_types = $finder_type_manager->getActiveFinderTypes();
   /** @var \Drupal\finders\Plugin\FinderType\FinderTypeInterface $finder_type */
   foreach ($active_finder_types as $finder_type) {
     $index_ids = $finder_type->getIndexIds();
@@ -55,9 +53,7 @@ function finders_db_uninstall($is_syncing) {
   $entity_type_manager = \Drupal::service('entity_type.manager');
   $finder_type_manager = \Drupal::service('plugin.manager.finders_finder_type');
 
-  // Only work on node finder types (for now? Performance issues?)
-  $node_entity_type = $entity_type_manager->getDefinition('node');
-  $active_finder_types = $finder_type_manager->getActiveFinderTypes($node_entity_type);
+  $active_finder_types = $finder_type_manager->getActiveFinderTypes();
   /** @var \Drupal\finders\Plugin\FinderType\FinderTypeInterface $finder_type */
   foreach ($active_finder_types as $finder_type) {
     $index_ids = $finder_type->getIndexIds();
