@@ -28,6 +28,10 @@ use Drupal\views\ResultRow;
  *    style options.
  * 5. Add other fields as required.
  *
+ * @todo Figure out how to make isDateField() work with any SearchAPI field, and
+ * then make that into a patch for calendar_view module, and remove the need for
+ * this plugin.
+ *
  * @see https://www.drupal.org/project/calendar_view/issues/3488137
  */
 #[ViewsStyle(
