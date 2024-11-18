@@ -3,6 +3,10 @@ services:
     class: Drupal\finders_facets\Hook\FindersFacetsHooks
     autowire: true
 
+  Drupal\finders_facets\Hook\FindersFormAlterHooks:
+    class: Drupal\finders_facets\Hook\FindersFormAlterHooks
+    autowire: true
+
   finders_facets.event_subscriber:
     class: Drupal\finders_facets\EventSubscriber\FindersFacetsConfigSubscriber
     arguments: ['@config.storage', '@config.storage.sync']
