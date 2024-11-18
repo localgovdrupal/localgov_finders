@@ -73,6 +73,10 @@ class EntityBundles extends FormElementBase implements ContainerFactoryPluginInt
         [$class, 'processEntityBundles'],
       ],
       '#options_element_type' => 'select',
+      // These allow the form to disable values that are already set on the
+      // Finder entity.
+      '#disable_entity_type' => FALSE,
+      '#disabled_bundles' => [],
     ];
   }
 
@@ -133,8 +137,8 @@ class EntityBundles extends FormElementBase implements ContainerFactoryPluginInt
 
     // Lock the entity type if it is set already -- finders do not yet support
     // removal of channel or entry types.
-    if ($default_entity_type_id) {
-      // $element['container']['entity_type_id']['#disabled'] = TRUE;
+    if ($element['#disable_entity_type']) {
+      $element['container']['entity_type_id']['#disabled'] = TRUE;
     }
 
     // Non-JS support: button to choose the entity type.
@@ -173,10 +177,8 @@ class EntityBundles extends FormElementBase implements ContainerFactoryPluginInt
       ];
 
       // Lock the bundles that are already set.
-      if ($default_entity_type_id) {
-        foreach ($element['container']['bundles']['#default_value'] as $bundle) {
-          // $element['container']['bundles'][$bundle]['#disabled'] = TRUE;
-        }
+      foreach ($element['#disabled_bundles'] as $bundle) {
+        $element['container']['bundles'][$bundle]['#disabled'] = TRUE;
       }
 
       if (empty($bundle_options)) {

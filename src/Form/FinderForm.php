@@ -4,6 +4,7 @@ namespace Drupal\finders\Form;
 
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\finders\FinderTypeManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -12,6 +13,13 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * Provides the default form handler for the Finder entity.
  */
 class FinderForm extends EntityForm {
+
+  /**
+   * The entity type manager.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected $entityTypeManager;
 
   /**
    * The finder type manager.
@@ -26,6 +34,7 @@ class FinderForm extends EntityForm {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('plugin.manager.finders_finder_type'),
+      $container->get('entity_type.manager'),
     );
   }
 
@@ -37,8 +46,10 @@ class FinderForm extends EntityForm {
    */
   public function __construct(
     FinderTypeManager $finder_type_manager,
+    EntityTypeManagerInterface $entity_type_manager,
   ) {
     $this->finderTypeManager = $finder_type_manager;
+    $this->entityTypeManager = $entity_type_manager;
   }
 
   /**
@@ -102,7 +113,6 @@ class FinderForm extends EntityForm {
       ];
     }
 
-
     $form['entries'] = [
       '#type' => 'finders_entity_bundles',
       '#title' => $this->t('Entry bundles'),
@@ -117,7 +127,19 @@ class FinderForm extends EntityForm {
       ];
     }
 
-    // TODO: disable existing channels and entry bundles.
+    // Disable existing channels and entry bundles. We don't currently support
+    // removing bundles from a finder.
+    if (!$this->entity->isNew()) {
+      $original = $this->entityTypeManager->getStorage('finder')->load($this->entity->id());
+
+      $original_channels = $original->get('channels');
+      $form['channels']['#disable_entity_type'] = TRUE;
+      $form['channels']['#disabled_bundles'] = $original_channels[array_key_first($original_channels)];
+
+      $original_entries = $original->get('entries');
+      $form['entries']['#disable_entity_type'] = TRUE;
+      $form['entries']['#disabled_bundles'] = $original_entries[array_key_first($original_entries)];
+    }
 
     return $form;
   }
