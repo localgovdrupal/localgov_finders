@@ -114,6 +114,10 @@ class FindersFacetsHooks {
    */
   #[Hook('finders_index_alter')]
   public function findersIndexAlter(IndexInterface $index, FinderInterface $finder): void {
+    if (!$this->isFinderEnabledWithFacets($finder)) {
+      return;
+    }
+
     if ($index->getField(static::FACET_INDEXING_FIELD)) {
       return;
     }
@@ -140,6 +144,10 @@ class FindersFacetsHooks {
    */
   #[Hook('finders_view_alter')]
   public function findersViewAlter(ViewEntityInterface $view, IndexInterface $index, FinderInterface $finder): void {
+    if (!$this->isFinderEnabledWithFacets($finder)) {
+      return;
+    }
+
   }
 
   /**
