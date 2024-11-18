@@ -71,7 +71,8 @@ class Events extends FinderTypeBase {
    */
   public function getViewIds(IndexInterface $search_index): array {
     return [
-      'finders_events_channel_view',
+      'finders_events_channel_list',
+      'finders_events_channel_calendar',
     ];
   }
 
