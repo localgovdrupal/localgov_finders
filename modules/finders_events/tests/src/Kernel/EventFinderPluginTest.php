@@ -138,14 +138,20 @@ class EventFinderPluginTest extends KernelTestBase {
     $this->assertArrayHasKey('finders_channels', $fields);
     $this->assertArrayHasKey('finders_events_date_occurrence', $fields);
 
-    // A view has been created by the creation of the channel bundle, using the
-    // ID from the plugin.
+    // A list view has been created by the creation of the channel bundle, using
+    // the ID from the plugin.
     $view = $this->entityTypeManager->getStorage('view')->load('finders_events_channel_list');
     $this->assertNotEmpty($view);
     $this->assertArrayHasKey('finders_title_sort', $view->getDisplay('default')['display_options']['sorts']);
     $this->assertArrayHasKey('finders_events_date_occurrence', $view->getDisplay('default')['display_options']['sorts']);
     $this->assertEquals(['finders_events_date_occurrence', 'search_api_relevance', 'finders_title_sort'], array_keys($view->getDisplay('default')['display_options']['sorts']));
     $this->assertArrayHasKey('finders_channels', $view->getDisplay('default')['display_options']['arguments']);
+
+    // A calendar view has been created by the creation of the channel bundle,
+    // using the template from this module.
+    $view = $this->entityTypeManager->getStorage('view')->load('finders_events_channel_calendar');
+    $this->assertNotEmpty($view);
+    $this->assertEquals('finders_events_calendar_month', $view->getDisplay('default')['display_options']['style']['type']);
   }
 
 }
