@@ -371,7 +371,7 @@ abstract class FinderTypeBase extends PluginBase implements FinderTypeInterface,
     $entry_entity_type_id = $finder->getEntryEntityTypeId();
     if (!$index->getField(static::CHANNEL_SELECTION_FIELD)) {
       $channel_selection_field = new SearchIndexField($index, static::CHANNEL_SELECTION_FIELD);
-      $channel_selection_field->setLabel('Directory channels');
+      $channel_selection_field->setLabel('Finder channels');
       $channel_selection_field->setDatasourceId($datasource_id);
       $channel_selection_field->setPropertyPath(static::CHANNEL_SELECTION_FIELD);
       $channel_selection_field->setType('string');
@@ -569,7 +569,7 @@ abstract class FinderTypeBase extends PluginBase implements FinderTypeInterface,
     return BundleFieldDefinition::create('entity_reference')
       ->setName(static::CHANNEL_SELECTION_FIELD)
       ->setTargetEntityTypeId($content_entity_type_id)
-      ->setLabel(t('Directory channels'))
+      ->setLabel(t('Finder channels'))
       ->setRequired(FALSE)
       ->setTranslatable(FALSE)
       ->setCardinality(BundleFieldDefinition::CARDINALITY_UNLIMITED)
