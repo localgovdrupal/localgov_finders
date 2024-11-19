@@ -60,10 +60,10 @@ processor_configs:
       sort: 40
     settings:
       sort: ASC
-  hierarchy_processor:
-    processor_id: hierarchy_processor
+  translate_entity:
+    processor_id: translate_entity
     weights:
-      build: 100
+      build: 5
     settings: {  }
   url_processor_handler:
     processor_id: url_processor_handler
