@@ -97,7 +97,7 @@ class FindersFacetsHooks {
       ->setCardinality(BundleFieldDefinition::CARDINALITY_UNLIMITED)
       ->setSettings([
         'target_type' => 'finders_facet',
-        // 'handler' => 'finders_facets_selection',
+        'handler' => 'finders_facets_facets',
         'handler_settings' => [
           'target_bundles' => NULL, // REMOVE!
           'auto_create' => FALSE,
