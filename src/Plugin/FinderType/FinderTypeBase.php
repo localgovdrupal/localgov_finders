@@ -583,7 +583,7 @@ abstract class FinderTypeBase extends PluginBase implements FinderTypeInterface,
           'target_bundles' => NULL,
           'sort' => [
             'field' => $content_entity_type->getKey('label'),
-            'direction' => 'DESC',
+            'direction' => 'ASC',
           ],
         ],
       ])
