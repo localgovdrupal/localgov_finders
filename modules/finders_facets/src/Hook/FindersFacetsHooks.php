@@ -196,7 +196,9 @@ class FindersFacetsHooks {
       $views = $this->entityTypeManager->getStorage('view')->loadMultiple($view_ids);
 
       foreach ($views as $view) {
-        $facet_id = 'finders_' . $index->id() . '_' . $view->id();
+        // No need to prefix with 'finders'; the index ID should already have
+        // that.
+        $facet_id = $index->id() . '_' . $view->id();
 
         // Do not overwrite an existing facet.
         $facet = $facet_storage->load($facet_id);
@@ -207,7 +209,7 @@ class FindersFacetsHooks {
         // Copy the template and replace values.
         $facet_values = $facet_template_config_values;
 
-        $facet_values['id'] = 'finders_' . $index->id() . '_' . $view->id();
+        $facet_values['id'] = $facet_id;
         $facet_values['name'] = 'Finders - ' . $finder_type->getPluginDefinition()['label'] . ' - ' . $view->id();
 
         $facet_values['dependencies']['config'] = [

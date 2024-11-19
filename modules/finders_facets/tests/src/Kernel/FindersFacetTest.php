@@ -136,6 +136,10 @@ class FindersFacetTest extends KernelTestBase {
 
     // The facets field has been added to the search index.
     $this->assertArrayHasKey('finders_facets_filter', $fields);
+
+    // The facet has been created.
+    $facet = $this->entityTypeManager->getStorage('facets_facet')->load('finders_index_default_finders_channel_view');
+    $this->assertNotEmpty($facet);
   }
 
 }
