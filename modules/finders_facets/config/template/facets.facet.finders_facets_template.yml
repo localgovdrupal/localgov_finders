@@ -2,13 +2,13 @@ uuid: d51ab6de-b6df-4374-96d6-b8dcee222808
 langcode: en
 status: true
 dependencies:
-  config:
-    - search_api.index.finders_index_events
-    - views.view.finders_events_channel_list
+  config: {  }
+    # - search_api.index.ID
+    # - views.view.ID
   module:
     - search_api
-id: finders_facets
-name: 'Finders facets'
+id: localgov_directories_facets
+name: REPLACE
 weight: 0
 min_count: 1
 missing: false
