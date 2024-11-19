@@ -322,14 +322,6 @@ class FinderConfigManager {
         $this->fieldDefinitionListener->onFieldDefinitionCreate($field_definition);
       }
     }
-
-    // fields:
-    // localgov_directory_channels
-    // localgov_directory_facets_select
-    // localgov_directory_title_sort
-
-    // TODO:
-    // Create config.
   }
 
   /**
