@@ -28,21 +28,21 @@ class FindersFormAlterHooks {
     ];
 
     foreach (Element::children($form['actions']) as $action) {
-      $form['actions'][$action]['#validate'][] = static::class . '::validate';
-      $form['actions'][$action]['#submit'][] = static::class . '::submit';
+      $form['actions'][$action]['#validate'][] = static::class . '::finderFormValidate';
+      $form['actions'][$action]['#submit'][] = static::class . '::finderFormsubmit';
     }
   }
 
   /**
-   * {@inheritdoc}
+   * Form validate handler for the finder form alteration.
    */
-  public static function validate(array $form, FormStateInterface $form_state): void {
+  public static function finderFormValidate(array $form, FormStateInterface $form_state): void {
   }
 
   /**
-   * {@inheritdoc}
+   * Form submit handler for the finder form alteration.
    */
-  public static function submit(array $form, FormStateInterface $form_state): void {
+  public static function finderFormsubmit(array $form, FormStateInterface $form_state): void {
     $finder = $form_state->getFormObject()->getEntity();
 
     if (empty($form_state->getValue(['facets']))) {
