@@ -25,7 +25,7 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
   multiple_values: TRUE,
   weight: '-10',
 )]
-class FinderChannel extends OptionsWidgetBase {
+class Channels extends OptionsWidgetBase {
   /**
    * {@inheritdoc}
    */
