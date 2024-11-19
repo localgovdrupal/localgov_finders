@@ -9,18 +9,17 @@ use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\Plugin\Field\FieldWidget\OptionsWidgetBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
-use Drupal\finders_facets\Entity\LocalgovDirectoriesFacetsType;
 use Drupal\finders_facets\Hook\FindersFacetsHooks;
-use Drupal\node\Entity\Node;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Display available facet options by selected channel.
  *
+ * This is updated when the channel field widget's value changes, to reflect the
+ * facet types that are enabled in the selected channels.
+ *
  * Grouping by entity reference by bundle would also be solved by
  * https://www.drupal.org/project/drupal/issues/2269823
- *
- * This is updated when the channel field widget's value changes.
  *
  * @see \Drupal\finders_facets\Hook\FindersFacetsWidgetAlterHooks
  */
@@ -91,7 +90,6 @@ class Facets extends OptionsWidgetBase {
     $element = parent::formElement($items, $delta, $element, $form, $form_state);
 
     $options = $this->getOptions($items->getEntity());
-    // dsm($options);
     // Trying to imagine the best way round this.
     //
     // EntityReferenceItem::getSettableOptions() called by ::getOptions()
