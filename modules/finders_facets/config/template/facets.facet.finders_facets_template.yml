@@ -2,19 +2,19 @@ langcode: en
 status: true
 dependencies:
   config: {  }
-    # - search_api.index.ID
-    # - views.view.ID
+    # - search_api.index.INDEX_ID
+    # - views.view.VIEW_ID
   module:
     - search_api
-id: localgov_directories_facets
+id: REPLACE
 name: REPLACE
 weight: 0
 min_count: 1
 missing: false
 missing_label: others
 url_alias: finders_facets
-facet_source_id: 'search_api:views_embed__localgov_directory_channel__node_embed' REPLACE
-field_identifier: finders_facets_filter REPLACE
+facet_source_id: 'search_api:views_embed__VIEW_ID__DISPLAY_ID'
+field_identifier: finders_facets_filter
 query_operator: or
 hard_limit: 0
 exclude: false
