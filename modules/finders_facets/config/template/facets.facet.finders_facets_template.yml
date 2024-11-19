@@ -71,3 +71,7 @@ processor_configs:
       pre_query: 50
       build: 15
     settings: {  }
+  finders_facets_weight_order:
+    processor_id: finders_facets_weight_order
+    weights:
+      build: -5
