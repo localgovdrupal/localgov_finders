@@ -241,8 +241,8 @@ display:
       tags:
         - 'config:search_api.index.finders_index_events'
         - 'search_api_list:finders_index_events'
-  embed_1:
-    id: embed_1
+  channel_embed:
+    id: channel_embed
     display_title: Embed
     display_plugin: embed
     position: 2
