@@ -589,7 +589,7 @@ abstract class FinderTypeBase extends PluginBase implements FinderTypeInterface,
       ])
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayOptions('form', [
-        'type' => 'options_buttons',
+        'type' => 'finders_channels',
       ]);
   }
 
