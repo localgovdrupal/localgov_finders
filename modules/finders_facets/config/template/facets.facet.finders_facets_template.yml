@@ -13,8 +13,8 @@ min_count: 1
 missing: false
 missing_label: others
 url_alias: finders_facets
-facet_source_id: 'search_api:views_embed__finders_events_channel_list__channel_embed'
-field_identifier: finders_facets_filter
+facet_source_id: 'search_api:views_embed__localgov_directory_channel__node_embed' REPLACE
+field_identifier: finders_facets_filter REPLACE
 query_operator: or
 hard_limit: 0
 exclude: false
