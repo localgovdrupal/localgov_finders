@@ -272,9 +272,9 @@ display:
         - 'user.node_grants:view'
       tags: {  }
       #   - 'config:search_api.index.SEARCH_INDEX_ID'
-  node_embed:
+  channel_embed:
     display_plugin: embed
-    id: node_embed
+    id: channel_embed
     display_title: Embed
     position: 1
     display_options:
