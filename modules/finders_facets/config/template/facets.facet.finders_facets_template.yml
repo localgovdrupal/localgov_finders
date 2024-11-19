@@ -12,6 +12,9 @@ weight: 0
 min_count: 1
 missing: false
 missing_label: others
+# Assume that there will only be one channel visible at a time.
+# If one channel has multiple views, the facets intentionally use the same URL
+# alias, so that one shown facet can control all the views.
 url_alias: finders_facets
 facet_source_id: 'search_api:views_embed__VIEW_ID__DISPLAY_ID'
 field_identifier: finders_facets_filter
