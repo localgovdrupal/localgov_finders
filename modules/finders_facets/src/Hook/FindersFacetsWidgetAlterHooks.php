@@ -61,8 +61,8 @@ class FindersFacetsWidgetAlterHooks {
     $form_state->setRebuild();
 
     $renderer = \Drupal::service('renderer');
-    // Render just this field, alone, no matter how it's placed on the form.
-    $field = $form['localgov_directory_facets_select'];
+    // Render just the facets field, alone, no matter how it's placed on the form.
+    $field = $form[FindersFacetsHooks::FACET_SELECTION_FIELD];
     unset($field['#parents']);
     unset($field['#group']);
     unset($field['#groups']);

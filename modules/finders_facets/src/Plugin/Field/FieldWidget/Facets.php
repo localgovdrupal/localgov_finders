@@ -91,7 +91,7 @@ class Facets extends OptionsWidgetBase {
     $element = parent::formElement($items, $delta, $element, $form, $form_state);
 
     $options = $this->getOptions($items->getEntity());
-    dsm($options);
+    // dsm($options);
     // Trying to imagine the best way round this.
     //
     // EntityReferenceItem::getSettableOptions() called by ::getOptions()
@@ -116,6 +116,7 @@ class Facets extends OptionsWidgetBase {
     $bundle_entity_type_id = $host_entity->getEntityType()->getBundleEntityType();
     $bundle_entity = $this->entityTypeManager->getStorage($bundle_entity_type_id)->load($host_entity->bundle());
     $finder = $this->entityTypeManager->getStorage('finder')->getFinderForBundleEntity($bundle_entity);
+
     /** @var \Drupal\finders\Plugin\FinderType\FinderTypeInterface $finder_type_plugin */
     $finder_type_plugin = $finder->getFinderTypePlugin();
 
@@ -125,20 +126,15 @@ class Facets extends OptionsWidgetBase {
     // Get the enabled facet types from the host entity's channels.
     $enabled = [];
     if ($user_input = $form_state->getValue($channel_field_name)) {
+      $entity_ids = array_column($user_input, 'target_id');
+
       // If there is user input in the form, use the selected channels.
-      dump($user_input);
+      $channel_entity_type_id = $finder->getChannelEntityTypeId();
+      $channel_entities = $this->entityTypeManager->getStorage($channel_entity_type_id)->loadMultiple($entity_ids);
 
-      // NEEDS WORK FROM HERE
-      // Expects input from the channels widget.
-
-      foreach ($user_input as $user_input_nid) {
-        // TODO!
-        if ($user_input_nid['target_id'] && ($channel = Node::load($user_input_nid['target_id']))) {
-          foreach ($channel->localgov_directory_facets_enable as $facet_item) {
-            $facet = $facet_item->entity;
-            assert($facet instanceof LocalgovDirectoriesFacetsType);
-            $enabled[$facet->label()] = $facet->label();
-          }
+      foreach ($channel_entities as $channel_entity) {
+        foreach ($channel_entity->get($facet_types_enabled_field_name)->referencedEntities() as $facet_type) {
+          $enabled[$facet_type->label()] = $facet_type->label();
         }
       }
     }
