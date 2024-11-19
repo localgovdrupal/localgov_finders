@@ -8,7 +8,6 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\facets\Processor\SortProcessorPluginBase;
 use Drupal\facets\Result\ResultInterface;
-use Drupal\localgov_directories\Constants as Directory;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -27,22 +26,18 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class WeightOrderProcessor extends SortProcessorPluginBase implements ContainerFactoryPluginInterface {
 
   /**
-   * Constructs a new object.
+   * Mapping between facet id and facet weight.
    *
-   * @param array $configuration
-   *   A configuration array containing information about the plugin instance.
-   * @param string $plugin_id
-   *   The plugin_id for the plugin instance.
-   * @param mixed $plugin_definition
-   *   The plugin implementation definition.
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
-   *   The entity type manager.
+   * @var array
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityTypeManagerInterface $entity_type_manager) {
-    parent::__construct($configuration, $plugin_id, $plugin_definition);
+  protected $facetsWeightMap = [];
 
-    $this->dirFacetStorage = $entity_type_manager->getStorage(Directory::FACET_CONFIG_ENTITY_ID);
-  }
+  /**
+   * The entity type manager.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected $entityTypeManager;
 
   /**
    * {@inheritdoc}
@@ -57,18 +52,22 @@ class WeightOrderProcessor extends SortProcessorPluginBase implements ContainerF
   }
 
   /**
-   * LocalGov Directory Facets entity storage.
+   * Constructs a new object.
    *
-   * @var \Drupal\Core\Entity\EntityStorageInterface
+   * @param array $configuration
+   *   A configuration array containing information about the plugin instance.
+   * @param string $plugin_id
+   *   The plugin_id for the plugin instance.
+   * @param mixed $plugin_definition
+   *   The plugin implementation definition.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager.
    */
-  protected $dirFacetStorage;
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityTypeManagerInterface $entity_type_manager) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
 
-  /**
-   * Mapping between facet id and facet weight.
-   *
-   * @var array
-   */
-  protected $facetsWeightMap = [];
+    $this->entityTypeManager = $entity_type_manager;
+  }
 
   /**
    * {@inheritdoc}
@@ -76,7 +75,6 @@ class WeightOrderProcessor extends SortProcessorPluginBase implements ContainerF
    * Compare *Facet items* by the value of their *weight* property.
    */
   public function sortResults(ResultInterface $a, ResultInterface $b) {
-
     $a_facet_id = $a->getRawValue();
     $b_facet_id = $b->getRawValue();
 
@@ -102,14 +100,15 @@ class WeightOrderProcessor extends SortProcessorPluginBase implements ContainerF
    * Facet item.
    */
   protected function loadFacetWeightsOnce(int|string $a_facet_id, int|string $b_facet_id): void {
+    $facet_storage = $this->entityTypeManager->getStorage('finders_facet');
 
     if (!array_key_exists($a_facet_id, $this->facetsWeightMap)) {
-      $a_facet_entity = $this->dirFacetStorage->load($a_facet_id);
+      $a_facet_entity = $facet_storage->load($a_facet_id);
       $this->facetsWeightMap[$a_facet_id] = $a_facet_entity->get('weight')->value ?? 0;
     }
 
     if (!array_key_exists($b_facet_id, $this->facetsWeightMap)) {
-      $b_facet_entity = $this->dirFacetStorage->load($b_facet_id);
+      $b_facet_entity = $facet_storage->load($b_facet_id);
       $this->facetsWeightMap[$b_facet_id] = $b_facet_entity->get('weight')->value ?? 0;
     }
   }
