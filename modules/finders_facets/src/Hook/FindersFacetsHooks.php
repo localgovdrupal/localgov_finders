@@ -17,6 +17,11 @@ use Drupal\views\ViewEntityInterface;
 class FindersFacetsHooks {
 
   /**
+   * Name of the field on channel entities for enabling facet types.
+   */
+  public const FACET_ENABLE_FIELD = 'finders_facets_enable';
+
+  /**
    * Name of the field on entry entities for selecting facets.
    */
   public const FACET_SELECTION_FIELD = 'finders_facets_select';
@@ -53,8 +58,8 @@ class FindersFacetsHooks {
     }
 
     // Add the enabled facets field to a channel bundle.
-    $channel_field_definitions['finders_facets_enable'] = BundleFieldDefinition::create('entity_reference')
-      ->setName('finders_facets_enable')
+    $channel_field_definitions[static::FACET_ENABLE_FIELD] = BundleFieldDefinition::create('entity_reference')
+      ->setName(static::FACET_ENABLE_FIELD)
       ->setTargetEntityTypeId($content_entity_type_id)
       ->setLabel(t('Enabled Facets'))
       ->setDescription(t('Which facets are enabled to be shown on this directory channel, and will be added when editing content to be added to this directory.'))
