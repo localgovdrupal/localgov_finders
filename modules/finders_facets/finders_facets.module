@@ -84,3 +84,13 @@ function finders_facets_finders_index_alter(IndexInterface $index, FinderInterfa
 function finders_facets_finders_view_alter(ViewEntityInterface $view, IndexInterface $index, FinderInterface $finder): void {
   \Drupal::service(FindersFacetsHooks::class)->findersViewAlter($view, $index, $finder);
 }
+
+/**
+ * Legacy hook implementation.
+ *
+ * @todo Remove this method when support for Drupal core < 11.1 is dropped.
+ */
+#[LegacyHook]
+function finders_facets_finders_post_configure(FinderInterface $finder) {
+  \Drupal::service(FindersFacetsHooks::class)->findersPostConfigure($finder);
+}
