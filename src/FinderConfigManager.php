@@ -263,7 +263,7 @@ class FinderConfigManager {
       }
     }
 
-    \Drupal::moduleHandler()->invokeAll('finders_post_configure', $finder);
+    \Drupal::moduleHandler()->invokeAll('finders_post_configure', [$finder]);
   }
 
   /**
