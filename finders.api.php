@@ -86,6 +86,19 @@ function hook_finders_entry_fields_alter(array &$entry_field_definitions, Config
 }
 
 /**
+ * Act after a finder has been configured.
+ *
+ * This is invoked after a finder has had its fields set up, and its search
+ * indexes and views created or updated.
+ *
+ * @param \Drupal\finders\Entity\FinderInterface $finder
+ *   The finder entity.
+ */
+function hook_finders_post_configure(FinderInterface $finder) {
+  // TODO: write sample code.
+}
+
+/**
  * Perform alterations on Finder Type definitions.
  *
  * @param array &$info
