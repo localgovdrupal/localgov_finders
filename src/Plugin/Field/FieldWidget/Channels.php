@@ -44,20 +44,6 @@ class Channels extends OptionsWidgetBase {
       $element['#description'] = $this->t('The finder channels this content should be found in. Will change the available facets.');
     }
 
-    // TODO: needs to move to facets module.
-    // $ajax = [
-    //   'callback' => [
-    //     '\Drupal\localgov_directories\Plugin\Field\FieldWidget\ChannelFacetInteractions',
-    //     'updateFields',
-    //   ],
-    //   'disable-refocus' => FALSE,
-    //   'event' => 'change',
-    //   'progress' => [
-    //     'type' => 'throbber',
-    //     'message' => $this->t('Loading facets...'),
-    //   ],
-    // ];
-
     $element['primary'] = [
       '#title' => $this->t('Primary'),
       '#type' => 'radios',

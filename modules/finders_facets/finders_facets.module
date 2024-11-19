@@ -11,6 +11,7 @@ use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\finders\Entity\FinderInterface;
 use Drupal\finders_facets\Hook\FindersFacetsHooks;
 use Drupal\finders_facets\Hook\FindersFormAlterHooks;
+use Drupal\finders_facets\Hook\FindersFacetsWidgetAlterHooks;
 use Drupal\search_api\IndexInterface;
 use Drupal\views\ViewEntityInterface;
 
@@ -32,6 +33,16 @@ function finders_facets_help($route_name, RouteMatchInterface $route_match) {
 #[LegacyHook]
 function finders_facets_form_finder_form_alter(&$form, FormStateInterface $form_state, $form_id) {
   \Drupal::service(FindersFormAlterHooks::class)->formFinderFormAlter($form, $form_state, $form_id);
+}
+
+/**
+ * Legacy hook implementation.
+ *
+ * @todo Remove this method when support for Drupal core < 11.1 is dropped.
+ */
+#[LegacyHook]
+function finders_facets_field_widget_single_element_finders_channels_form_alter(array &$element, FormStateInterface $form_state, array $context) {
+  \Drupal::service(FindersFacetsWidgetAlterHooks::class)->fieldWidgetSingleElementFindersChannelsFormAlter($element, $form_state, $context);
 }
 
 /**

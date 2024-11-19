@@ -7,6 +7,10 @@ services:
     class: Drupal\finders_facets\Hook\FindersFormAlterHooks
     autowire: true
 
+  Drupal\finders_facets\Hook\FindersFacetsWidgetAlterHooks:
+    class: Drupal\finders_facets\Hook\FindersFacetsWidgetAlterHooks
+    autowire: true
+
   finders_facets.event_subscriber:
     class: Drupal\finders_facets\EventSubscriber\FindersFacetsConfigSubscriber
     arguments: ['@config.storage', '@config.storage.sync']
