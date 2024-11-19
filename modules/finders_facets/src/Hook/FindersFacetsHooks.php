@@ -110,7 +110,7 @@ class FindersFacetsHooks {
       ])
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayOptions('form', [
-        'type' => 'options_buttons',
+        'type' => 'finders_facets_checkbox',
       ]);
   }
 
