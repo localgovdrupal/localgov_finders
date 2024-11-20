@@ -102,6 +102,7 @@ class EntryTypes extends SelectionPluginBase implements ContainerFactoryPluginIn
     // Get the entity we are getting field values for.
     $host_entity = $this->configuration['entity'];
 
+    // Get the finder for the host entity's bundle.
     $bundle_entity_type_id = $host_entity->getEntityType()->getBundleEntityType();
     $bundle_entity = $this->entityTypeManager->getStorage($bundle_entity_type_id)->load($host_entity->bundle());
     $finder = $this->entityTypeManager->getStorage('finder')->getFinderForBundleEntity($bundle_entity);

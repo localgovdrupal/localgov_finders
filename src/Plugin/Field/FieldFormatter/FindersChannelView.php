@@ -16,6 +16,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Field formatter for channel views.
+ *
+ * @todo Implement isApplicable().
  */
 #[FieldFormatter(
   id: 'finders_channel_view',
@@ -170,13 +172,5 @@ class FindersChannelView extends FormatterBase {
     // form, while accepting the parameters. But this does the same later.
     return $markup::create(preg_replace('|<form.*?class="[^"]*views-exposed-form.*?>.*?</form>|s', '', $markup, 1));
   }
-
-  // /**
-  //  * {@inheritdoc}
-  //  */
-  // public static function isApplicable(FieldDefinitionInterface $field_definition) {
-  // TODO only show on our fields!
-  //   // Returns if the formatter can be used for the provided field.
-  // }
 
 }
