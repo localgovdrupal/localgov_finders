@@ -4,7 +4,3 @@ dependencies: {  }
 label: null
 id: finders_channel
 description: null
-third_party_settings:
-  finders:
-    finder_type: test
-    finder_role: channel
