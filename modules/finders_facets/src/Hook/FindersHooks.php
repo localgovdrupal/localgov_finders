@@ -49,20 +49,6 @@ class FindersHooks {
   }
 
   /**
-   * Implements hook_help().
-   */
-  #[Hook('help')]
-  public function help($route_name, RouteMatchInterface $route_match) {
-    switch ($route_name) {
-      case 'help.page.finders_facets':
-        return t("TODO: Create admin help text.");
-
-      // OPTIONAL: Add additional cases for other paths that should display
-      // help text.
-    }
-  }
-
-  /**
    * Implements hook_finders_channel_fields_alter().
    */
   #[Hook('finders_channel_fields_alter')]

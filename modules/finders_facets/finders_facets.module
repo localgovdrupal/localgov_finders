@@ -22,16 +22,6 @@ use Drupal\views\ViewEntityInterface;
  * @todo Remove this method when support for Drupal core < 11.1 is dropped.
  */
 #[LegacyHook]
-function finders_facets_help($route_name, RouteMatchInterface $route_match) {
-  \Drupal::service(FindersHooks::class)->help($route_name, $route_match);
-}
-
-/**
- * Legacy hook implementation.
- *
- * @todo Remove this method when support for Drupal core < 11.1 is dropped.
- */
-#[LegacyHook]
 function finders_facets_form_finder_form_alter(&$form, FormStateInterface $form_state, $form_id) {
   \Drupal::service(FormAlterHooks::class)->formFinderFormAlter($form, $form_state, $form_id);
 }
