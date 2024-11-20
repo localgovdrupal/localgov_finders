@@ -12,12 +12,23 @@ finders.finder.*:
       type: text
       label: Finder type
     channels:
-      # @todo Figure this out.
-      type: ignore
+      type: sequence
       label: Finder channels
+      sequence:
+        type: sequence
+        label: Finder channel bundles
+        sequence:
+          type: text
+          label: Bundle name
     entries:
-      type: ignore
+      type: sequence
       label: Finder entries
+      sequence:
+        type: sequence
+        label: Finder channel bundles
+        sequence:
+          type: text
+          label: Bundle name
     third_party_settings:
       requiredKey: false
       type: sequence

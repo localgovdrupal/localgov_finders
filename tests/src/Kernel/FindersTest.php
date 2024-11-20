@@ -44,9 +44,6 @@ class FindersTest extends KernelTestBase {
    */
   protected $entityFieldManager;
 
-  // TEMP!
-  protected $strictConfigSchema = FALSE;
-
   /**
    * {@inheritdoc}
    */
