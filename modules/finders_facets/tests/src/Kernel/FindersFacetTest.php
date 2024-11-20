@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\finders_facets\Kernel;
 
-use Drupal\finders\Enum\FinderRole;
 use Drupal\KernelTests\KernelTestBase;
 
 /**
@@ -43,11 +42,6 @@ class FindersFacetTest extends KernelTestBase {
    * @var \Drupal\Core\Entity\EntityFieldManagerInterface
    */
   protected $entityFieldManager;
-
-  // Disable config checking -- the schema for Finders third-party settings on
-  // the entity_test_with_bundle entity type is in the test module and we don't
-  // want what it installs.
-  protected $strictConfigSchema = FALSE;
 
   /**
    * {@inheritdoc}
