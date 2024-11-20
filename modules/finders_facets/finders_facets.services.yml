@@ -3,6 +3,10 @@ services:
     class: Drupal\finders_facets\Hook\FindersFacetsHooks
     autowire: true
 
+  Drupal\finders_facets\Hook\FacetsHooks:
+    class: Drupal\finders_facets\Hook\FacetsHooks
+    autowire: true
+
   Drupal\finders_facets\Hook\FindersFormAlterHooks:
     class: Drupal\finders_facets\Hook\FindersFormAlterHooks
     autowire: true

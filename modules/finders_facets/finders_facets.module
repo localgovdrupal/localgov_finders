@@ -9,6 +9,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Hook\LegacyHook;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\finders\Entity\FinderInterface;
+use Drupal\finders_facets\Hook\FacetsHooks;
 use Drupal\finders_facets\Hook\FindersFacetsHooks;
 use Drupal\finders_facets\Hook\FindersFormAlterHooks;
 use Drupal\finders_facets\Hook\FindersFacetsWidgetAlterHooks;
@@ -93,4 +94,14 @@ function finders_facets_finders_view_alter(ViewEntityInterface $view, IndexInter
 #[LegacyHook]
 function finders_facets_finders_post_configure(FinderInterface $finder) {
   \Drupal::service(FindersFacetsHooks::class)->findersPostConfigure($finder);
+}
+
+/**
+ * Legacy hook implementation.
+ *
+ * @todo Remove this method when support for Drupal core < 11.1 is dropped.
+ */
+#[LegacyHook]
+function finders_facets_facets_search_api_query_type_mapping_alter($backend_plugin_id, array &$query_types) {
+  \Drupal::service(FacetsHooks::class)->facetsSearchApiQueryTypeMappingAlter($backend_plugin_id, $query_types);
 }
