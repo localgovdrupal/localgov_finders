@@ -133,7 +133,7 @@ class FindersDbInstallTest extends KernelTestBase {
   /**
    * Reloads the given entity from the storage and returns it.
    *
-   * TODO: Replace this with EntityTrait when
+   * @todo Replace this with EntityTrait when
    * https://www.drupal.org/project/drupal/issues/3485409 is fixed.
    *
    * @param \Drupal\Core\Entity\EntityInterface $entity

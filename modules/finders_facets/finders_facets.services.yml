@@ -1,4 +1,6 @@
 services:
+  # @todo Remove hook services definitions when support for Drupal core < 11.1
+  # is dropped.
   Drupal\finders_facets\Hook\FindersHooks:
     class: Drupal\finders_facets\Hook\FindersHooks
     autowire: true

@@ -124,7 +124,7 @@ class Events extends FinderTypeBase {
     $datasource_id = $this->getIndexDatasourceId($index, $entry_entity_type_id);
     $datasource = $index->getDatasource($datasource_id);
 
-    // TODO: make DateRecur::getComputedFieldName() public so we can use that
+    // @todo Make DateRecur::getComputedFieldName() public so we can use that
     // instead of accessing the DateOccurrence::COMPUTED_FIELD_SUFFIX constant
     // directly.
     $occurrence_field_name = static::EVENT_DATE_FIELD . DateOccurrence::COMPUTED_FIELD_SUFFIX;
