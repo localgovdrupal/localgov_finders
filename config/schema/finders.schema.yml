@@ -18,3 +18,9 @@ finders.finder.*:
     entries:
       type: ignore
       label: Finder entries
+    third_party_settings:
+      requiredKey: false
+      type: sequence
+      label: 'Third party settings'
+      sequence:
+        type: finders.finder.third_party.[%key]
