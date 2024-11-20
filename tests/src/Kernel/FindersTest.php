@@ -3,6 +3,7 @@
 namespace Drupal\Tests\finders\Kernel;
 
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\Plugin\DataType\ConfigEntityAdapter;
 use Drupal\finders\Plugin\FinderType\FinderTypeBase;
 use Drupal\KernelTests\KernelTestBase;
 
@@ -111,6 +112,31 @@ class FindersTest extends KernelTestBase {
       ],
     ]);
     $finder->save();
+
+    $adapter = ConfigEntityAdapter::createFromEntity($finder);
+    $violations = $adapter->validate();
+    $this->assertEmpty($violations);
+
+    // Attempt to create a second finder with the same entries, which should
+    // fail validation.
+    $finder_invalid = $this->entityTypeManager->getStorage('finder')->create([
+      'id' => 'invalid',
+      'label' => 'Invalid',
+      'type' => 'test',
+      'channels' => [
+        'entity_test_with_bundle' => [
+          'test_channel_bundle',
+        ],
+      ],
+      'entries' => [
+        'entity_test_with_bundle' => [
+          'test_entry_bundle_one',
+        ],
+      ],
+    ]);
+    $adapter = ConfigEntityAdapter::createFromEntity($finder_invalid);
+    $violations = $adapter->validate();
+    $this->assertNotEmpty($violations);
 
     $channel_fields = $this->entityFieldManager->getFieldDefinitions('entity_test_with_bundle', 'test_channel_bundle');
     $this->assertArrayHasKey(FinderTypeBase::CHANNEL_TYPES_FIELD, $channel_fields);

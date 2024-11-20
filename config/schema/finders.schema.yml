@@ -14,15 +14,26 @@ finders.finder.*:
     channels:
       type: sequence
       label: Finder channels
+      constraints:
+        FindersBundlesUniqueToFinder:
+          finderId: '%parent.id'
+          finderRole: channel
       sequence:
         type: sequence
         label: Finder channel bundles
         sequence:
           type: text
           label: Bundle name
+          constraints: {  }
+            # The EntityBundleExists doesn't work here.
+            # See https://www.drupal.org/project/drupal/issues/3488667
     entries:
       type: sequence
       label: Finder entries
+      constraints:
+        FindersBundlesUniqueToFinder:
+          finderId: '%parent.id'
+          finderRole: entries
       sequence:
         type: sequence
         label: Finder channel bundles
