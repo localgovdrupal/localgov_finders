@@ -132,17 +132,6 @@ class EntryTypes extends SelectionPluginBase implements ContainerFactoryPluginIn
    */
   public function validateReferenceableEntities(array $ids) {
     return $ids;
-
-    // TODO!! STUFF!
-
-    // VAliDATE IN same index.
-
-
-    // Return only the $ids in $options, any others will be used in validation
-    // to list as invalid.
-    // @see Drupal\Core\Entity\Element\EntityAutocomplete::validateEntityAutocomplete()
-    $options = $this->getReferenceableEntities();
-    return array_intersect($ids, array_keys($options['node_type']));
   }
 
 }
