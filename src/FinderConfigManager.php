@@ -131,17 +131,13 @@ class FinderConfigManager {
    *   entity is not configured for finders, an empty array is returned.
    */
   public function getBundleFieldDefinitions(ConfigEntityInterface $bundle_entity): array {
-    // does this bundle participate ina finder and which type?
+    // Bail if this bundle does not participate in a finder.
     if (!($finder = $this->entityTypeManager->getStorage('finder')->getFinderForBundleEntity($bundle_entity))) {
       return [];
     }
 
     $finder_type = $finder->getFinderTypePlugin();
     $finder_role = $finder->getFinderRoleForBundle($bundle_entity);
-
-    // $finder_type_manager = \Drupal::service('plugin.manager.finders_finder_type');
-    // $finder_type = $finder_type_manager->getBundleFinderType($bundle_entity);
-    // $finder_role_name = $bundle_entity->getThirdPartySetting('finders', 'finder_role', '');
 
     if (!$finder_type) {
       return [];
