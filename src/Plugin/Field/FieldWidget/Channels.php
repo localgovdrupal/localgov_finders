@@ -89,25 +89,6 @@ class Channels extends OptionsWidgetBase {
   }
 
   /**
-   * AJAX callback to rebuild form fields dependent on selected channels.
-   *
-   * Presently hard codes the one field - by name.
-   *
-   * @param array $form
-   *   Form array.
-   * @param \Drupal\Core\Form\FormStateInterface $form_state
-   *   The form state.
-   *
-   * @return array
-   *   Form array for field.
-   */
-  // TODO: moves to facets module
-  // public static function updateFacets(array $form, FormStateInterface $form_state) {
-  //   $form_state->setRebuild();
-  //   return $form['localgov_directory_facets_select'];
-  // }
-
-  /**
    * {@inheritdoc}
    */
   public static function isApplicable(FieldDefinitionInterface $field_definition) {
