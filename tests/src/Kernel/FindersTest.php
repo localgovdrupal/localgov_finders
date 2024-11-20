@@ -124,6 +124,12 @@ class FindersTest extends KernelTestBase {
     $entry_fields = $this->entityFieldManager->getFieldDefinitions('entity_test_with_bundle', 'test_entry_bundle_one');
     $this->assertArrayHasKey(FinderTypeBase::CHANNEL_SELECTION_FIELD, $entry_fields);
 
+    // View modes have been created for the entry entity type.
+    $view_mode = $this->entityTypeManager->getStorage('entity_view_mode')->load('entity_test_with_bundle.finders_index');
+    $this->assertNotEmpty($view_mode);
+    $view_mode = $this->entityTypeManager->getStorage('entity_view_mode')->load('entity_test_with_bundle.finders_results');
+    $this->assertNotEmpty($view_mode);
+
     // A search index has been created by the creation of the channel bundle.
     $search_index = $this->entityTypeManager->getStorage('search_api_index')->load('finders_index_default');
     $this->assertNotEmpty($search_index);
