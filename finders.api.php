@@ -27,6 +27,8 @@ use Drupal\views\ViewEntityInterface;
  *   The bundle entity that is being configured as a channel.
  * @param \Drupal\finders\Entity\FinderInterface $finder
  *   The finder entity.
+ *
+ * @see \Drupal\finders\FinderConfigManage::ensureFinderConfig()
  */
 function hook_finders_channel_fields_alter(array &$channel_field_definitions, ConfigEntityInterface $bundle_entity, FinderInterface $finder) {
   // Change the label of the finder channel types field.
@@ -45,6 +47,8 @@ function hook_finders_channel_fields_alter(array &$channel_field_definitions, Co
  *   invoker of this hook.
  * @param \Drupal\finders\Entity\FinderInterface $finder
  *   The finder entity.
+ *
+ * @see \Drupal\finders\FinderConfigManage::ensureFinderConfig()
  */
 function hook_finders_index_alter(IndexInterface $index, FinderInterface $finder): void {
   // Change the boost on the index title field.
@@ -65,6 +69,8 @@ function hook_finders_index_alter(IndexInterface $index, FinderInterface $finder
  *   finder.
  * @param \Drupal\finders\Entity\FinderInterface $finder
  *   The finder entity.
+ *
+ * @see \Drupal\finders\FinderConfigManage::ensureFinderConfig()
  */
 function hook_finders_view_alter(ViewEntityInterface $view, IndexInterface $index, FinderInterface $finder): void {
   // Add a field to the index.
@@ -86,6 +92,8 @@ function hook_finders_view_alter(ViewEntityInterface $view, IndexInterface $inde
  *   The bundle entity that is being configured as an entry.
  * @param \Drupal\finders\Entity\FinderInterface $finder
  *   The finder entity.
+ *
+ * @see \Drupal\finders\FinderConfigManage::ensureFinderConfig()
  */
 function hook_finders_entry_fields_alter(array &$entry_field_definitions, ConfigEntityInterface $bundle_entity, FinderInterface $finder) {
   // Change the label of the finder channel selection field.
@@ -99,8 +107,13 @@ function hook_finders_entry_fields_alter(array &$entry_field_definitions, Config
  * This is invoked after a finder has had its fields set up, and its search
  * indexes and views created or updated.
  *
+ * It is essential that implementations of this hook be idempotent, as
+ * it is invoked every time a finder entity is updated.
+ *
  * @param \Drupal\finders\Entity\FinderInterface $finder
  *   The finder entity.
+ *
+ * @see \Drupal\finders\FinderConfigManage::ensureFinderConfig()
  */
 function hook_finders_post_configure(FinderInterface $finder) {
   // TODO: write sample code.
