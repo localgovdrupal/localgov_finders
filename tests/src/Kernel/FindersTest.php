@@ -7,7 +7,7 @@ use Drupal\finders\Plugin\FinderType\FinderTypeBase;
 use Drupal\KernelTests\KernelTestBase;
 
 /**
- * Test case class TODO.
+ * Tests setting up a finder.
  *
  * @group finders
  */
@@ -188,7 +188,7 @@ class FindersTest extends KernelTestBase {
   /**
    * Reloads the given entity from the storage and returns it.
    *
-   * TODO: Replace this with EntityTrait when 10.4.0 is minimum supported
+   * @todo Replace this with EntityTrait when 10.4.0 is minimum supported
    * version.
    *
    * @param \Drupal\Core\Entity\EntityInterface $entity
