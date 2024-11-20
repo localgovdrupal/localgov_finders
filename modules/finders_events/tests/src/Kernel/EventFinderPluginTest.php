@@ -47,10 +47,17 @@ class EventFinderPluginTest extends KernelTestBase {
     'finders_events',
   ];
 
-  // Disable config checking -- the schema for Finders third-party settings on
-  // the entity_test_with_bundle entity type is in the test module and we don't
-  // want what it installs.
-  protected $strictConfigSchema = FALSE;
+  /**
+   * Disable config checking of the calendar view.
+   *
+   * The calendar_view module is missing config schema.
+   * @see https://www.drupal.org/project/calendar_view/issues/3488649
+   *
+   * @var array
+   */
+  protected static $configSchemaCheckerExclusions = [
+    'views.view.finders_events_channel_calendar',
+  ];
 
   /**
    * {@inheritdoc}
