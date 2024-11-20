@@ -20,7 +20,9 @@ use Drupal\views\ViewEntityInterface;
  *
  * @param \Drupal\finders\Field\BundleFieldDefinition[] $channel_field_definitions
  *   An array of bundle field definitions to be added to the channel bundle.
- *   These have not yet been declared to the field system.
+ *   These have not yet been declared to the field system. Field definitions
+ *   added to this array may omit the target entity type and bundle as a
+ *   convenience.
  * @param \Drupal\Core\Config\Entity\ConfigEntityInterface $bundle_entity
  *   The bundle entity that is being configured as a channel.
  * @param \Drupal\finders\Entity\FinderInterface $finder
@@ -77,8 +79,9 @@ function hook_finders_view_alter(ViewEntityInterface $view, IndexInterface $inde
  * Perform alterations on the entry bundle fields before they are created.
  *
  * @param \Drupal\finders\Field\BundleFieldDefinition[] $entry_field_definitions
- *   An array of bundle field definitions to be added to the entry bundle.
- *   These have not yet been declared to the field system.
+ *   An array of bundle field definitions to be added to the entry bundle. These
+ *   have not yet been declared to the field system. Field definitions added to
+ *   this array may omit the target entity type and bundle as a convenience.
  * @param \Drupal\Core\Config\Entity\ConfigEntityInterface $bundle_entity
  *   The bundle entity that is being configured as an entry.
  * @param \Drupal\finders\Entity\FinderInterface $finder

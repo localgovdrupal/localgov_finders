@@ -162,6 +162,9 @@ class FinderConfigManager {
    *   An array of bundle field definitions.
    */
   protected function getChannelFieldDefinitions(ConfigEntityInterface $bundle_entity, FinderInterface $finder): array {
+    $bundle_entity_type = $bundle_entity->getEntityType();
+    $content_entity_type_id = $bundle_entity_type->getBundleOf();
+
     $finder_type = $finder->getFinderTypePlugin();
     $channel_field_definitions = $finder_type->getChannelFieldDefinitions($bundle_entity, $finder);
 
@@ -170,7 +173,8 @@ class FinderConfigManager {
 
     /** @var \Drupal\finders\Field\BundleFieldDefinition $field_definition */
     foreach ($channel_field_definitions as $field_definition) {
-      // Set the target bundle on all bundle fields.
+      // Set the target entity type and bundle on all bundle fields.
+      $field_definition->setTargetEntityTypeId($content_entity_type_id);
       $field_definition->setTargetBundle($bundle_entity->id());
     }
 
@@ -189,6 +193,9 @@ class FinderConfigManager {
    *   An array of bundle field definitions.
    */
   protected function getEntryFieldDefinitions(ConfigEntityInterface $bundle_entity, FinderInterface $finder): array {
+    $bundle_entity_type = $bundle_entity->getEntityType();
+    $content_entity_type_id = $bundle_entity_type->getBundleOf();
+
     $finder_type = $finder->getFinderTypePlugin();
     $entry_field_definitions = $finder_type->getEntryFieldDefinitions($bundle_entity, $finder);
 
@@ -197,7 +204,8 @@ class FinderConfigManager {
 
     /** @var \Drupal\finders\Field\BundleFieldDefinition $field_definition */
     foreach ($entry_field_definitions as $field_definition) {
-      // Set the target bundle on all bundle fields.
+      // Set the target entity type and bundle on all bundle fields.
+      $field_definition->setTargetEntityTypeId($content_entity_type_id);
       $field_definition->setTargetBundle($bundle_entity->id());
     }
 

@@ -98,7 +98,6 @@ class Geo extends FinderTypeBase {
 
     return BundleFieldDefinition::create('viewsreference')
       ->setName(static::LIST_VIEW_FIELD)
-      ->setTargetEntityTypeId($content_entity_type_id)
       ->setLabel(t('Geo list view'))
       ->setRequired(FALSE)
       ->setTranslatable(FALSE)
@@ -138,7 +137,6 @@ class Geo extends FinderTypeBase {
 
     return BundleFieldDefinition::create('viewsreference')
       ->setName(static::MAP_VIEW_FIELD)
-      ->setTargetEntityTypeId($content_entity_type_id)
       ->setLabel(t('Geo map view'))
       ->setRequired(FALSE)
       ->setTranslatable(FALSE)

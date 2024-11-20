@@ -479,15 +479,11 @@ abstract class FinderTypeBase extends PluginBase implements FinderTypeInterface,
    * @see \Drupal\finders\Plugin\EntityReferenceSelection\EntryTypes
    */
   protected function getChannelTypesFieldDefinition(ConfigEntityInterface $bundle, FinderInterface $finder): ?BundleFieldDefinition {
-    $bundle_entity_type = $bundle->getEntityType();
-    $content_entity_type_id = $bundle_entity_type->getBundleOf();
-
     $entry_entity_type_id = $finder->getEntryEntityTypeId();
     $entry_entity_type = $this->entityTypeManager->getDefinition($entry_entity_type_id);
 
     return BundleFieldDefinition::create('entity_reference')
       ->setName(static::CHANNEL_TYPES_FIELD)
-      ->setTargetEntityTypeId($content_entity_type_id)
       ->setLabel(t('Enabled Content types'))
       ->setRequired(FALSE)
       ->setTranslatable(FALSE)
@@ -517,12 +513,8 @@ abstract class FinderTypeBase extends PluginBase implements FinderTypeInterface,
    *   The bundle field definition, or NULL if no field should be defined.
    */
   protected function getViewFieldDefinition(ConfigEntityInterface $bundle): ?BundleFieldDefinition {
-    $bundle_entity_type = $bundle->getEntityType();
-    $content_entity_type_id = $bundle_entity_type->getBundleOf();
-
     return BundleFieldDefinition::create('viewsreference')
       ->setName(static::VIEW_FIELD)
-      ->setTargetEntityTypeId($content_entity_type_id)
       ->setLabel(t('Event list view'))
       ->setRequired(FALSE)
       ->setTranslatable(FALSE)
@@ -568,7 +560,6 @@ abstract class FinderTypeBase extends PluginBase implements FinderTypeInterface,
 
     return BundleFieldDefinition::create('entity_reference')
       ->setName(static::CHANNEL_SELECTION_FIELD)
-      ->setTargetEntityTypeId($content_entity_type_id)
       ->setLabel(t('Finder channels'))
       ->setRequired(FALSE)
       ->setTranslatable(FALSE)
@@ -605,12 +596,8 @@ abstract class FinderTypeBase extends PluginBase implements FinderTypeInterface,
    *   The bundle field definition, or NULL if no field should be defined.
    */
   protected function getTitleSortFieldDefinition(ConfigEntityInterface $bundle): ?BundleFieldDefinition {
-    $bundle_entity_type = $bundle->getEntityType();
-    $content_entity_type_id = $bundle_entity_type->getBundleOf();
-
     return BundleFieldDefinition::create('string')
       ->setName(static::TITLE_SORT_FIELD)
-      ->setTargetEntityTypeId($content_entity_type_id)
       ->setLabel(t('Title used for sorting'))
       ->setDescription(t("<strong>Can be left blank</strong>. If this field is completed it will be used instead of the <em>Title</em> for alphabetically sorted lists. For example to move 'The' or 'A' from the beginning of a name."))
       ->setRequired(FALSE)

@@ -214,12 +214,8 @@ class Events extends FinderTypeBase {
    *   The bundle field definition, or NULL if no field should be defined.
    */
   protected function getListViewFieldDefinition(ConfigEntityInterface $bundle): ?BundleFieldDefinition {
-    $bundle_entity_type = $bundle->getEntityType();
-    $content_entity_type_id = $bundle_entity_type->getBundleOf();
-
     return BundleFieldDefinition::create('viewsreference')
       ->setName(static::LIST_VIEW_FIELD)
-      ->setTargetEntityTypeId($content_entity_type_id)
       ->setLabel(t('Event list view'))
       ->setRequired(FALSE)
       ->setTranslatable(FALSE)
@@ -258,12 +254,8 @@ class Events extends FinderTypeBase {
    *   The bundle field definition, or NULL if no field should be defined.
    */
   protected function getCalendarViewFieldDefinition(ConfigEntityInterface $bundle): ?BundleFieldDefinition {
-    $bundle_entity_type = $bundle->getEntityType();
-    $content_entity_type_id = $bundle_entity_type->getBundleOf();
-
     return BundleFieldDefinition::create('viewsreference')
       ->setName(static::CALENDAR_VIEW_FIELD)
-      ->setTargetEntityTypeId($content_entity_type_id)
       ->setLabel(t('Event calendar view'))
       ->setRequired(FALSE)
       ->setTranslatable(FALSE)
@@ -299,12 +291,8 @@ class Events extends FinderTypeBase {
    *   The bundle field definition, or NULL if no field should be defined.
    */
   protected function getEventDateFieldDefinition(ConfigEntityInterface $bundle): ?BundleFieldDefinition {
-    $bundle_entity_type = $bundle->getEntityType();
-    $content_entity_type_id = $bundle_entity_type->getBundleOf();
-
     return BundleFieldDefinition::create('date_recur')
       ->setName(static::EVENT_DATE_FIELD)
-      ->setTargetEntityTypeId($content_entity_type_id)
       ->setLabel(t('Date'))
       ->setRequired(TRUE)
       ->setTranslatable(FALSE)

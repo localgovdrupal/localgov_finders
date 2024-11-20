@@ -53,9 +53,6 @@ class FindersHooks {
    */
   #[Hook('finders_channel_fields_alter')]
   public function findersChannelFieldsAlter(array &$channel_field_definitions, ConfigEntityInterface $bundle_entity, FinderInterface $finder) {
-    $bundle_entity_type = $bundle_entity->getEntityType();
-    $content_entity_type_id = $bundle_entity_type->getBundleOf();
-
     if (!$this->isFinderEnabledWithFacets($finder)) {
       return;
     }
@@ -63,7 +60,6 @@ class FindersHooks {
     // Add the enabled facets field to a channel bundle.
     $channel_field_definitions[static::FACET_ENABLE_FIELD] = BundleFieldDefinition::create('entity_reference')
       ->setName(static::FACET_ENABLE_FIELD)
-      ->setTargetEntityTypeId($content_entity_type_id)
       ->setLabel(t('Enabled Facets'))
       ->setDescription(t('Which facets are enabled to be shown on this directory channel, and will be added when editing content to be added to this directory.'))
       ->setRequired(FALSE)
@@ -88,9 +84,6 @@ class FindersHooks {
    */
   #[Hook('finders_entry_fields_alter')]
   public function findersEntryFieldsAlter(array &$entry_field_definitions, ConfigEntityInterface $bundle_entity, FinderInterface $finder) {
-    $bundle_entity_type = $bundle_entity->getEntityType();
-    $content_entity_type_id = $bundle_entity_type->getBundleOf();
-
     if (!$this->isFinderEnabledWithFacets($finder)) {
       return;
     }
@@ -98,7 +91,6 @@ class FindersHooks {
     // Add the selected facets field to a channel bundle.
     $entry_field_definitions[static::FACET_SELECTION_FIELD] = BundleFieldDefinition::create('entity_reference')
       ->setName(static::FACET_SELECTION_FIELD)
-      ->setTargetEntityTypeId($content_entity_type_id)
       ->setLabel(t('Facets'))
       ->setRequired(FALSE)
       ->setTranslatable(FALSE)

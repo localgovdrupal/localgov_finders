@@ -36,7 +36,7 @@ interface FinderTypeInterface extends PluginInspectionInterface, DerivativeInspe
    *
    * @return \Drupal\finders\Field\BundleFieldDefinition[]
    *   An array of bundle field definitions, keyed by the field name. These may
-   *   omit the target bundle as a convenience.
+   *   omit the target entity type and bundle as a convenience.
    */
   public function getChannelFieldDefinitions(ConfigEntityInterface $bundle, FinderInterface $finder): array;
 
@@ -50,7 +50,7 @@ interface FinderTypeInterface extends PluginInspectionInterface, DerivativeInspe
    *
    * @return \Drupal\finders\Field\BundleFieldDefinition[]
    *   An array of bundle field definitions, keyed by the field name. These may
-   *   omit the target bundle as a convenience.
+   *   omit the target entity type and bundle as a convenience.
    */
   public function getEntryFieldDefinitions(ConfigEntityInterface $bundle, FinderInterface $finder): array;
 
