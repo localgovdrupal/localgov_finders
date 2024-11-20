@@ -154,6 +154,7 @@ class EntityBundles extends FormElementBase implements ContainerFactoryPluginInt
       '#submit' => [static::class . '::entityTypeSubmit'],
     ];
 
+    $entity_repository = \Drupal::service('entity.repository');
     if ($selected_entity_type_id) {
       $selected_entity_type = $entity_type_manager->getDefinition($selected_entity_type_id);
       $bundle_entity_type_id = $selected_entity_type->getBundleEntityType();
@@ -161,8 +162,7 @@ class EntityBundles extends FormElementBase implements ContainerFactoryPluginInt
 
       $bundle_options = [];
       foreach ($entity_type_manager->getStorage($bundle_entity_type_id)->loadMultiple() as $bundle_entity) {
-        // TODO: label translation.
-        $bundle_options[$bundle_entity->id()] = $bundle_entity->label();
+        $bundle_options[$bundle_entity->id()] = HtmlUtility::escape($entity_repository->getTranslationFromContext($bundle_entity)->label());
       }
 
       natcasesort($bundle_options);
