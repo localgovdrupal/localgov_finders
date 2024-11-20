@@ -116,7 +116,14 @@ function hook_finders_entry_fields_alter(array &$entry_field_definitions, Config
  * @see \Drupal\finders\FinderConfigManage::ensureFinderConfig()
  */
 function hook_finders_post_configure(FinderInterface $finder) {
-  // TODO: write sample code.
+  // Create a custom config entity based on the finder.
+  $cat_storage = \Drupal::service('entity_type.manager')->getStorage('cats');
+  if (!$cat_storage->load($finder->id())) {
+    $cat = $cat_storage->create([
+      'id' => $finder->id(),
+    ]);
+    $cat->save();
+  }
 }
 
 /**
