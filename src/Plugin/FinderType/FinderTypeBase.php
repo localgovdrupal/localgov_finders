@@ -24,8 +24,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 abstract class FinderTypeBase extends PluginBase implements FinderTypeInterface, ContainerFactoryPluginInterface {
 
-  // @todo Confirm we want typed constants, and target ≥ PHP8.3
-
   /**
    * The entity type manager.
    *
