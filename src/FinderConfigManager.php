@@ -7,6 +7,7 @@ use Drupal\Core\Config\Entity\ConfigEntityInterface;
 use Drupal\Core\Config\FileStorage as ConfigFileStorage;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Entity\EntityViewModeInterface;
 use Drupal\Core\Extension\ModuleExtensionList;
 use Drupal\Core\Field\FieldDefinitionListenerInterface;
 use Drupal\Core\Field\FieldStorageDefinitionListenerInterface;
@@ -235,6 +236,16 @@ class FinderConfigManager {
       $this->configureAsEntry($entry_bundle, $finder);
     }
 
+    // Set up the view modes.
+    foreach (['INDEX_VIEW_MODE', 'RESULTS_VIEW_MODE'] as $view_mode_constant) {
+      $view_mode_id = $finder_type->getFinderTypeConstant($view_mode_constant);
+      $view_mode = $this->entityTypeManager->getStorage('entity_view_mode')->load($view_mode_id);
+      if (empty($view_mode)) {
+        $view_mode = $this->loadTemplateViewMode($view_mode_id, $finder);
+        $view_mode->save();
+      }
+    }
+
     // Set up the indexes for the finder type.
     foreach ($finder_type->getIndexIds() as $index_id) {
       $index = $this->entityTypeManager->getStorage('search_api_index')->load($index_id);
@@ -328,6 +339,51 @@ class FinderConfigManager {
         $this->fieldDefinitionListener->onFieldDefinitionCreate($field_definition);
       }
     }
+  }
+
+  /**
+   * Creates a view mode on entries for the given view mode ID.
+   *
+   * @param string $view_mode_id
+   *   The ID of the view mode to create, without the target entity type ID
+   *   prefix.
+   * @param \Drupal\finders\Entity\FinderInterface $finder
+   *   The finder this is for.
+   *
+   * @return \Drupal\Core\Entity\EntityViewModeInterface
+   *   The view mode created from the template configuration. It is the caller's
+   *   responsibility to save this.
+   */
+  protected function loadTemplateViewMode(string $view_mode_id, FinderInterface $finder): EntityViewModeInterface {
+    $finder_type = $finder->getFinderTypePlugin();
+
+    $template_directory = $this->moduleExtensionList->getPath($finder_type->getPluginDefinition()['provider']) . '/config/template';
+    $config_source = new ConfigFileStorage($template_directory);
+    $config_filename = 'core.entity_view_mode.entry_type.' . $view_mode_id;
+
+    // Fall back to the default view mode template if the finder type module
+    // does not provide a template for the view mode.
+    if (!$config_source->exists($config_filename)) {
+      $template_directory = $this->moduleExtensionList->getPath('finders') . '/config/template';
+      $config_source = new ConfigFileStorage($template_directory);
+      $config_filename = "core.entity_view_mode.entry_type.{$view_mode_id}_template";
+    }
+
+    $config_values = $config_source->read($config_filename);
+
+    $entry_entity_type_id = $finder->getEntryEntityTypeId();
+
+    $replacements = [
+      'ENTRY_ENTITY_TYPE_ID' => $entry_entity_type_id,
+    ];
+
+    array_walk($config_values, function (&$config_value) use ($replacements) {
+      $config_value = str_replace(array_keys($replacements), array_values($replacements), $config_value);
+    });
+
+    $view_mode = $this->entityTypeManager->getStorage('entity_view_mode')->create($config_values);
+
+    return $view_mode;
   }
 
   /**

@@ -97,6 +97,16 @@ abstract class FinderTypeBase extends PluginBase implements FinderTypeInterface,
   const TITLE_SORT_FIELD = 'finders_title_sort';
 
   /**
+   * The ID of the view mode used for indexing entries.
+   */
+  const INDEX_VIEW_MODE = 'finders_index';
+
+  /**
+   * The ID of the view mode used for showing entries.
+   */
+  const RESULTS_VIEW_MODE = 'finders_results';
+
+  /**
    * {@inheritdoc}
    */
   public function getFinderTypeConstant(string $constant_name): string {
