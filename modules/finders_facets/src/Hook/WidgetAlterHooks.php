@@ -17,7 +17,7 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
  *
  * @see \Drupal\finders\Plugin\Field\FieldWidget\Channels
  */
-class FindersFacetsWidgetAlterHooks {
+class WidgetAlterHooks {
 
   use StringTranslationTrait;
 

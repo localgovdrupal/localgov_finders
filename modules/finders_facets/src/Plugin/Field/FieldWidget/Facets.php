@@ -21,7 +21,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * Grouping by entity reference by bundle would also be solved by
  * https://www.drupal.org/project/drupal/issues/2269823
  *
- * @see \Drupal\finders_facets\Hook\FindersFacetsWidgetAlterHooks
+ * @see \Drupal\finders_facets\Hook\WidgetAlterHooks
  */
 #[FieldWidget(
   id: 'finders_facets_checkbox',

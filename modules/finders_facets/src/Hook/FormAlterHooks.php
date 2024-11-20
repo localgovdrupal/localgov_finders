@@ -10,7 +10,7 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
 /**
  * Contains form alter hook implementations for the Finders facets module.
  */
-class FindersFormAlterHooks {
+class FormAlterHooks {
 
   use StringTranslationTrait;
 

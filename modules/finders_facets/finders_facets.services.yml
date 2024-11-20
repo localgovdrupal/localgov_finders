@@ -7,12 +7,12 @@ services:
     class: Drupal\finders_facets\Hook\FacetsHooks
     autowire: true
 
-  Drupal\finders_facets\Hook\FindersFormAlterHooks:
-    class: Drupal\finders_facets\Hook\FindersFormAlterHooks
+  Drupal\finders_facets\Hook\FormAlterHooks:
+    class: Drupal\finders_facets\Hook\FormAlterHooks
     autowire: true
 
-  Drupal\finders_facets\Hook\FindersFacetsWidgetAlterHooks:
-    class: Drupal\finders_facets\Hook\FindersFacetsWidgetAlterHooks
+  Drupal\finders_facets\Hook\WidgetAlterHooks:
+    class: Drupal\finders_facets\Hook\WidgetAlterHooks
     autowire: true
 
   finders_facets.event_subscriber:
