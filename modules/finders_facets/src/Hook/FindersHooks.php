@@ -15,7 +15,7 @@ use Drupal\search_api\Item\Field as SearchIndexField;
 use Drupal\views\ViewEntityInterface;
 
 /**
- * Contains hook implementations for the Finders facets module.
+ * Contains Finders hook implementations for the Finders facets module.
  */
 class FindersHooks {
 
