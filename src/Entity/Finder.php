@@ -220,6 +220,12 @@ class Finder extends ConfigEntityBase implements FinderInterface {
     return $bundles;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function getEntryBundleIds(): array {
+    return $this->entries[$this->getEntryEntityTypeId()];
+  }
 
   /**
    * {@inheritdoc}

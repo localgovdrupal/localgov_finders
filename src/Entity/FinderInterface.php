@@ -62,4 +62,15 @@ interface FinderInterface extends ConfigEntityInterface, EntityWithPluginCollect
    */
   public function getEntryBundles(): array;
 
+  /**
+   * Gets the IDs of the entry bundles.
+   *
+   * Note this assumes that this finder only contains entries of one entity
+   * type.
+   *
+   * @return array
+   *   An array of bundle IDs.
+   */
+  public function getEntryBundleIds(): array;
+
 }
