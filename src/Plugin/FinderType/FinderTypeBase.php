@@ -437,7 +437,6 @@ abstract class FinderTypeBase extends PluginBase implements FinderTypeInterface,
       // The rendered item field already exists on this index. Ensure it has all
       // the entry bundles in the view mode configuration.
       $configuration = $rendered_item_field->getConfiguration();
-      // TODO make the view mode a plugin constant.
       foreach ($entry_bundle_entities as $entry_bundle) {
         $configuration['view_mode'][$datasource_id][$entry_bundle->id()] = static::INDEX_VIEW_MODE;
       }
