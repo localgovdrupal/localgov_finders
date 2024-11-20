@@ -237,8 +237,9 @@ class FinderConfigManager {
     }
 
     // Set up the view modes.
+    $entry_entity_type_id = $finder->getEntryEntityTypeId();
     foreach (['INDEX_VIEW_MODE', 'RESULTS_VIEW_MODE'] as $view_mode_constant) {
-      $view_mode_id = $finder_type->getFinderTypeConstant($view_mode_constant);
+      $view_mode_id = $entry_entity_type_id . '.' . $finder_type->getFinderTypeConstant($view_mode_constant);
       $view_mode = $this->entityTypeManager->getStorage('entity_view_mode')->load($view_mode_id);
       if (empty($view_mode)) {
         $view_mode = $this->loadTemplateViewMode($view_mode_id, $finder);
@@ -345,7 +346,7 @@ class FinderConfigManager {
    * Creates a view mode on entries for the given view mode ID.
    *
    * @param string $view_mode_id
-   *   The ID of the view mode to create, without the target entity type ID
+   *   The ID of the view mode to create, including the target entity type ID
    *   prefix.
    * @param \Drupal\finders\Entity\FinderInterface $finder
    *   The finder this is for.
@@ -357,16 +358,18 @@ class FinderConfigManager {
   protected function loadTemplateViewMode(string $view_mode_id, FinderInterface $finder): EntityViewModeInterface {
     $finder_type = $finder->getFinderTypePlugin();
 
+    $view_mode_suffix = explode('.', $view_mode_id)[1];
+
     $template_directory = $this->moduleExtensionList->getPath($finder_type->getPluginDefinition()['provider']) . '/config/template';
     $config_source = new ConfigFileStorage($template_directory);
-    $config_filename = 'core.entity_view_mode.entry_type.' . $view_mode_id;
+    $config_filename = 'core.entity_view_mode.entry_type.' . $view_mode_suffix;
 
     // Fall back to the default view mode template if the finder type module
     // does not provide a template for the view mode.
     if (!$config_source->exists($config_filename)) {
       $template_directory = $this->moduleExtensionList->getPath('finders') . '/config/template';
       $config_source = new ConfigFileStorage($template_directory);
-      $config_filename = "core.entity_view_mode.entry_type.{$view_mode_id}_template";
+      $config_filename = "core.entity_view_mode.entry_type.{$view_mode_suffix}_template";
     }
 
     $config_values = $config_source->read($config_filename);
