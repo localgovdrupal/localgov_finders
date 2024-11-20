@@ -27,6 +27,8 @@ protected $strictConfigSchema = FALSE;
   protected static $modules = [
     'system',
     'user',
+    'views',
+    'viewsreference',
     'entity_test',
     'search_api',
     'finders',
@@ -65,40 +67,38 @@ protected $strictConfigSchema = FALSE;
 
     $this->installConfig('finders_test');
 
-    // Create a channel bundle.
+    // Create bundles that will be channels and entries.
     $channel_bundle = $this->entityTypeManager->getStorage('entity_test_bundle')->create([
       'id' => 'test_channel_bundle',
+      'label' => 'Label',
       'status' => TRUE,
     ]);
-    $channel_bundle->setThirdPartySetting(
-      'finders',
-      'finder_type',
-      'test'
-    );
-    $channel_bundle->setThirdPartySetting(
-      'finders',
-      'finder_role',
-      'channel'
-    );
     $channel_bundle->save();
 
-    // Create an entry bundle.
     $entry_bundle = $this->entityTypeManager->getStorage('entity_test_bundle')->create([
       'id' => 'test_entry_bundle_one',
+      'label' => 'Label',
       'status' => TRUE,
     ]);
     $entry_bundle->save();
-    $entry_bundle->setThirdPartySetting(
-      'finders',
-      'finder_type',
-      'test'
-    );
-    $entry_bundle->setThirdPartySetting(
-      'finders',
-      'finder_role',
-      FinderRole::Entries->value,
-    );
-    $entry_bundle->save();
+
+    // Create a finder.
+    $finder = $this->entityTypeManager->getStorage('finder')->create([
+      'id' => 'test',
+      'label' => 'Test',
+      'type' => 'test',
+      'channels' => [
+        'entity_test_with_bundle' => [
+          'test_channel_bundle',
+        ],
+      ],
+      'entries' => [
+        'entity_test_with_bundle' => [
+          'test_entry_bundle_one',
+        ],
+      ],
+    ]);
+    $finder->save();
   }
 
   /**
