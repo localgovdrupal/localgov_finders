@@ -10,7 +10,7 @@ use Drupal\Core\Hook\LegacyHook;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\finders\Entity\FinderInterface;
 use Drupal\finders_facets\Hook\FacetsHooks;
-use Drupal\finders_facets\Hook\FindersFacetsHooks;
+use Drupal\finders_facets\Hook\FindersHooks;
 use Drupal\finders_facets\Hook\FindersFormAlterHooks;
 use Drupal\finders_facets\Hook\FindersFacetsWidgetAlterHooks;
 use Drupal\search_api\IndexInterface;
@@ -23,7 +23,7 @@ use Drupal\views\ViewEntityInterface;
  */
 #[LegacyHook]
 function finders_facets_help($route_name, RouteMatchInterface $route_match) {
-  \Drupal::service(FindersFacetsHooks::class)->help($route_name, $route_match);
+  \Drupal::service(FindersHooks::class)->help($route_name, $route_match);
 }
 
 /**
@@ -53,7 +53,7 @@ function finders_facets_field_widget_single_element_finders_channels_form_alter(
  */
 #[LegacyHook]
 function finders_facets_finders_channel_fields_alter(&$channel_field_definitions, $bundle_entity, $finder) {
-  \Drupal::service(FindersFacetsHooks::class)->findersChannelFieldsAlter($channel_field_definitions, $bundle_entity, $finder);
+  \Drupal::service(FindersHooks::class)->findersChannelFieldsAlter($channel_field_definitions, $bundle_entity, $finder);
 }
 
 /**
@@ -63,7 +63,7 @@ function finders_facets_finders_channel_fields_alter(&$channel_field_definitions
  */
 #[LegacyHook]
 function finders_facets_finders_entry_fields_alter(&$channel_field_definitions, $bundle_entity, $finder) {
-  \Drupal::service(FindersFacetsHooks::class)->findersEntryFieldsAlter($channel_field_definitions, $bundle_entity, $finder);
+  \Drupal::service(FindersHooks::class)->findersEntryFieldsAlter($channel_field_definitions, $bundle_entity, $finder);
 }
 
 /**
@@ -73,7 +73,7 @@ function finders_facets_finders_entry_fields_alter(&$channel_field_definitions, 
  */
 #[LegacyHook]
 function finders_facets_finders_index_alter(IndexInterface $index, FinderInterface $finder): void {
-  \Drupal::service(FindersFacetsHooks::class)->findersIndexAlter($index, $finder);
+  \Drupal::service(FindersHooks::class)->findersIndexAlter($index, $finder);
 }
 
 /**
@@ -83,7 +83,7 @@ function finders_facets_finders_index_alter(IndexInterface $index, FinderInterfa
  */
 #[LegacyHook]
 function finders_facets_finders_view_alter(ViewEntityInterface $view, IndexInterface $index, FinderInterface $finder): void {
-  \Drupal::service(FindersFacetsHooks::class)->findersViewAlter($view, $index, $finder);
+  \Drupal::service(FindersHooks::class)->findersViewAlter($view, $index, $finder);
 }
 
 /**
@@ -93,7 +93,7 @@ function finders_facets_finders_view_alter(ViewEntityInterface $view, IndexInter
  */
 #[LegacyHook]
 function finders_facets_finders_post_configure(FinderInterface $finder) {
-  \Drupal::service(FindersFacetsHooks::class)->findersPostConfigure($finder);
+  \Drupal::service(FindersHooks::class)->findersPostConfigure($finder);
 }
 
 /**

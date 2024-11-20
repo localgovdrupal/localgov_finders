@@ -4,7 +4,7 @@ namespace Drupal\finders_facets\Plugin\facets\query_type;
 
 use Drupal\facets\QueryType\QueryTypePluginBase;
 use Drupal\facets\Result\Result;
-use Drupal\finders_facets\Hook\FindersFacetsHooks;
+use Drupal\finders_facets\Hook\FindersHooks;
 use Drupal\search_api\Query\ConditionGroupInterface;
 use Drupal\search_api\Query\QueryInterface;
 
@@ -187,7 +187,7 @@ class FindersFacetsQueryType extends QueryTypePluginBase {
       ->condition('bundle', $facet_type_id)
       ->accessCheck(TRUE)
       ->execute();
-    $found_facets = $facets[FindersFacetsHooks::FACET_INDEXING_FIELD] ?? [];
+    $found_facets = $facets[FindersHooks::FACET_INDEXING_FIELD] ?? [];
     $found_facets = array_filter($found_facets, function ($item) use ($group_facet_ids) {
       if (in_array(intval(trim($item['filter'], '"')), $group_facet_ids)) {
         return TRUE;

@@ -9,7 +9,7 @@ use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\Plugin\Field\FieldWidget\OptionsWidgetBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
-use Drupal\finders_facets\Hook\FindersFacetsHooks;
+use Drupal\finders_facets\Hook\FindersHooks;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -119,7 +119,7 @@ class Facets extends OptionsWidgetBase {
     $finder_type_plugin = $finder->getFinderTypePlugin();
 
     $channel_field_name = $finder_type_plugin->getFieldName('CHANNEL_SELECTION_FIELD');
-    $facet_types_enabled_field_name = FindersFacetsHooks::FACET_ENABLE_FIELD;
+    $facet_types_enabled_field_name = FindersHooks::FACET_ENABLE_FIELD;
 
     // Get the enabled facet types from the host entity's channels.
     $enabled = [];

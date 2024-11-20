@@ -17,7 +17,7 @@ use Drupal\views\ViewEntityInterface;
 /**
  * Contains hook implementations for the Finders facets module.
  */
-class FindersFacetsHooks {
+class FindersHooks {
 
   /**
    * Name of the field on channel entities for enabling facet types.

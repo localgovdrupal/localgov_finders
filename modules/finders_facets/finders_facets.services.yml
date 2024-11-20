@@ -1,6 +1,6 @@
 services:
-  Drupal\finders_facets\Hook\FindersFacetsHooks:
-    class: Drupal\finders_facets\Hook\FindersFacetsHooks
+  Drupal\finders_facets\Hook\FindersHooks:
+    class: Drupal\finders_facets\Hook\FindersHooks
     autowire: true
 
   Drupal\finders_facets\Hook\FacetsHooks:

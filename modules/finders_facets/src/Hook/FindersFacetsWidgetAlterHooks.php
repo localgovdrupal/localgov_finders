@@ -62,7 +62,7 @@ class FindersFacetsWidgetAlterHooks {
 
     $renderer = \Drupal::service('renderer');
     // Render just the facets field, alone, no matter how it's placed on the form.
-    $field = $form[FindersFacetsHooks::FACET_SELECTION_FIELD];
+    $field = $form[FindersHooks::FACET_SELECTION_FIELD];
     unset($field['#parents']);
     unset($field['#group']);
     unset($field['#groups']);
