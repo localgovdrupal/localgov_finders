@@ -65,7 +65,12 @@ function hook_finders_index_alter(IndexInterface $index, FinderInterface $finder
  *   The finder entity.
  */
 function hook_finders_view_alter(ViewEntityInterface $view, IndexInterface $index, FinderInterface $finder): void {
-  // TODO: write sample code.
+  // Add a field to the index.
+  $field = new \Drupal\search_api\Item\Field($index, 'rendered_item');
+  $field->setType('text');
+  $field->setPropertyPath('rendered_item');
+  $field->setLabel('Rendered HTML output');
+  $index->addField($field);
 }
 
 /**
