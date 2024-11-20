@@ -99,8 +99,8 @@ abstract class FinderTypeBase extends PluginBase implements FinderTypeInterface,
   /**
    * {@inheritdoc}
    */
-  public function getFieldName(string $field_constant): string {
-    return constant(static::class . '::' . $field_constant);
+  public function getFinderTypeConstant(string $constant_name): string {
+    return constant(static::class . '::' . $constant_name);
   }
 
   /**

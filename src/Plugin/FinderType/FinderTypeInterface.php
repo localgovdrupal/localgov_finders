@@ -16,15 +16,15 @@ use Drupal\views\ViewEntityInterface;
 interface FinderTypeInterface extends PluginInspectionInterface, DerivativeInspectionInterface {
 
   /**
-   * Gets the name of a bundle field this plugin defines.
+   * Gets the value of a constant on a finder type plugin.
    *
    * @param string $field_constant
-   *   The name of a field name constant on the plugin class.
+   *   The name of a constant on the plugin class.
    *
    * @return string
-   *   The name of the field.
+   *   The value of the constant.
    */
-  public function getFieldName(string $field_constant): string;
+  public function getFinderTypeConstant(string $field_constant): string;
 
   /**
    * Gets the bundle field definitions for a finder channel bundle.

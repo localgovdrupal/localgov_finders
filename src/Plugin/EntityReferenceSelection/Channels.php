@@ -173,7 +173,7 @@ class Channels extends DefaultSelection {
     $query->condition('type', $channel_bundles, 'IN');
 
     // Condition for channel types field, if it is set.
-    $channel_types_field_name = $finder_type->getFieldName('CHANNEL_TYPES_FIELD');
+    $channel_types_field_name = $finder_type->getFinderTypeConstant('CHANNEL_TYPES_FIELD');
     $or = $query->orConditionGroup();
     $or->notExists($channel_types_field_name);
     $bundle = $this->configuration['entity']->bundle();

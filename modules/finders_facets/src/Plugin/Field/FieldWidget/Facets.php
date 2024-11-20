@@ -118,7 +118,7 @@ class Facets extends OptionsWidgetBase {
     /** @var \Drupal\finders\Plugin\FinderType\FinderTypeInterface $finder_type_plugin */
     $finder_type_plugin = $finder->getFinderTypePlugin();
 
-    $channel_field_name = $finder_type_plugin->getFieldName('CHANNEL_SELECTION_FIELD');
+    $channel_field_name = $finder_type_plugin->getFinderTypeConstant('CHANNEL_SELECTION_FIELD');
     $facet_types_enabled_field_name = FindersHooks::FACET_ENABLE_FIELD;
 
     // Get the enabled facet types from the host entity's channels.
