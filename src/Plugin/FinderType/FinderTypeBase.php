@@ -242,7 +242,7 @@ abstract class FinderTypeBase extends PluginBase implements FinderTypeInterface,
     // Add the entry bundle to the view's row options.
     if ($default_display_configuration['display_options']['row']['type'] == 'search_api') {
       foreach ($entry_bundle_entities as $entry_bundle) {
-        $default_display_configuration['display_options']['row']['options']['view_modes']['entity:' . $entry_entity_type_id][$entry_bundle->id()] = 'teaser';
+        $default_display_configuration['display_options']['row']['options']['view_modes']['entity:' . $entry_entity_type_id][$entry_bundle->id()] = static::RESULTS_VIEW_MODE;
       }
     }
   }
