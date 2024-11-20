@@ -1,5 +1,9 @@
-# Template for Finders search indexes.
-# Commented-out lines are the sections that need to be added dynamically.
+# Template finder search index.
+# This template is loaded and changed by Finder type plugins. Some elements are
+# present but commented out, and some have placeholder tokens which the plugin
+# will replace. This makes future updates to this file from config easier to
+# manage.
+# @see \Drupal\finders\Plugin\FinderType\FinderTypeBase::alterSearchIndex()
 langcode: en
 status: false
 dependencies:

@@ -3,8 +3,7 @@
 # present but commented out, and some have placeholder tokens which the plugin
 # will replace. This makes future updates to this file from config easier to
 # manage.
-# @see \Drupal\finders\Plugin\FinderType\FinderTypeBase::alterViewForChannel
-# @see \Drupal\finders\Plugin\FinderType\FinderTypeBase::alterViewForEntry
+# @see \Drupal\finders\Plugin\FinderType\FinderTypeBase::alterView()
 langcode: en
 status: true
 dependencies:
