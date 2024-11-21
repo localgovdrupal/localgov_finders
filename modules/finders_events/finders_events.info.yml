@@ -1,0 +1,12 @@
+name: Finders events
+type: module
+description: 'WIP - will move to its own repo; in here for convenience during development'
+package: Search Finders
+core_version_requirement: ^10.2
+dependencies:
+  # Contrib
+  - date_recur:date_recur
+  - date_recur_modular:date_recur_modular
+  - search_api:search_api
+  - date_recur_search_api:date_recur_search_api
+  - finders:finders

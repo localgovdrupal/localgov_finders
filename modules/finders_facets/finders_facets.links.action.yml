@@ -1,0 +1,12 @@
+entity.finders_facet_type.add:
+  title: Add Finders Facet Type
+  route_name: entity.finders_facet_type.add_form
+  weight: 15
+  appears_on:
+    - entity.finders_facet_type.collection
+entity.finders_facet.add:
+  title: Add Finders Facet
+  route_name: entity.finders_facet.add_page
+  weight: 15
+  appears_on:
+    - entity.finders_facet.collection

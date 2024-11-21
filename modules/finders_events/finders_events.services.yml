@@ -1,0 +1,5 @@
+services:
+  # @todo Remove this definition when support for Drupal core < 11.1 is dropped.
+  Drupal\finders_events\Hooks\FindersEventsHooks:
+    class: Drupal\finders_events\Hooks\FindersEventsHooks
+    autowire: true

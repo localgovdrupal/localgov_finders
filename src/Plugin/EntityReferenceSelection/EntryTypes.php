@@ -1,0 +1,140 @@
+<?php
+
+namespace Drupal\finders\Plugin\EntityReferenceSelection;
+
+use Drupal\Component\Utility\Html;
+use Drupal\Core\Entity\Attribute\EntityReferenceSelection;
+use Drupal\Core\Entity\EntityReferenceSelection\SelectionPluginBase;
+use Drupal\Core\Entity\EntityRepositoryInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\finders\FinderTypeManager;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+
+/**
+ * Selection plugin for finder entry types.
+ */
+#[EntityReferenceSelection(
+  id: 'finders_entry_types',
+  label: new TranslatableMarkup("Finder entry types"),
+  group: 'finders_entry_types',
+  weight: 0,
+  entity_types: [],
+)]
+class EntryTypes extends SelectionPluginBase implements ContainerFactoryPluginInterface {
+
+  /**
+   * The entity type manager.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected $entityTypeManager;
+
+  /**
+   * The finder type manager.
+   *
+   * @var \Drupal\finders\FinderTypeManager
+   */
+  protected $finderTypeManager;
+
+  /**
+   * The entity repository service.
+   *
+   * @var \Drupal\Core\Entity\EntityRepositoryInterface
+   */
+  protected $entityRepository;
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+    return new static(
+      $configuration,
+      $plugin_id,
+      $plugin_definition,
+      $container->get('entity_type.manager'),
+      $container->get('plugin.manager.finders_finder_type'),
+      $container->get('entity.repository'),
+    );
+  }
+
+  /**
+   * Creates a EntryTypes instance.
+   *
+   * @param array $configuration
+   *   A configuration array containing information about the plugin instance.
+   * @param string $plugin_id
+   *   The plugin_id for the plugin instance.
+   * @param mixed $plugin_definition
+   *   The plugin implementation definition.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager.
+   * @param \Drupal\finders\FinderTypeManager $finder_type_manager
+   *   The finder type manager.
+   * @param \Drupal\Core\Entity\EntityRepositoryInterface $entity_repository
+   *   The entity repository service.
+   */
+  public function __construct(
+    array $configuration,
+    $plugin_id,
+    $plugin_definition,
+    EntityTypeManagerInterface $entity_type_manager,
+    FinderTypeManager $finder_type_manager,
+    EntityRepositoryInterface $entity_repository,
+  ) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
+    $this->entityTypeManager = $entity_type_manager;
+    $this->finderTypeManager = $finder_type_manager;
+    $this->entityRepository = $entity_repository;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getReferenceableEntities($match = NULL, $match_operator = 'CONTAINS', $limit = 0) {
+    // Get the entity we are getting field values for.
+    $host_entity = $this->configuration['entity'];
+
+    $bundle_entity_type_id = $host_entity->getEntityType()->getBundleEntityType();
+    $bundle_entity = $this->entityTypeManager->getStorage($bundle_entity_type_id)->load($host_entity->bundle());
+    $finder_type = $this->finderTypeManager->getBundleFinderType($bundle_entity);
+
+    $entry_bundles = $this->finderTypeManager->getEntryBundles($host_entity->getEntityType(), $finder_type);
+
+    $options = [];
+
+    foreach ($entry_bundles as $entity_id => $entity) {
+      $options[$bundle_entity_type_id][$entity_id] = Html::escape($this->entityRepository->getTranslationFromContext($entity)->label());
+    }
+
+    return $options;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function countReferenceableEntities($match = NULL, $match_operator = 'CONTAINS') {
+    $options = $this->getReferenceableEntities($match, $match_operator);
+    return count($options);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function validateReferenceableEntities(array $ids) {
+    return $ids;
+
+    // TODO!! STUFF!
+
+    // VAliDATE IN same index.
+
+
+    // Return only the $ids in $options, any others will be used in validation
+    // to list as invalid.
+    // @see Drupal\Core\Entity\Element\EntityAutocomplete::validateEntityAutocomplete()
+    $options = $this->getReferenceableEntities();
+    return array_intersect($ids, array_keys($options['node_type']));
+  }
+
+}

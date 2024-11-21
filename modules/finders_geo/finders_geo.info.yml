@@ -1,0 +1,10 @@
+name: Geo Finders
+type: module
+description: 'WIP - will move to its own repo; in here for convenience during development'
+package: Search Finders
+core_version_requirement: ^10.2
+dependencies:
+  # Contrib
+  - geo_entity:geo_entity
+  - search_api:search_api
+  - finders:finders

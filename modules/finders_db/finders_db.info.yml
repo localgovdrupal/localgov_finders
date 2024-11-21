@@ -1,0 +1,9 @@
+name: 'Finders Database'
+description: 'Installs initial SQL database index and configuration for Finders.'
+core_version_requirement: ^10.2
+type: module
+package: Search Finders
+
+dependencies:
+  - finders:finders
+  - search_api:search_api_db

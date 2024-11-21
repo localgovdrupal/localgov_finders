@@ -1,0 +1,82 @@
+<?php
+
+/**
+ * @file
+ * Contains install and update hooks for the finders_db module.
+ */
+
+/**
+ * Implements hook_install().
+ */
+function finders_db_install($is_syncing) {
+  if ($is_syncing) {
+    return;
+  }
+
+  $entity_type_manager = \Drupal::service('entity_type.manager');
+  $finder_type_manager = \Drupal::service('plugin.manager.finders_finder_type');
+
+  $server = $entity_type_manager->getStorage('search_api_server')->load('finders_default');
+
+  // Only work on node finder types (for now? Performance issues?)
+  $node_entity_type = $entity_type_manager->getDefinition('node');
+  $active_finder_types = $finder_type_manager->getActiveFinderTypes($node_entity_type);
+  /** @var \Drupal\finders\Plugin\FinderType\FinderTypeInterface $finder_type */
+  foreach ($active_finder_types as $finder_type) {
+    $index_ids = $finder_type->getIndexIds();
+    foreach ($index_ids as $index_id) {
+      /** @var \Drupal\search_api\Entity\IndexInterface $index */
+      $index = $entity_type_manager->getStorage('search_api_index')->load($index_id);
+
+      // Skip an index that does not exist for some reason.
+      if (!$index) {
+        continue;
+      }
+      // Skip an index that already has a server.
+      if ($index->getServerId()) {
+        continue;
+      }
+
+      $index->setServer($server);
+      $index->setStatus(TRUE);
+      $index->save();
+    }
+  }
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function finders_db_uninstall($is_syncing) {
+  if ($is_syncing) {
+    return;
+  }
+
+  $entity_type_manager = \Drupal::service('entity_type.manager');
+  $finder_type_manager = \Drupal::service('plugin.manager.finders_finder_type');
+
+  // Only work on node finder types (for now? Performance issues?)
+  $node_entity_type = $entity_type_manager->getDefinition('node');
+  $active_finder_types = $finder_type_manager->getActiveFinderTypes($node_entity_type);
+  /** @var \Drupal\finders\Plugin\FinderType\FinderTypeInterface $finder_type */
+  foreach ($active_finder_types as $finder_type) {
+    $index_ids = $finder_type->getIndexIds();
+    foreach ($index_ids as $index_id) {
+      $index = $entity_type_manager->getStorage('search_api_index')->load($index_id);
+
+      // Skip an index that does not exist for some reason.
+      if (!$index) {
+        continue;
+      }
+
+      // Skip an index that has been customized with a server other than ours.
+      if ($index->getServerId() != 'finders_default') {
+        continue;
+      }
+
+      $index->setServer(NULL);
+      $index->setStatus(FALSE);
+      $index->save();
+    }
+  }
+}

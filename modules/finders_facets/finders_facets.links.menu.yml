@@ -1,0 +1,10 @@
+entity.finders_facet.collection:
+  title: 'Finders facets'
+  parent: system.admin_content
+  description: 'Add and manage finders facets.'
+  route_name: entity.finders_facet.collection
+entity.finders_facet_type.collection:
+  title: Finders Facet Types
+  description: Create and manage fields, forms, and display settings for Finders Facet Types.
+  route_name: entity.finders_facet_type.collection
+  parent: system.admin_structure

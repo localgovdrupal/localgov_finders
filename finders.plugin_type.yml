@@ -1,0 +1,4 @@
+finders.finder_type:
+  label: 'Finder Type'
+  plugin_manager_service_id: plugin.manager.finders_finder_type
+  plugin_definition_decorator_class: Drupal\plugin\PluginDefinition\ArrayPluginDefinitionDecorator

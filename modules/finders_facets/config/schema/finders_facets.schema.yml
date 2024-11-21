@@ -1,0 +1,31 @@
+finders_facets.finders_facet_type.*:
+  type: config_entity
+  label: Finders Facet Type
+  mapping:
+    id:
+      type: text
+      label: Machine name
+    label:
+      type: label
+      label: Name
+    weight:
+      type: weight
+      label: Weight
+    description:
+      type: text
+      label: 'Description of facet type'
+
+# Schema for Finders Facets third party settings on bundle entities.
+# This is needed because apparently a schema name wildcard can't be used at the
+# start of the schema name, so this must be used in a schema definition for
+# every bundle entity config which uses finders.
+finders_facets.third_party_settings:
+  type: mapping
+  label: 'Third party settings'
+  mapping:
+    facets:
+      type: boolean
+      label: 'Enable facets'
+
+node.type.*.third_party.finders_facets:
+  type: finders_facets.third_party_settings
