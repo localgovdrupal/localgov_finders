@@ -9,6 +9,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Validation\ConstraintValidatorFactory;
 use Drupal\finders\Enum\FinderRole;
 use Drupal\finders\FinderTypeManager;
+use Drupal\views\ViewEntityInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Validator\Validation;
 
@@ -143,6 +144,55 @@ class FinderForm extends EntityForm {
       $original_entries = $original->get('entries');
       $form['entries']['#disable_entity_type'] = TRUE;
       $form['entries']['#disabled_bundles'] = $original_entries[array_key_first($original_entries)];
+    }
+
+    // Add some information on related config if the finder entity already
+    // exists. We assume if the user can edit a finder, they can see these
+    // config entities.
+    if (!$this->entity->isNew()) {
+      $form['info'] = [
+        '#type' => 'details',
+        '#title' => $this->t('Finder components'),
+        '#open' => TRUE,
+        '#weight' => 100,
+      ];
+
+      $finder_type_plugin = $this->entity->getFinderTypePlugin();
+
+      $index_ids = $finder_type_plugin->getIndexIds();
+      $indexes = $this->entityTypeManager->getStorage('search_api_index')->loadMultiple($index_ids);
+      $index_items = [];
+      foreach ($indexes as $index) {
+        $view_ids = $finder_type_plugin->getViewIds($index);
+        $views = $this->entityTypeManager->getStorage('view')->loadMultiple($view_ids);
+
+        $index_items[] = [
+          'index' => [
+            '#type' => 'link',
+            '#title' => 'index ' . $index->id() . ' index',
+            '#url' => $index->toUrl(),
+          ],
+          'views' => [
+            '#theme' => 'item_list',
+            '#items' => array_map(
+              fn (ViewEntityInterface $view) => [
+                // Use a key so facets module can add a further nested list.
+                'view' => [
+                  '#type' => 'link',
+                  '#title' => $view->label() . ' view',
+                  '#url' => $view->toUrl(),
+                ]
+              ],
+              $views
+            ),
+          ],
+        ];
+      }
+
+      $form['info']['indexes'] = [
+        '#theme' => 'item_list',
+        '#items' => $index_items,
+      ];
     }
 
     return $form;
