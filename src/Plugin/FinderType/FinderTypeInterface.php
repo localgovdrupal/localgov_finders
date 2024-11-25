@@ -7,7 +7,6 @@ use Drupal\Component\Plugin\PluginInspectionInterface;
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
 use Drupal\finders\Entity\FinderInterface;
 use Drupal\search_api\IndexInterface;
-use Drupal\search_api\Item\Field as SearchIndexField;
 use Drupal\views\ViewEntityInterface;
 
 /**
@@ -103,7 +102,7 @@ interface FinderTypeInterface extends PluginInspectionInterface, DerivativeInspe
   /**
    * Alters the view for a search index when a finder is configured.
    *
-   * @param ViewEntityInterface $view
+   * @param \Drupal\views\ViewEntityInterface $view
    *   The view about to be saved.
    * @param \Drupal\search_api\IndexInterface $index
    *   The search index. It has already been updated for the channel bundle and

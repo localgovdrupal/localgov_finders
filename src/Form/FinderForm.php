@@ -180,7 +180,7 @@ class FinderForm extends EntityForm {
                   '#type' => 'link',
                   '#title' => $view->label() . ' view',
                   '#url' => $view->toUrl(),
-                ]
+                ],
               ],
               $views
             ),

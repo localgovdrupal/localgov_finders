@@ -4,14 +4,14 @@ namespace Drupal\finders\Plugin\FinderType;
 
 use Drupal\Component\Plugin\PluginBase;
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\finders\Entity\FinderInterface;
 use Drupal\finders\Field\BundleFieldDefinition;
 use Drupal\search_api\Datasource\DatasourceInterface;
 use Drupal\search_api\IndexInterface;
 use Drupal\search_api\Item\Field as SearchIndexField;
-use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
-use Drupal\finders\Entity\FinderInterface;
 use Drupal\search_api\Utility\PluginHelperInterface;
 use Drupal\views\ViewEntityInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -210,7 +210,6 @@ abstract class FinderTypeBase extends PluginBase implements FinderTypeInterface,
       $channel_field_argument_template['field'] = static::CHANNEL_SELECTION_FIELD;
       // No need to change the table, as that has been set already by
       // FinderConfigManager::loadTemplateView().
-
       $default_display_configuration['display_options']['arguments'][static::CHANNEL_SELECTION_FIELD] = $channel_field_argument_template;
     }
 
@@ -238,7 +237,6 @@ abstract class FinderTypeBase extends PluginBase implements FinderTypeInterface,
 
     // Ensure the row settings have all the entry bundles in the view mode
     // configuration.
-
     // Add the entry bundle to the view's row options.
     if ($default_display_configuration['display_options']['row']['type'] == 'search_api') {
       foreach ($entry_bundle_entities as $entry_bundle) {

@@ -2,10 +2,8 @@
 
 namespace Drupal\Tests\finders\Kernel;
 
-use Drupal\KernelTests\KernelTestBase;
-use Drupal\finders\Enum\FinderRole;
 use Drupal\finders\Plugin\FinderType\FinderTypeBase;
-use Drupal\search_api\IndexInterface;
+use Drupal\KernelTests\KernelTestBase;
 use Drupal\search_api\Utility\Utility;
 
 /**

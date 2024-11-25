@@ -3,12 +3,9 @@
 namespace Drupal\finders;
 
 use Drupal\Core\Cache\CacheBackendInterface;
-use Drupal\Core\Config\Entity\ConfigEntityInterface;
-use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Plugin\DefaultPluginManager;
 use Drupal\finders\Attribute\FinderType;
-use Drupal\finders\Enum\FinderRole;
 use Drupal\finders\Plugin\FinderType\FinderTypeInterface;
 
 /**

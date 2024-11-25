@@ -6,7 +6,6 @@ use Drupal\Core\Config\Entity\ConfigEntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ModuleExtensionList;
 use Drupal\Core\Hook\Attribute\Hook;
-use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\finders\Entity\FinderInterface;
 use Drupal\finders\Field\BundleFieldDefinition;
 use Drupal\finders_facets\FindersFacetsTypeManager;
@@ -181,7 +180,7 @@ class FindersHooks {
    * @param \Drupal\finders\Entity\FinderInterface $finder
    *   The finder entity.
    *
-   * @return boolean
+   * @return bool
    *   TRUE if the finder is configured to use facets, FALSE if not.
    */
   protected function isFinderEnabledWithFacets(FinderInterface $finder): bool {

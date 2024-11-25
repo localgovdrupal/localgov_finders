@@ -6,7 +6,6 @@ use Drupal\facets\FacetInterface;
 use Drupal\finders\Entity\FinderInterface;
 use Drupal\finders_facets\Attribute\FindersFacetsType;
 use Drupal\finders_facets\Plugin\FindersFacetsType\FindersFacetsTypeBase;
-use Drupal\finders_events\Plugin\FinderType\Events as FinderEvents;
 use Drupal\search_api\IndexInterface;
 use Drupal\views\ViewEntityInterface;
 

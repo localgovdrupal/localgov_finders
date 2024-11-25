@@ -2,10 +2,9 @@
 
 namespace Drupal\Tests\finders_events\Kernel;
 
+use Drupal\finders\Plugin\FinderType\FinderTypeBase;
 use Drupal\finders_events\Plugin\FinderType\Events;
 use Drupal\KernelTests\KernelTestBase;
-use Drupal\finders\Enum\FinderRole;
-use Drupal\finders\Plugin\FinderType\FinderTypeBase;
 use Drupal\search_api\Entity\Index;
 
 /**
@@ -51,6 +50,7 @@ class EventFinderPluginTest extends KernelTestBase {
    * Disable config checking of the calendar view.
    *
    * The calendar_view module is missing config schema.
+   *
    * @see https://www.drupal.org/project/calendar_view/issues/3488649
    *
    * @var array

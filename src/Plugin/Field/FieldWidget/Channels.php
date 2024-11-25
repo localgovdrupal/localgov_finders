@@ -16,7 +16,7 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
  *  - radios to select the primary item, stored in the delta 0 of the field
  *  - checkboxes to select further items.
  */
- #[FieldWidget(
+#[FieldWidget(
   id: 'finders_channels',
   label: new TranslatableMarkup('Finder channels'),
   field_types: [
@@ -26,6 +26,7 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
   weight: '-10',
 )]
 class Channels extends OptionsWidgetBase {
+
   /**
    * {@inheritdoc}
    */
