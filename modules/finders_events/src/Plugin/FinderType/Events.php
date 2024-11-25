@@ -55,7 +55,7 @@ class Events extends FinderTypeBase {
    *
    * This is defined by the date_recur_search_api module.
    */
-  const EVENT_DATE_OCCURRENCE_FIELD = self::EVENT_DATE_FIELD .  '_occurrence';
+  const EVENT_DATE_OCCURRENCE_FIELD = self::EVENT_DATE_FIELD . '_occurrence';
 
   /**
    * {@inheritdoc}
@@ -80,7 +80,7 @@ class Events extends FinderTypeBase {
    * {@inheritdoc}
    */
   public function getIndexDatasourceId(IndexInterface $index, string $entity_type_id): string {
-    // See \Drupal\date_recur_search_api\Plugin\search_api\datasource\DateRecur
+    // See \Drupal\date_recur_search_api\Plugin\search_api\datasource\DateRecur.
     return 'date_recur:' . $entity_type_id . '__' . static::EVENT_DATE_FIELD;
   }
 
@@ -122,7 +122,6 @@ class Events extends FinderTypeBase {
     $entry_entity_type_id = $finder->getEntryEntityTypeId();
 
     $datasource_id = $this->getIndexDatasourceId($index, $entry_entity_type_id);
-    $datasource = $index->getDatasource($datasource_id);
 
     // @todo Make DateRecur::getComputedFieldName() public so we can use that
     // instead of accessing the DateOccurrence::COMPUTED_FIELD_SUFFIX constant
@@ -312,7 +311,7 @@ class Events extends FinderTypeBase {
             'MONTHLY' => [],
             'YEARLY' => [],
           ],
-        ]
+        ],
       ])
       ->setDefaultValue([
         'default_date_type' => 'now',

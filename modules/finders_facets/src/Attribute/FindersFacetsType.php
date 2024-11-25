@@ -3,7 +3,6 @@
 namespace Drupal\finders_facets\Attribute;
 
 use Drupal\Component\Plugin\Attribute\Plugin;
-use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
  * Defines a Finders Facets Type attribute object.

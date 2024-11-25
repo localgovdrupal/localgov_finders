@@ -72,7 +72,6 @@ abstract class FindersFacetsTypeBase extends PluginBase implements FindersFacets
     $this->moduleExtensionList = $module_extension_list;
   }
 
-
   /**
    * {@inheritdoc}
    */

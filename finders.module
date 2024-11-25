@@ -30,13 +30,6 @@ function finders_entity_bundle_field_info(EntityTypeInterface $entity_type, stri
     return [];
   }
 
-  // // Get finder type, if there is one.
-  // $finder_type_manager = \Drupal::service('plugin.manager.finders_finder_type');
-  // $finder_type = $finder_type_manager->getBundleFinderType($bundle);
-  // if (empty($finder_type)) {
-  //   return [];
-  // }
-
   $finder_config_manager = \Drupal::service('finders.finder_config_manager');
   return $finder_config_manager->getBundleFieldDefinitions($bundle);
 }
