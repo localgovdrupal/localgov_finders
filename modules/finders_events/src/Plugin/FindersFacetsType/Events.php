@@ -12,6 +12,10 @@ use Drupal\views\ViewEntityInterface;
 
 /**
  * Finders facets type for events.
+ *
+ * Events use a facet for each view, calendar and list. These use the same facet
+ * url_alias, which means that we can show a block just for one facet, and have
+ * the facet links control both view simultaneously.
  */
 #[FindersFacetsType(
   id: 'events',
