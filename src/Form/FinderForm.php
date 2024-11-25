@@ -6,8 +6,11 @@ use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Validation\ConstraintValidatorFactory;
+use Drupal\finders\Enum\FinderRole;
 use Drupal\finders\FinderTypeManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\Validator\Validation;
 
 /**
  * Provides the default form handler for the Finder entity.
@@ -149,8 +152,35 @@ class FinderForm extends EntityForm {
    * {@inheritdoc}
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
-    // TODO: Validation at the config schema level.
     parent::validateForm($form, $form_state);
+
+    // Go via the config schema validation to validate channels and entries.
+    // @todo Remove this when core handles config entity validation.
+    $entity = $this->buildEntity($form, $form_state);
+
+    $validation_constraint = \Drupal::service('validation.constraint')->createInstance('FindersBundlesUniqueToFinder');
+    $validator_factory = new ConstraintValidatorFactory(\Drupal::service('class_resolver'));
+    $validator = $validator_factory->getInstance($validation_constraint);
+
+    foreach (['channels', 'entries'] as $form_key) {
+      $form_values = $form_state->getValue($form_key);
+
+      // Form values may be empty during AJAX calls.
+      if (!isset($form_values['container']['entity_type_id'])) {
+        continue;
+      }
+      $entity_type_id = $form_values['container']['entity_type_id'];
+
+      if (!isset($form_values['container']['bundles'])) {
+        continue;
+      }
+      $bundles = array_filter($form_values['container']['bundles']);
+
+      $violation_message_placeholders = $validator->doValidate($entity->id(), FinderRole::from($form_key), $entity_type_id, $bundles);
+      if ($violation_message_placeholders) {
+        $form_state->setError($form[$form_key], $this->t($validation_constraint->message, $violation_message_placeholders));
+      }
+    }
   }
 
   /**

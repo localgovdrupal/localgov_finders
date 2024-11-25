@@ -50,6 +50,19 @@ class FindersBundlesUniqueToFinderValidator extends ConstraintValidator implemen
     $validating_finder_entity_type_id = array_key_first($items);
     $validating_finder_bundle_ids = $items[$validating_finder_entity_type_id];
 
+    $placeholders = $this->doValidate($validating_finder_id, $validating_finder_role, $validating_finder_entity_type_id, $validating_finder_bundle_ids);
+    if ($placeholders) {
+      $this->context->addViolation($constraint->message, $placeholders);
+    }
+  }
+
+  /**
+   * Hacky helper method which allows the finder entity form to use this.
+   *
+   * @todo Fold this into self::validate() when core handles config entity
+   * validation.
+   */
+  public function doValidate($validating_finder_id, $validating_finder_role, $validating_finder_entity_type_id, $validating_finder_bundle_ids): ?array {
     /** @var \Drupal\finders\Entity\FinderInterface $finder */
     foreach ($this->entityTypeManager->getStorage('finder')->loadMultiple() as $finder) {
       // Skip the finder being validated.
@@ -79,20 +92,20 @@ class FindersBundlesUniqueToFinderValidator extends ConstraintValidator implemen
         // Finally, get the bundle labels of the duplicated bundles.
         $duplicated_bundle_labels = array_column($duplicated_bundle_info, 'label');
 
-        $this->context->addViolation($constraint->message, [
+        // If we have a violation, we can leave. There should not be common
+        // bundles between existing finders.
+        return [
           '@finder_label' => $finder->label(),
           '@used_bundles' => implode(', ', $duplicated_bundle_labels),
           '@role' => match($validating_finder_role) {
             FinderRole::Channel => t('channels'),
             FinderRole::Entries => t('entries'),
           },
-        ]);
-
-        // If we have a violation, we can leave. There should not be common
-        // bundles between existing finders.
-        return;
+        ];
       }
     }
+
+    return NULL;
   }
 
 }
