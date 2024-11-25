@@ -5,16 +5,17 @@ namespace Drupal\finders_facets\Plugin\FindersFacetsType;
 use Drupal\Core\Config\FileStorage as ConfigFileStorage;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ModuleExtensionList;
-use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
-use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\finders\Entity\FinderInterface;
 use Drupal\finders_facets\Attribute\FindersFacetsType;
 use Drupal\finders_facets\Hook\FindersHooks;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * TODO: class docs.
+ * Default plugin for finder facets types.
+ *
+ * This is used if there is no finders facet plugin whose ID matches a finder
+ * entity's finder type plugin.
  */
 #[FindersFacetsType(
   id: '_default',
@@ -74,7 +75,10 @@ class DefaultFinderFacetType extends FindersFacetsTypeBase implements ContainerF
     $this->moduleExtensionList = $module_extension_list;
   }
 
-  public function findersPostConfigure(FinderInterface $finder) {
+  /**
+   * {@inheritdoc}
+   */
+  public function findersPostConfigure(FinderInterface $finder): void {
     $finder_type = $finder->getFinderTypePlugin();
 
     // Get the config template for a facet.

@@ -4,6 +4,7 @@ namespace Drupal\finders_facets\Plugin\FindersFacetsType;
 
 use Drupal\Component\Plugin\DerivativeInspectionInterface;
 use Drupal\Component\Plugin\PluginInspectionInterface;
+use Drupal\finders\Entity\FinderInterface;
 
 /**
  * Interface for Finders Facets Type plugins.
@@ -14,5 +15,16 @@ use Drupal\Component\Plugin\PluginInspectionInterface;
  * configuration for that finder.
  */
 interface FindersFacetsTypeInterface extends PluginInspectionInterface, DerivativeInspectionInterface {
+
+  /**
+   * Performs configuration for a finder's facets.
+   *
+   * @param \Drupal\finders\Entity\FinderInterface $finder
+   *   The finder entity.
+   *
+   * @see \Drupal\finders\FinderConfigManage::ensureFinderConfig()
+   * @see \Drupal\finders_facets\Hook\FindersHooks::findersPostConfigure()
+   */
+  public function findersPostConfigure(FinderInterface $finder): void;
 
 }
