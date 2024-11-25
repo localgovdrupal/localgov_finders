@@ -233,8 +233,6 @@ class Finder extends ConfigEntityBase implements FinderInterface {
   public function postSave(EntityStorageInterface $storage, $update = TRUE) {
     parent::postSave($storage, $update);
 
-    // TODO validation! at the config schema level -- bundle can only be in one finder!
-
     // Configure the channel and entry bundles for this finder.
     $finder_config_manager = \Drupal::service('finders.finder_config_manager');
     $finder_config_manager->ensureFinderConfig($this);
