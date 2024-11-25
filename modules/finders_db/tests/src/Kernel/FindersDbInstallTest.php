@@ -32,7 +32,9 @@ class FindersDbInstallTest extends KernelTestBase {
     'finders_test',
   ];
 
-  // Disable config checking -- schema for our third-party settings is missing.
+  /**
+   * Disable config checking -- schema for our third-party settings is missing.
+   */
   protected $strictConfigSchema = FALSE;
 
   /**
