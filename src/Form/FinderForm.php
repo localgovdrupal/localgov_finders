@@ -154,16 +154,39 @@ class FinderForm extends EntityForm {
   public function validateForm(array &$form, FormStateInterface $form_state) {
     parent::validateForm($form, $form_state);
 
-    // Go via the config schema validation to validate channels and entries.
-    // @todo Remove this when core handles config entity validation.
     $entity = $this->buildEntity($form, $form_state);
 
+    // Ensure at least one bundle is selected for channels and entries. We can't
+    // use #required because on existing entity forms, the disabled checkboxes
+    // don't appear to form validation as values.
+    if ($entity->isNew()) {
+      foreach (['channels', 'entries'] as $role_form_key) {
+        $form_values = $form_state->getValue($role_form_key);
+
+      // Form values may be empty during AJAX calls.
+      if (!isset($form_values['container']['bundles'])) {
+          continue;
+        }
+        $bundles = array_filter($form_values['container']['bundles']);
+        if (empty($bundles)) {
+          $form_state->setError($form[$role_form_key], $this->t('At least one @role bundle must be selected.', [
+            '@role' => match (FinderRole::from($role_form_key)) {
+              FinderRole::Channel => 'channel',
+              FinderRole::Entries => 'entry',
+            },
+          ]));
+        }
+      }
+    }
+
+    // Go via the config schema validation to validate channels and entries.
+    // @todo Remove this when core handles config entity validation.
     $validation_constraint = \Drupal::service('validation.constraint')->createInstance('FindersBundlesUniqueToFinder');
     $validator_factory = new ConstraintValidatorFactory(\Drupal::service('class_resolver'));
     $validator = $validator_factory->getInstance($validation_constraint);
 
-    foreach (['channels', 'entries'] as $form_key) {
-      $form_values = $form_state->getValue($form_key);
+    foreach (['channels', 'entries'] as $role_form_key) {
+      $form_values = $form_state->getValue($role_form_key);
 
       // Form values may be empty during AJAX calls.
       if (!isset($form_values['container']['entity_type_id'])) {
@@ -176,9 +199,9 @@ class FinderForm extends EntityForm {
       }
       $bundles = array_filter($form_values['container']['bundles']);
 
-      $violation_message_placeholders = $validator->doValidate($entity->id(), FinderRole::from($form_key), $entity_type_id, $bundles);
+      $violation_message_placeholders = $validator->doValidate($entity->id(), FinderRole::from($role_form_key), $entity_type_id, $bundles);
       if ($violation_message_placeholders) {
-        $form_state->setError($form[$form_key], $this->t($validation_constraint->message, $violation_message_placeholders));
+        $form_state->setError($form[$role_form_key], $this->t($validation_constraint->message, $violation_message_placeholders));
       }
     }
   }
