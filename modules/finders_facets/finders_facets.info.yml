@@ -4,5 +4,6 @@ package: Search Finders
 description: 'Provides a content managed set of facets for Finders.'
 core_version_requirement: ^10.2
 dependencies:
-  - 'facets:facets'
+  - drupal:block
+  - facets:facets
 configure: entity.finders_facets_type.collection

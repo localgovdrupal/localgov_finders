@@ -1,0 +1,32 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - facets.facet.FACET_ID
+  module:
+    - facets
+    - node
+  theme:
+    - THEME_ID
+id: BLOCK_ID
+theme: THEME_ID
+region: sidebar_first
+weight: 5
+provider: null
+plugin: 'facet_block:FACET_ID'
+settings:
+  id: 'facet_block:FACET_ID'
+  label: 'Finder facets'
+  provider: facets
+  context_mapping: {  }
+  label_display: '0'
+  block_id: FACET_ID
+visibility: {  }
+  # Replaced in code.
+  # 'entity_bundle:node':
+  #   id: 'entity_bundle:node'
+  #   negate: false
+  #   context_mapping:
+  #     node: '@node.node_route_context:node'
+  #   bundles:
+  #     localgov_directory: localgov_directory

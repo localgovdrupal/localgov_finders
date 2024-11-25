@@ -19,6 +19,7 @@ class FindersFacetTest extends KernelTestBase {
   protected static $modules = [
     'system',
     'user',
+    'block',
     'views',
     'viewsreference',
     'search_api',

@@ -9,6 +9,8 @@ use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\finders\Entity\FinderInterface;
 use Drupal\finders_facets\Attribute\FindersFacetsType;
 use Drupal\finders_facets\Hook\FindersHooks;
+use Drupal\search_api\IndexInterface;
+use Drupal\views\ViewEntityInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -71,13 +73,16 @@ class DefaultFinderFacetType extends FindersFacetsTypeBase {
         $facet = $facet_storage->create($facet_values);
         $facet->save();
 
-        $this->ensureViewFacets($finder, $index, $view);
+        // Allow plugins to add further facets.
+        $facets = $this->ensureViewFacets($finder, $index, $view);
+
+        $facets[] = $facet;
+
+        foreach ($facets as $loop_facet) {
+          $this->ensureFacetBlock($loop_facet, $finder, $index, $view);
+        }
       }
     }
-
-    // TODO: further config:
-    // facet block
-
   }
 
 }

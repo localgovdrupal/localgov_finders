@@ -3,6 +3,7 @@
 namespace Drupal\finders_facets\Plugin\FindersFacetsType;
 
 use Drupal\Component\Plugin\PluginBase;
+use Drupal\Core\Config\FileStorage as ConfigFileStorage;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ModuleExtensionList;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
@@ -79,9 +80,72 @@ abstract class FindersFacetsTypeBase extends PluginBase implements FindersFacets
    *   The search index to add facets for.
    * @param \Drupal\views\ViewEntityInterface $view
    *   The view on the given search index to add facets for.
+   *
+   * @return \Drupal\facets\FacetInterface[]
+   *   An array of facets that blocks should be created for. Implementations of
+   *   this method may choose not to return a facet they have created.
    */
-  protected function ensureViewFacets(FinderInterface $finder, IndexInterface $index, ViewEntityInterface $view): void {
-    // Do nothing in this plugin.
+  protected function ensureViewFacets(FinderInterface $finder, IndexInterface $index, ViewEntityInterface $view): array {
+    // Do nothing in the base class.
+    return [];
+  }
+
+  /**
+   * Ensures a block exists for the given facet.
+   *
+   * This is based on the config template file, and is configured to show on
+   * all channel bundles of the finder.
+   *
+   * @param \Drupal\facets\FacetInterface $facet
+   *   The facet to create a block for.
+   * @param \Drupal\finders\Entity\FinderInterface $finder
+   *   The finder being configured.
+   * @param \Drupal\search_api\IndexInterface $index
+   *   The index the facet is for.
+   * @param \Drupal\views\ViewEntityInterface $view
+   *   The view the facet is on.
+   */
+  protected function ensureFacetBlock(FacetInterface $facet, FinderInterface $finder, IndexInterface $index, ViewEntityInterface $view): void {
+    $block_storage = $this->entityTypeManager->getStorage('block');
+
+    // Get the config template for a block.
+    $template_directory = $this->moduleExtensionList->getPath('finders_facets') . '/config/template';
+    $config_source = new ConfigFileStorage($template_directory);
+    $config_filename = 'block.block.finders_facets_template';
+    $block_template_config_values = $config_source->read($config_filename);
+
+    $block_id = 'finders_facets_' . $facet->id();
+
+    // Don't do anything if the block already exists.
+    if ($block = $block_storage->load($block_id)) {
+      return;
+    }
+
+    $block_values = $block_template_config_values;
+
+    $theme = \Drupal::service('theme.manager')->getActiveTheme()->getName();
+
+    $replacements = [
+      'FACET_ID' => $facet->id(),
+      'THEME_ID' => $theme,
+      'BLOCK_ID' => $block_id,
+    ];
+
+    array_walk_recursive($block_values, function (&$config_value) use ($replacements) {
+      if (is_string($config_value)) {
+        $config_value = str_replace(array_keys($replacements), array_values($replacements), $config_value);
+      }
+    });
+
+    // Show the block on channel bundles for the finder.
+    $finder_channel_entity_type_id = $finder->getChannelEntityTypeId();
+    $block_values['visibility']['entity_bundle:' . $finder_channel_entity_type_id] = [
+      'id' => 'entity_bundle:' . $finder_channel_entity_type_id,
+      'bundles' => $finder->getChannelBundleIds(),
+    ];
+
+    $block = $block_storage->create($block_values);
+    $block->save();
   }
 
 }
