@@ -18,14 +18,4 @@ use Drupal\views\ViewEntityInterface;
 )]
 class Events extends FindersFacetsTypeBase {
 
-  /**
-   * {@inheritdoc}
-   */
-  protected function loadViewContentFacetsFacet(string $facet_id, array $facet_template_config_values, FinderInterface $finder, IndexInterface $index, ViewEntityInterface $view): ?FacetInterface {
-    // Don't provide a facet for the calendar view.
-    if ($view->id() == FinderEvents::CALENDAR_VIEW_FIELD) {
-      return NULL;
-    }
-  }
-
 }
