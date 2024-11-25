@@ -266,7 +266,7 @@ abstract class FinderTypeBase extends PluginBase implements FinderTypeInterface,
 
     $datasource = $this->getIndexDatasource($index, $finder);
     if (!$datasource) {
-      throw new \Exception('Failed to update the directories search index with new bundle');
+      throw new \Exception('Failed to update the finders search index with new bundle');
     }
 
     $configuration = $datasource->getConfiguration();

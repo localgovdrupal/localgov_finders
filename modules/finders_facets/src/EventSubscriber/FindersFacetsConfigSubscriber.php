@@ -35,7 +35,7 @@ class FindersFacetsConfigSubscriber implements EventSubscriberInterface {
   protected $syncStorage;
 
   /**
-   * DirectoriesConfigSubscriber constructor.
+   * FindersFacetsConfigSubscriber constructor.
    *
    * @param \Drupal\Core\Config\StorageInterface $config_storage
    *   The config active storage.

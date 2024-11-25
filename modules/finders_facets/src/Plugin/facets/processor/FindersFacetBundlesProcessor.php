@@ -8,7 +8,7 @@ use Drupal\facets\Processor\ProcessorPluginBase;
 use Drupal\finders_facets\Hook\FacetsHooks;
 
 /**
- * ANDs LocalGov Directories Facet Groups while keeping OR within each group.
+ * ANDs LocalGov Finders Facet Groups while keeping OR within each group.
  *
  * Switches the query type for finders facets entities.
  *
@@ -16,8 +16,8 @@ use Drupal\finders_facets\Hook\FacetsHooks;
  *
  * @FacetsProcessor(
  *   id = "finders_facets_bundle",
- *   label = @Translation("LocalGov Directories - AND Facet Groups"),
- *   description = @Translation("ANDs LocalGov Directories Facet Groups while keeping OR within each group."),
+ *   label = @Translation("Finders - AND Facet Groups"),
+ *   description = @Translation("ANDs Finders Facet Groups while keeping OR within each group."),
  *   stages = {
  *     "pre_query" = 35
  *   }
