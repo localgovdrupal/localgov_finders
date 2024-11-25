@@ -4,12 +4,12 @@ namespace Drupal\finders_facets\Hook;
 
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\Core\Config\FileStorage as ConfigFileStorage;
 use Drupal\Core\Extension\ModuleExtensionList;
 use Drupal\Core\Hook\Attribute\Hook;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\finders\Entity\FinderInterface;
 use Drupal\finders\Field\BundleFieldDefinition;
+use Drupal\finders_facets\FindersFacetsTypeManager;
 use Drupal\search_api\IndexInterface;
 use Drupal\search_api\Item\Field as SearchIndexField;
 use Drupal\views\ViewEntityInterface;
@@ -41,10 +41,13 @@ class FindersHooks {
    *   The entity type manager.
    * @param \Drupal\Core\Extension\ModuleExtensionList $module_extension_list
    *   The module extension list service.
+   * @param \Drupal\finders_facets\FindersFacetsTypeManager $findersFacetTypeManager
+   *   The finders facets type manager.
    */
   public function __construct(
     protected EntityTypeManagerInterface $entityTypeManager,
     protected ModuleExtensionList $moduleExtensionList,
+    protected FindersFacetsTypeManager $findersFacetTypeManager,
   ) {
   }
 
@@ -158,54 +161,18 @@ class FindersHooks {
     }
 
     $finder_type = $finder->getFinderTypePlugin();
+    $finder_type_id = $finder_type->getPluginId();
 
-    // Get the config template for a facet.
-    $template_directory = $this->moduleExtensionList->getPath('finders_facets') . '/config/template';
-    $config_source = new ConfigFileStorage($template_directory);
-    $config_filename = 'facets.facet.finders_facets_template';
-    $facet_template_config_values = $config_source->read($config_filename);
-
-    $facet_storage = $this->entityTypeManager->getStorage('facets_facet');
-
-    // Ensure a facet for each view.
-    $indexes = $this->entityTypeManager->getStorage('search_api_index')->loadMultiple($finder_type->getIndexIds());
-    foreach ($indexes as $index) {
-      $view_ids = $finder_type->getViewIds($index);
-      $views = $this->entityTypeManager->getStorage('view')->loadMultiple($view_ids);
-
-      foreach ($views as $view) {
-        // No need to prefix with 'finders'; the index ID should already have
-        // that.
-        $facet_id = $index->id() . '_' . $view->id();
-
-        // Do not overwrite an existing facet.
-        $facet = $facet_storage->load($facet_id);
-        if ($facet) {
-          continue;
-        }
-
-        // Copy the template and replace values.
-        $facet_values = $facet_template_config_values;
-
-        $facet_values['id'] = $facet_id;
-        $facet_values['name'] = 'Finders - ' . $finder_type->getPluginDefinition()['label'] . ' - ' . $view->id();
-
-        $facet_values['dependencies']['config'] = [
-          $index->getConfigDependencyName(),
-          $view->getConfigDependencyName(),
-        ];
-
-        $facet_values['facet_source_id'] = 'search_api:views_embed__' . $view->id() . '__channel_embed';
-        $facet_values['field_identifier'] = static::FACET_INDEXING_FIELD;
-
-        // Save the facet.
-        $facet = $facet_storage->create($facet_values);
-        $facet->save();
-      }
+    // Get the finder facets type plugin which matches the finder type, if one
+    // exists. Otherwise, fall back to the special '_default' plugin.
+    if ($this->findersFacetTypeManager->hasDefinition($finder_type_id)) {
+      $finder_facets_type_plugin = $this->findersFacetTypeManager->createInstance($finder_type_id);
+    }
+    else {
+      $finder_facets_type_plugin = $this->findersFacetTypeManager->createInstance($this->findersFacetTypeManager::DEFAULT_PLUGIN_ID);
     }
 
-    // TODO: further config:
-    // facet block
+    $finder_facets_type_plugin->findersPostConfigure($finder);
   }
 
   /**

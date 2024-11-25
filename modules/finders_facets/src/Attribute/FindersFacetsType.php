@@ -20,15 +20,9 @@ class FindersFacetsType extends Plugin {
    *
    * @param string $id
    *   The plugin ID.
-   * @param \Drupal\Core\StringTranslation\TranslatableMarkup $label
-   *   The plugin label.
-   * @param \Drupal\Core\StringTranslation\TranslatableMarkup $description
-   *   The plugin description.
    */
   public function __construct(
     public readonly string $id,
-    public readonly TranslatableMarkup $label,
-    public readonly TranslatableMarkup $description,
   ) {
   }
 

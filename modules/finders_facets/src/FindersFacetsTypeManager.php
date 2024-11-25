@@ -14,6 +14,11 @@ use Drupal\finders_facets\Plugin\FindersFacetsType\FindersFacetsTypeInterface;
 class FindersFacetsTypeManager extends DefaultPluginManager {
 
   /**
+   * The ID of the plugin to use when there is none matching a finder type.
+   */
+  public const DEFAULT_PLUGIN_ID = '_default';
+
+  /**
    * Constructs a new FindersFacetsTypeManagerManager.
    *
    * @param \Traversable $namespaces
