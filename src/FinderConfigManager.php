@@ -145,7 +145,7 @@ class FinderConfigManager {
     }
     else {
       return match ($finder_role) {
-        FinderRole::Channel => $this->getChannelFieldDefinitions($bundle_entity, $finder),
+        FinderRole::Channels => $this->getChannelFieldDefinitions($bundle_entity, $finder),
         FinderRole::Entries => $this->getEntryFieldDefinitions($bundle_entity, $finder),
       };
     }

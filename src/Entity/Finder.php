@@ -156,7 +156,7 @@ class Finder extends ConfigEntityBase implements FinderInterface {
     $entity_type_id = $bundle_entity->getEntityType()->getBundleOf();
 
     if (in_array($bundle_entity->id(), $this->get('channels')[$entity_type_id])) {
-      return FinderRole::Channel;
+      return FinderRole::Channels;
     }
     if (in_array($bundle_entity->id(), $this->get('entries')[$entity_type_id])) {
       return FinderRole::Entries;

@@ -171,7 +171,7 @@ class FinderForm extends EntityForm {
         if (empty($bundles)) {
           $form_state->setError($form[$role_form_key], $this->t('At least one @role bundle must be selected.', [
             '@role' => match (FinderRole::from($role_form_key)) {
-              FinderRole::Channel => 'channel',
+              FinderRole::Channels => 'channel',
               FinderRole::Entries => 'entry',
             },
           ]));

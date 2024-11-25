@@ -71,7 +71,7 @@ class FindersBundlesUniqueToFinderValidator extends ConstraintValidator implemen
       }
 
       $finder_entity_type_id = match($validating_finder_role) {
-        FinderRole::Channel => $finder->getChannelEntityTypeId(),
+        FinderRole::Channels => $finder->getChannelEntityTypeId(),
         FinderRole::Entries => $finder->getEntryEntityTypeId(),
       };
 
@@ -81,7 +81,7 @@ class FindersBundlesUniqueToFinderValidator extends ConstraintValidator implemen
       }
 
       $finder_bundle_ids = match($validating_finder_role) {
-        FinderRole::Channel => $finder->getChannelBundleIds(),
+        FinderRole::Channels => $finder->getChannelBundleIds(),
         FinderRole::Entries => $finder->getEntryBundleIds(),
       };
 
@@ -98,7 +98,7 @@ class FindersBundlesUniqueToFinderValidator extends ConstraintValidator implemen
           '@finder_label' => $finder->label(),
           '@used_bundles' => implode(', ', $duplicated_bundle_labels),
           '@role' => match($validating_finder_role) {
-            FinderRole::Channel => t('channels'),
+            FinderRole::Channels => t('channels'),
             FinderRole::Entries => t('entries'),
           },
         ];

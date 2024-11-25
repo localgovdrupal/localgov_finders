@@ -85,7 +85,7 @@ class GeoFinderPluginTest extends KernelTestBase {
     $channel_bundle->setThirdPartySetting(
       'finders',
       'finder_role',
-      FinderRole::Channel->value,
+      FinderRole::Channels->value,
     );
     $channel_bundle->save();
 

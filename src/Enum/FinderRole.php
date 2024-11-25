@@ -10,7 +10,7 @@ enum FinderRole: string {
   /**
    * Bundles with this role show lists of entries.
    */
-  case Channel = 'channels';
+  case Channels = 'channels';
 
   /**
    * Bundles with this role are entries shown in listings.
