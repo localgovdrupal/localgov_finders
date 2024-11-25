@@ -42,7 +42,7 @@ class FinderForm extends EntityForm {
   }
 
   /**
-   * Creates a FinderFormDummy instance.
+   * Creates a FinderForm instance.
    *
    * @param \Drupal\finders\FinderTypeManager $finder_type_manager
    *   The finder type manager.
