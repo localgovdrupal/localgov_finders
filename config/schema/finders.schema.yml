@@ -17,7 +17,7 @@ finders.finder.*:
       constraints:
         FindersBundlesUniqueToFinder:
           finderId: '%parent.id'
-          finderRole: channel
+          finderRole: channels
       sequence:
         type: sequence
         label: Finder channel bundles
