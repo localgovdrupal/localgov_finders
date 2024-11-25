@@ -7,7 +7,6 @@
 
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Hook\LegacyHook;
-use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\finders\Entity\FinderInterface;
 use Drupal\finders_facets\Hook\FacetsHooks;
 use Drupal\finders_facets\Hook\FindersHooks;

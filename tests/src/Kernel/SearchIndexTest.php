@@ -15,7 +15,7 @@ use Drupal\search_api\Utility\Utility;
  */
 class SearchIndexTest extends KernelTestBase {
 
-protected $strictConfigSchema = FALSE;
+  protected $strictConfigSchema = FALSE;
 
   /**
    * The modules to enable.
