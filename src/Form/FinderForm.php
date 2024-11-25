@@ -11,7 +11,6 @@ use Drupal\finders\Enum\FinderRole;
 use Drupal\finders\FinderTypeManager;
 use Drupal\views\ViewEntityInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\Validator\Validation;
 
 /**
  * Provides the default form handler for the Finder entity.
