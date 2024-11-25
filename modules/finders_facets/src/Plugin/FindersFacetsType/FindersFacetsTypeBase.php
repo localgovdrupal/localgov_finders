@@ -198,6 +198,7 @@ abstract class FindersFacetsTypeBase extends PluginBase implements FindersFacets
    *   The view the facet is on.
    */
   protected function ensureFacetBlock(FacetInterface $facet, FinderInterface $finder, IndexInterface $index, ViewEntityInterface $view): void {
+    $finder_type = $finder->getFinderTypePlugin();
     $block_storage = $this->entityTypeManager->getStorage('block');
 
     // Get the config template for a block.
@@ -214,6 +215,8 @@ abstract class FindersFacetsTypeBase extends PluginBase implements FindersFacets
     }
 
     $block_values = $block_template_config_values;
+
+    $block_values['settings']['label'] = 'Finders facet - ' . $finder_type->getPluginDefinition()['label'] . ' - ' . $view->id();
 
     // Get the main theme (rather than the active theme, which will likely be
     // the admin theme).
