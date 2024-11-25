@@ -101,7 +101,7 @@ class FindersHooks {
         'target_type' => 'finders_facet',
         'handler' => 'finders_facets_facets',
         'handler_settings' => [
-          'target_bundles' => NULL, // REMOVE!
+          'target_bundles' => NULL,
           'auto_create' => FALSE,
         ],
       ])
