@@ -248,9 +248,13 @@ abstract class FindersFacetsTypeBase extends PluginBase implements FindersFacets
 
     // Show the block on channel bundles for the finder.
     $finder_channel_entity_type_id = $finder->getChannelEntityTypeId();
+    $finder_channel_bundles = $finder->getChannelBundleIds();
     $block_values['visibility']['entity_bundle:' . $finder_channel_entity_type_id] = [
       'id' => 'entity_bundle:' . $finder_channel_entity_type_id,
-      'bundles' => $finder->getChannelBundleIds(),
+      'bundles' => array_combine($finder_channel_bundles, $finder_channel_bundles),
+      'context_mapping' => [
+        $finder_channel_entity_type_id => "@{$finder_channel_entity_type_id}.{$finder_channel_entity_type_id}_route_context:{$finder_channel_entity_type_id}",
+      ],
     ];
 
     $block = $block_storage->create($block_values);
