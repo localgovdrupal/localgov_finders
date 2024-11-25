@@ -103,10 +103,15 @@ abstract class FindersFacetsTypeBase extends PluginBase implements FindersFacets
         if (!$content_facet) {
           $content_facet = $this->loadViewContentFacetsFacet($facet_id, $facet_template_config_values, $finder, $index, $view);
 
-          $content_facet->save();
+          // Allow plugins to omit the content facet for a view.
+          if ($content_facet) {
+            $content_facet->save();
+          }
         }
 
-        $this->ensureFacetBlock($content_facet, $finder, $index, $view);
+        if ($content_facet) {
+          $this->ensureFacetBlock($content_facet, $finder, $index, $view);
+        }
 
         // Allow plugins to add further facets.
         $extra_facets = $this->ensureViewFacets($finder, $index, $view);
@@ -132,11 +137,11 @@ abstract class FindersFacetsTypeBase extends PluginBase implements FindersFacets
    * @param \Drupal\views\ViewEntityInterface $view
    *   The view on the given search index to add facets for.
    *
-   * @return \Drupal\facets\FacetInterface
-   *   The facet config entity. It is the responsibility of the caller to save
-   *   this.
+   * @return \Drupal\facets\FacetInterface|null
+   *   The facet config entity, or NULL to not create a facet for this view and
+   *   index. It is the responsibility of the caller to save this.
    */
-  protected function loadViewContentFacetsFacet(string $facet_id, array $facet_template_config_values, FinderInterface $finder, IndexInterface $index, ViewEntityInterface $view): FacetInterface {
+  protected function loadViewContentFacetsFacet(string $facet_id, array $facet_template_config_values, FinderInterface $finder, IndexInterface $index, ViewEntityInterface $view): ?FacetInterface {
     $finder_type = $finder->getFinderTypePlugin();
     $facet_storage = $this->entityTypeManager->getStorage('facets_facet');
 
