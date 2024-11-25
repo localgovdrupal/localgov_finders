@@ -123,6 +123,8 @@ class DefaultFinderFacetType extends FindersFacetsTypeBase implements ContainerF
         // Save the facet.
         $facet = $facet_storage->create($facet_values);
         $facet->save();
+
+        $this->ensureViewFacets($finder, $index, $view);
       }
     }
 
