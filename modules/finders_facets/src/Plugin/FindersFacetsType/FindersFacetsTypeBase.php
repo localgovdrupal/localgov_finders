@@ -99,39 +99,63 @@ abstract class FindersFacetsTypeBase extends PluginBase implements FindersFacets
         $facet_id = $index->id() . '_' . $view->id();
 
         // Do not overwrite an existing facet.
-        $facet = $facet_storage->load($facet_id);
-        if ($facet) {
-          continue;
+        $content_facet = $facet_storage->load($facet_id);
+        if (!$content_facet) {
+          $content_facet = $this->loadViewContentFacetsFacet($facet_id, $facet_template_config_values, $finder, $index, $view);
+
+          $content_facet->save();
         }
 
-        // Copy the template and replace values.
-        $facet_values = $facet_template_config_values;
-
-        $facet_values['id'] = $facet_id;
-        $facet_values['name'] = 'Finders - ' . $finder_type->getPluginDefinition()['label'] . ' - ' . $view->id();
-
-        $facet_values['dependencies']['config'] = [
-          $index->getConfigDependencyName(),
-          $view->getConfigDependencyName(),
-        ];
-
-        $facet_values['facet_source_id'] = 'search_api:views_embed__' . $view->id() . '__channel_embed';
-        $facet_values['field_identifier'] = FindersHooks::FACET_INDEXING_FIELD;
-
-        // Save the facet.
-        $facet = $facet_storage->create($facet_values);
-        $facet->save();
+        $this->ensureFacetBlock($content_facet, $finder, $index, $view);
 
         // Allow plugins to add further facets.
-        $facets = $this->ensureViewFacets($finder, $index, $view);
+        $extra_facets = $this->ensureViewFacets($finder, $index, $view);
 
-        $facets[] = $facet;
-
-        foreach ($facets as $loop_facet) {
-          $this->ensureFacetBlock($loop_facet, $finder, $index, $view);
+        foreach ($extra_facets as $facet) {
+          $this->ensureFacetBlock($facet, $finder, $index, $view);
         }
       }
     }
+  }
+
+  /**
+   * Creates a content facet for the given index and view.
+   *
+   * @param string $facet_id
+   *   The ID of the facet to create.
+   * @param array $facet_template_config_values
+   *   The template values.
+   * @param \Drupal\finders\Entity\FinderInterface $finder
+   *   The finder being configured.
+   * @param \Drupal\search_api\IndexInterface $index
+   *   The search index to add facets for.
+   * @param \Drupal\views\ViewEntityInterface $view
+   *   The view on the given search index to add facets for.
+   *
+   * @return \Drupal\facets\FacetInterface
+   *   The facet config entity. It is the responsibility of the caller to save
+   *   this.
+   */
+  protected function loadViewContentFacetsFacet(string $facet_id, array $facet_template_config_values, FinderInterface $finder, IndexInterface $index, ViewEntityInterface $view): FacetInterface {
+    $finder_type = $finder->getFinderTypePlugin();
+    $facet_storage = $this->entityTypeManager->getStorage('facets_facet');
+
+    // Copy the template and replace values.
+    $facet_values = $facet_template_config_values;
+
+    $facet_values['id'] = $facet_id;
+    $facet_values['name'] = 'Finders - ' . $finder_type->getPluginDefinition()['label'] . ' - ' . $view->id();
+
+    $facet_values['dependencies']['config'] = [
+      $index->getConfigDependencyName(),
+      $view->getConfigDependencyName(),
+    ];
+
+    $facet_values['facet_source_id'] = 'search_api:views_embed__' . $view->id() . '__channel_embed';
+    $facet_values['field_identifier'] = FindersHooks::FACET_INDEXING_FIELD;
+
+    $facet = $facet_storage->create($facet_values);
+    return $facet;
   }
 
   /**
