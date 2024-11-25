@@ -27,8 +27,11 @@ class FormAlterHooks {
       '#default_value' => $finder->getThirdPartySetting('finders_facets', 'facets', FALSE),
     ];
 
+    // The validate handler goes on the entire form, otherwise it zaps the form
+    // class's own validation.
+    $form['#validate'][] = static::class . '::finderFormValidate';
+
     foreach (Element::children($form['actions']) as $action) {
-      $form['actions'][$action]['#validate'][] = static::class . '::finderFormValidate';
       $form['actions'][$action]['#submit'][] = static::class . '::finderFormsubmit';
     }
   }
