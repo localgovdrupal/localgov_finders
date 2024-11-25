@@ -210,12 +210,28 @@ abstract class FindersFacetsTypeBase extends PluginBase implements FindersFacets
 
     $block_values = $block_template_config_values;
 
-    $theme = \Drupal::service('theme.manager')->getActiveTheme()->getName();
+    // $theme = \Drupal::service('theme.manager')->getActiveTheme()->getName();
+    $config = \Drupal::config('system.theme');
+    $theme = $config->get('default');
+
+    // Figure out a region, because core still doesn't provide a way to get a
+    // sidebar region.
+    $regions = system_region_list($theme);
+    if (isset($regions['sidebar_first'])) {
+      $region = 'sidebar_first';
+    }
+    elseif ($matches = preg_grep('/^sidebar/', array_keys($regions))) {
+      $region = reset($matches);
+    }
+    else {
+      $region = system_default_region($theme);
+    }
 
     $replacements = [
       'FACET_ID' => $facet->id(),
       'THEME_ID' => $theme,
       'BLOCK_ID' => $block_id,
+      'REGION' => $region,
     ];
 
     array_walk_recursive($block_values, function (&$config_value) use ($replacements) {

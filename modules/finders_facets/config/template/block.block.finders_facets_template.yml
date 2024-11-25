@@ -10,7 +10,7 @@ dependencies:
     - THEME_ID
 id: BLOCK_ID
 theme: THEME_ID
-region: sidebar_first
+region: REGION
 weight: 5
 provider: null
 plugin: 'facet_block:FACET_ID'
