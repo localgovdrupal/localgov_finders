@@ -13,6 +13,9 @@ use Drupal\finders\Entity\FinderInterface;
  * selected directly, but if a finder facet type plugin exists with the same ID
  * as a finder entity's finder type plugin ID, then it is used for facet
  * configuration for that finder.
+ *
+ * This allows third-party modules to extend finders facets at the same time as
+ * extending finders.
  */
 interface FindersFacetsTypeInterface extends PluginInspectionInterface, DerivativeInspectionInterface {
 
