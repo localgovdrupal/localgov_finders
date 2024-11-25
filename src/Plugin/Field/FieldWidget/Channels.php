@@ -50,8 +50,7 @@ class Channels extends OptionsWidgetBase {
       '#type' => 'radios',
       '#default_value' => $primary_selected,
       '#options' => $primary_options,
-      '#description' => $this->t('The primary directory this appears in. Path, breadcrumb, will be set for this directory'),
-      // '#ajax' => $ajax,
+      '#description' => $this->t('The primary channel this appears in. Path, breadcrumb, will be set for this channel'),
     ];
 
     $element['secondary'] = [
@@ -59,11 +58,11 @@ class Channels extends OptionsWidgetBase {
       '#type' => 'checkboxes',
       '#default_value' => $secondary_selected,
       '#options' => $secondary_options,
-      '#description' => $this->t('Other directories this will appear in.'),
-      // '#ajax' => $ajax,
+      '#description' => $this->t('Other channels this will appear in.'),
     ];
     foreach ($secondary_options as $key => $value) {
-      $element['secondary'][$key]['#states']['invisible'] = [':input[name=localgov_directory_channels\[primary\]]' => ['value' => $key]];
+      // @todo Use CHANNEL_SELECTION_FIELD from the appropriate finder type.
+      $element['secondary'][$key]['#states']['invisible'] = [':input[name=finders_channels\[primary\]]' => ['value' => $key]];
     }
 
     return $element;
