@@ -135,6 +135,9 @@ class FindersFacetTest extends KernelTestBase {
     // The facet has been created.
     $facet = $this->entityTypeManager->getStorage('facets_facet')->load('finders_index_default_finders_channel_view');
     $this->assertNotEmpty($facet);
+
+    $block = $this->entityTypeManager->getStorage('block')->load('finders_facets_finders_index_default_finders_channel_view');
+    $this->assertNotEmpty($block);
   }
 
 }
