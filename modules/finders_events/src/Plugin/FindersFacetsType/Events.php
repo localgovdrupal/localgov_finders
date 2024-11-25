@@ -22,4 +22,17 @@ use Drupal\views\ViewEntityInterface;
 )]
 class Events extends FindersFacetsTypeBase {
 
+  /**
+   * {@inheritdoc}
+   */
+  protected function ensureFacetBlock(FacetInterface $facet, FinderInterface $finder, IndexInterface $index, ViewEntityInterface $view): void {
+    // Don't create a facet block for the calendar view. The facet block for the
+    // list view will control both views.
+    if ($view->id() == 'finders_events_channel_calendar') {
+      return;
+    }
+
+    parent::ensureFacetBlock($facet, $finder, $index, $view);
+  }
+
 }
