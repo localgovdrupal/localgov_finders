@@ -1,4 +1,9 @@
 services:
+  plugin.manager.finders_facets_type:
+    class: Drupal\finders_facets\FindersFacetsTypeManager
+    parent: default_plugin_manager
+  Drupal\finders_facets\FindersFacetsTypeManager: '@plugin.manager.finders_facets_type'
+
   # @todo Remove hook services definitions when support for Drupal core < 11.1
   # is dropped.
   Drupal\finders_facets\Hook\FindersHooks:

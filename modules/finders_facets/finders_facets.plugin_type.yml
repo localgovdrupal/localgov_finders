@@ -1,0 +1,4 @@
+finders_facets.finders_facets_type:
+  label: Finders Facets Type
+  plugin_manager_service_id: plugin.manager.finders_facets_type
+  plugin_definition_decorator_class: Drupal\plugin\PluginDefinition\ArrayPluginDefinitionDecorator
