@@ -210,7 +210,8 @@ abstract class FindersFacetsTypeBase extends PluginBase implements FindersFacets
 
     $block_values = $block_template_config_values;
 
-    // $theme = \Drupal::service('theme.manager')->getActiveTheme()->getName();
+    // Get the main theme (rather than the active theme, which will likely be
+    // the admin theme).
     $config = \Drupal::config('system.theme');
     $theme = $config->get('default');
 
