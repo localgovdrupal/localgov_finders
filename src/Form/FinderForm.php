@@ -212,8 +212,8 @@ class FinderForm extends EntityForm {
       foreach (['channels', 'entries'] as $role_form_key) {
         $form_values = $form_state->getValue($role_form_key);
 
-      // Form values may be empty during AJAX calls.
-      if (!isset($form_values['container']['bundles'])) {
+        // Form values may be empty during AJAX calls.
+        if (!isset($form_values['container']['bundles'])) {
           continue;
         }
         $bundles = array_filter($form_values['container']['bundles']);
