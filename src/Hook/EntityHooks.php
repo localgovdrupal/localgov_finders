@@ -3,15 +3,45 @@
 namespace Drupal\finders\Hook;
 
 use Drupal\Core\Entity\ContentEntityTypeInterface;
-use Drupal\Core\Entity\DynamicallyFieldableEntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
-use Drupal\Core\Field\FieldDefinition;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Hook\Attribute\Hook;
+use Drupal\finders\FinderConfigManager;
 
 /**
  * Contains entity hook implementations for the Finders module.
  */
 class EntityHooks {
+
+  /**
+   * The entity type manager.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected $entityTypeManager;
+
+  /**
+   * The finder config manager.
+   *
+   * @var \Drupal\finders\FinderConfigManager
+   */
+  protected $finderConfigManager;
+
+  /**
+   * Creates a EntityHooksDummy instance.
+   *
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager.
+   * @param \Drupal\finders\FinderConfigManager $finder_config_manager
+   *   The finder config manager.
+   */
+  public function __construct(
+    EntityTypeManagerInterface $entity_type_manager,
+    FinderConfigManager $finder_config_manager,
+  ) {
+    $this->entityTypeManager = $entity_type_manager;
+    $this->finderConfigManager = $finder_config_manager;
+  }
 
   /**
    * Implements hook_entity_bundle_field_info().
@@ -31,13 +61,12 @@ class EntityHooks {
     }
 
     // On a bundle creation form, there is no bundle entity yet.
-    $bundle = \Drupal::service('entity_type.manager')->getStorage($bundle_type_id)->load($bundle_id);
+    $bundle = $this->entityTypeManager->getStorage($bundle_type_id)->load($bundle_id);
     if (empty($bundle)) {
       return [];
     }
 
-    $finder_config_manager = \Drupal::service('finders.finder_config_manager');
-    return $finder_config_manager->getBundleFieldDefinitions($bundle);
+    return $this->finderConfigManager->getBundleFieldDefinitions($bundle);
   }
 
   /**
@@ -60,13 +89,11 @@ class EntityHooks {
     /** @var \Drupal\finders\Field\BundleFieldDefinition[] $fields */
     $fields = [];
 
-    $entity_type_manager = \Drupal::service('entity_type.manager');
+    $entity_type_manager = $this->entityTypeManager;
     $bundle_entities = $entity_type_manager->getStorage($bundle_entity_type_id)->loadMultiple();
 
-    /** @var \Drupal\finders\FinderConfigManager $finder_config_manager */
-    $finder_config_manager = \Drupal::service('finders.finder_config_manager');
     foreach ($bundle_entities as $bundle_entity) {
-      $bundle_fields = $finder_config_manager->getBundleFieldDefinitions($bundle_entity);
+      $bundle_fields = $this->finderConfigManager->getBundleFieldDefinitions($bundle_entity);
 
       // Check that plugins don't change base field properties from other
       // plugins.
