@@ -24,6 +24,18 @@ class Events extends FindersFacetsTypeBase {
   /**
    * {@inheritdoc}
    */
+  protected function ensureViewFacets(FinderInterface $finder, IndexInterface $index, ViewEntityInterface $view): array {
+    // @todo Add a facet for the date occurrence field.
+    // $facet_storage = $this->entityTypeManager->getStorage('facets_facet');
+
+    // $facet_id = $index->id() . '_' . $view->id() . '_date';
+
+    return [];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   protected function ensureFacetBlock(FacetInterface $facet, FinderInterface $finder, IndexInterface $index, ViewEntityInterface $view): void {
     // Don't create a facet block for the calendar view. The facet block for the
     // list view will control both views.
