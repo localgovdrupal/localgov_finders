@@ -1,0 +1,89 @@
+<?php
+
+namespace Drupal\finders\Hook;
+
+use Drupal\Core\Entity\ContentEntityTypeInterface;
+use Drupal\Core\Entity\DynamicallyFieldableEntityStorageInterface;
+use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Field\FieldDefinition;
+use Drupal\Core\Hook\Attribute\Hook;
+
+/**
+ * Contains entity hook implementations for the Finders module.
+ */
+class EntityHooks {
+
+  /**
+   * Implements hook_entity_bundle_field_info().
+   */
+  #[Hook('entity_bundle_field_info')]
+  public function entityBundleFieldInfo(EntityTypeInterface $entity_type, $bundle_id, array $base_field_definitions) {
+    // Only act on content entity types.
+    if (!$entity_type instanceof ContentEntityTypeInterface) {
+      return [];
+    }
+
+    // Only act on entity types whose bundles are provided by a bundle entity
+    // type.
+    $bundle_type_id = $entity_type->getBundleEntityType();
+    if (empty($bundle_type_id)) {
+      return [];
+    }
+
+    // On a bundle creation form, there is no bundle entity yet.
+    $bundle = \Drupal::service('entity_type.manager')->getStorage($bundle_type_id)->load($bundle_id);
+    if (empty($bundle)) {
+      return [];
+    }
+
+    $finder_config_manager = \Drupal::service('finders.finder_config_manager');
+    return $finder_config_manager->getBundleFieldDefinitions($bundle);
+  }
+
+  /**
+   * Implements hook_entity_field_storage_info().
+   */
+  #[Hook('entity_field_storage_info')]
+  public function entityFieldStorageInfo(EntityTypeInterface $entity_type) {
+    // Only act on content entity types.
+    if (!$entity_type instanceof ContentEntityTypeInterface) {
+      return [];
+    }
+
+    // Only act on entity types whose bundles are provided by a bundle entity
+    // type.
+    $bundle_entity_type_id = $entity_type->getBundleEntityType();
+    if (empty($bundle_entity_type_id)) {
+      return [];
+    }
+
+    /** @var \Drupal\finders\Field\BundleFieldDefinition[] $fields */
+    $fields = [];
+
+    $entity_type_manager = \Drupal::service('entity_type.manager');
+    $bundle_entities = $entity_type_manager->getStorage($bundle_entity_type_id)->loadMultiple();
+
+    /** @var \Drupal\finders\FinderConfigManager $finder_config_manager */
+    $finder_config_manager = \Drupal::service('finders.finder_config_manager');
+    foreach ($bundle_entities as $bundle_entity) {
+      $bundle_fields = $finder_config_manager->getBundleFieldDefinitions($bundle_entity);
+
+      // Check that plugins don't change base field properties from other
+      // plugins.
+      foreach ($bundle_fields as $field_name => $bundle_field) {
+        if (isset($fields[$field_name])) {
+          assert($bundle_field->getType() == $fields[$field_name]->getType());
+          assert($bundle_field->getTargetEntityTypeId() == $fields[$field_name]->getTargetEntityTypeId());
+          assert($bundle_field->getCardinality() == $fields[$field_name]->getCardinality());
+          // @todo Check field settings could cause problems if changed, such as
+          // entity reference target type.
+        }
+      }
+
+      $fields += $bundle_fields;
+    }
+
+    return $fields;
+  }
+
+}

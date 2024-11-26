@@ -7,3 +7,6 @@ services:
     class: Drupal\finders\FinderConfigManager
     arguments: ['@entity_type.manager', '@entity_field.manager', '@extension.list.module', '@config.installer', '@logger.factory', '@search_api.plugin_helper', '@field_storage_definition.listener', '@field_definition.listener']
   Drupal\finders\FinderConfigManager: '@finders.finder_config_manager'
+  Drupal\finders\Hook\EntityHooks:
+    class: Drupal\finders\Hook\EntityHooks
+    autowire: true
