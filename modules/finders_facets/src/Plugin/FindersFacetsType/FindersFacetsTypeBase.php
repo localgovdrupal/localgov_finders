@@ -209,6 +209,7 @@ abstract class FindersFacetsTypeBase extends PluginBase implements FindersFacets
     $block_id = 'finders_facets_' . $facet->id();
 
     // Don't do anything if the block already exists.
+    // @todo Update the block to show on all channels.
     if ($block = $block_storage->load($block_id)) {
       return;
     }
