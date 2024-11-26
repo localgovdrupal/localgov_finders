@@ -32,6 +32,8 @@ interface FinderTypeInterface extends PluginInspectionInterface, DerivativeInspe
    *
    * @param \Drupal\Core\Config\Entity\ConfigEntityInterface
    *   The channel bundle entity.
+   * @param \Drupal\finders\Entity\FinderInterface $finder
+   *   The finder the channel bundle is in.
    *
    * @return \Drupal\finders\Field\BundleFieldDefinition[]
    *   An array of bundle field definitions, keyed by the field name. These may
@@ -46,6 +48,8 @@ interface FinderTypeInterface extends PluginInspectionInterface, DerivativeInspe
    *
    * @param \Drupal\Core\Config\Entity\ConfigEntityInterface
    *   The entry bundle entity.
+   * @param \Drupal\finders\Entity\FinderInterface $finder
+   *   The finder the entry bundle is in.
    *
    * @return \Drupal\finders\Field\BundleFieldDefinition[]
    *   An array of bundle field definitions, keyed by the field name. These may
@@ -76,7 +80,7 @@ interface FinderTypeInterface extends PluginInspectionInterface, DerivativeInspe
    * Gets the search datasource plugin ID for the given index and entity type.
    *
    * @param \Drupal\search_api\IndexInterface $index
-   *   The search index being altered.
+   *   The search index being created or updated.
    * @param string $entity_type_id
    *   The entity type ID that the datasource is for.
    *
@@ -94,8 +98,8 @@ interface FinderTypeInterface extends PluginInspectionInterface, DerivativeInspe
    *
    * @param \Drupal\search_api\IndexInterface $index
    *   The updated index about to be saved.
-   * @param \Drupal\Core\Config\Entity\ConfigEntityInterface $channel_bundle_entity
-   *   The channel bundle.
+   * @param \Drupal\finders\Entity\FinderInterface $finder
+   *   The finder being configured.
    */
   public function alterSearchIndex(IndexInterface $index, FinderInterface $finder): void;
 
@@ -107,8 +111,8 @@ interface FinderTypeInterface extends PluginInspectionInterface, DerivativeInspe
    * @param \Drupal\search_api\IndexInterface $index
    *   The search index. It has already been updated for the channel bundle and
    *   has been saved.
-   * @param \Drupal\Core\Config\Entity\ConfigEntityInterface $channel_bundle_entity
-   *   The channel bundle.
+   * @param \Drupal\finders\Entity\FinderInterface $finder
+   *   The finder being configured.
    */
   public function alterView(ViewEntityInterface $view, IndexInterface $index, FinderInterface $finder): void;
 
