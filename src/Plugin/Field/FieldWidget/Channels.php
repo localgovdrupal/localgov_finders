@@ -50,7 +50,9 @@ class Channels extends OptionsWidgetBase {
       '#type' => 'radios',
       '#default_value' => $primary_selected,
       '#options' => $primary_options,
-      '#description' => $this->t('The primary channel this appears in. Path, breadcrumb, will be set for this channel'),
+      // @todo Restore 'Path, breadcrumb, will be set for this channel'
+      // description text when pathauto is set up.
+      '#description' => $this->t('The primary channel this appears in.'),
     ];
 
     $element['secondary'] = [

@@ -24,7 +24,7 @@ function finders_entity_bundle_field_info(EntityTypeInterface $entity_type, stri
     return [];
   }
 
-  // On a node type creation form, there is no node type yet.
+  // On a bundle creation form, there is no bundle entity yet.
   $bundle = \Drupal::service('entity_type.manager')->getStorage($bundle_type_id)->load($bundle_id);
   if (empty($bundle)) {
     return [];

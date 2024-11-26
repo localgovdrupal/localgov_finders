@@ -489,7 +489,8 @@ abstract class FinderTypeBase extends PluginBase implements FinderTypeInterface,
 
     return BundleFieldDefinition::create('entity_reference')
       ->setName(static::CHANNEL_TYPES_FIELD)
-      ->setLabel(t('Enabled Content types'))
+      ->setLabel(t('Enabled entry types'))
+      ->setDescription(t('Entries of the following types will be able to set the current channel entity as a channel.'))
       ->setRequired(FALSE)
       ->setTranslatable(FALSE)
       ->setCardinality(BundleFieldDefinition::CARDINALITY_UNLIMITED)

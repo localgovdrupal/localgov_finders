@@ -20,7 +20,8 @@ use Drupal\views\ViewEntityInterface;
  * Provides calendars and listings.
  *
  * Event entries use the date_recur SearchAPI datasource, which adds an index
- * item for each occurrence of a recurring date rather than for each node.
+ * item for each occurrence of a recurring date rather than for each entry
+ * entity.
  */
 #[FinderType(
   id: "events",
