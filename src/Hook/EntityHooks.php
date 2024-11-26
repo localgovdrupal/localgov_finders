@@ -28,7 +28,7 @@ class EntityHooks {
   protected $finderConfigManager;
 
   /**
-   * Creates a EntityHooksDummy instance.
+   * Creates an EntityHooks instance.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
